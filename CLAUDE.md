@@ -1,8 +1,13 @@
-# BackstageHQ — Creator Admin Platform
+# BackstageHQ — The Business OS for Creators
 
-Enterprise admin application for managing creators (onboarding, profiles, content, campaigns,
-payouts, roles/permissions, audit). The product owner is not a programmer but reads code:
-explain decisions in plain language, show diffs, and never skip the review gate.
+SaaS for creators who work solo or without a professional team. BackstageHQ runs the business side
+of a creator's work (leads and enquiries, brand deals, contracts, invoicing and payment follow-up,
+tax, scheduling, email) and uses automation and AI to take that admin off their plate, so they can
+spend their time on content. The user is the creator themselves, not an agency or brand managing
+many creators. Target market, pricing and first wedge are still to be settled in Stage 1.
+
+The product owner is not a programmer but reads code: explain decisions in plain language, show
+diffs, and never skip the review gate.
 
 ## Where things live
 - `docs/PLAYBOOK.md` — the stage-by-stage delivery flow. Follow it.

@@ -19,14 +19,15 @@ output to git when you approve it.
 | 6 | Review & harden | `/review docs/iterations/01-*` | Opus | `review.md` | Verdict APPROVE, no blocking findings |
 | 7 | Release | deploy to staging, then production | Sonnet | release notes | You test staging yourself |
 
-Repeat 5–7 for each iteration. Typical sequence for a creator admin:
-1. Auth, organisations, roles and the audit log (the skeleton everything hangs on)
-2. Creator directory: profiles, search, filters, bulk import
-3. Onboarding and KYC / contract workflow
-4. Campaigns and content approval
-5. Payouts, invoices and tax documents
-6. Analytics dashboards and exports
-7. Hardening: SSO, rate limits, backups, load tests, accessibility pass
+Repeat 5–7 for each iteration. An example sequence for a creator business OS (the real order
+comes from the approved use cases and PRD):
+1. Sign-up, the creator's account and settings (the skeleton everything hangs on)
+2. Brand deals, deliverables and contacts
+3. Invoices, payment tracking and reminders
+4. Tax records and income summaries
+5. Inbox and enquiries: email connection and AI triage
+6. Calendar, dashboards and data export
+7. Hardening: rate limits, backups, load tests, accessibility pass
 
 ## Rules that keep quality high when you can't read every line
 - **Small tickets.** One concern, a few files, finishes in one fresh session.
