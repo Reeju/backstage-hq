@@ -11,3 +11,5 @@ each major decision. Constraints: $ARGUMENTS. Explain trade-offs in plain langua
 non-programmer owner."
 
 Show me the summary and the decisions that need my sign-off.
+
+When I approve, commit `docs/03-architecture` with the message "Stage 3: architecture approved".

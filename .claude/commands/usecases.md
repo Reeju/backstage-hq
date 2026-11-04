@@ -13,3 +13,5 @@ needs an enterprise buyer will ask about. End with open questions for the owner.
 
 When it returns, show me the summary and the open questions. Do not continue to the PRD
 until I answer them and say the use cases are approved.
+
+When I approve, commit `docs/01-usecases` with the message "Stage 1: use cases approved".

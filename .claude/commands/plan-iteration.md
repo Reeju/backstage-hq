@@ -12,3 +12,5 @@ and a tier label (B for normal build work, A if it needs Opus judgement). Keep e
 small enough to finish in one fresh session."
 
 Show me the plan and the ticket list. Wait for my approval before building.
+
+When I approve, commit `the iteration folder` with the message "Iteration <NN>: plan approved".

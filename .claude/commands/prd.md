@@ -11,3 +11,5 @@ permission matrix, non-functional requirements (security, audit, privacy, perfor
 availability), integrations, and risks. Extra notes: $ARGUMENTS"
 
 Then show me the summary, the MVP scope and the open questions. Wait for my approval.
+
+When I approve, commit `docs/02-prd` with the message "Stage 2: PRD approved".

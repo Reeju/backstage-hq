@@ -8,8 +8,13 @@ owner approves the document it depends on. Each stage has one command, one outpu
 | 0 | Setup | — | — | git repo, this harness | Repo exists, `/cost` runs |
 | 1 | Discovery & use cases | `/usecases <notes>` | Opus | `docs/01-usecases/use-cases.md` | Personas and use cases match how your business really works |
 | 2 | PRD | `/prd` | Opus | `docs/02-prd/PRD.md` | MVP scope, permission matrix, acceptance criteria |
-| 3 | Architecture | `/architecture <constraints>` | Opus | `docs/03-architecture/` + ADRs | Stack, hosting, data model, cost of running it |
-| 4 | Design mockups | `/mockups` | Sonnet | `docs/04-design/` clickable HTML | Click through every MVP screen |
+| 3 | Design mockups | `/mockups` | Sonnet | `docs/04-design/` clickable HTML | Click through every MVP screen |
+| 4 | Architecture | `/architecture <constraints>` | Opus | `docs/03-architecture/` + ADRs | Stack, hosting, data model, cost of running it |
+
+Mockups come before architecture so you can see the product early and fix the PRD while
+changes are cheap; the architecture is then designed for the screens you approved. (The
+folder numbers `03-architecture` / `04-design` are just names.) Every stage commits its
+output to git when you approve it.
 | 5 | Build iterations | `/plan-iteration 1 <goal>` then `/build <ticket>` per ticket | Opus plans, Sonnet builds | `docs/iterations/01-*/`, code in `app/` | The demo listed in the plan works |
 | 6 | Review & harden | `/review docs/iterations/01-*` | Opus | `review.md` | Verdict APPROVE, no blocking findings |
 | 7 | Release | deploy to staging, then production | Sonnet | release notes | You test staging yourself |

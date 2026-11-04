@@ -10,4 +10,6 @@ argument-hint: <path to ticket file>
 4. Delegate to the `reviewer` subagent with the ticket path and the diff.
 5. If the verdict is CHANGES REQUIRED, send the findings to a `builder` and review again
    (at most two rounds, then stop and tell me).
-6. Append a short entry to `docs/iterations/<that iteration>/log.md` and tell me the result.
+6. On APPROVE, append a short entry to `docs/iterations/<that iteration>/log.md` and commit the
+   ticket's changes with the message "<ticket id>: <ticket title>".
+7. Tell me the result and how to see it working.
