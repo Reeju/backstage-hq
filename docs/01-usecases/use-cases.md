@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Ready for owner approval.** All owner decisions are recorded (D1–D40, section 11). No open owner questions remain. Not committed. |
+| Status | **Approved** (Stage 1). Amended after the PRD with edits E1–E9 (`docs/02-prd/PRD.md`, section 13). Owner decisions D1–D40 are in section 11; the five items in 11.3 wait on PRD open questions. |
 | Stage | 1 of the playbook (`docs/PLAYBOOK.md`) |
 | Input | Owner's research summary and owner's decisions (Nov 2026) |
 | Next | Owner approves. Then Stage 2 (PRD), which settles the items listed in section 11.3. |
@@ -18,6 +18,8 @@
 
 **Priority** means priority for the *first paid release (v1)*. It follows owner decision D3:
 **build first the automation a creator cannot do by hand or in a spreadsheet** (section 5.0).
+The MVP (closed paid beta) is a subset of the v1 Musts, defined in the PRD (`docs/02-prd/PRD.md`,
+section 4). (Amended after PRD, E3.)
 
 **Tags used in the catalogue**
 
@@ -265,6 +267,10 @@ automation writes to. They are built as a by-product of automation, not as data-
 Draft v1: 63 = 23 / 29 / 11.) Manager items for v2 and later are listed in section 12 and are
 not counted here.
 
+**Amended after PRD (E1, E2):** credit notes (part of UC-056) become Must, and a new Must,
+UC-135 (choose a plan and pay), is added. The count becomes **80 use cases: 43 Must, 27 Should,
+11 Could**, with UC-056 counted in both Must and Should (the columns add to 81).
+
 | ID | Use case | Main actor | Priority | Tags | Data / decision |
 |---|---|---|---|---|---|
 | **A. Setup and sharing** | | | | | |
@@ -305,7 +311,7 @@ not counted here.
 | UC-053 | Send payment reminders (opt-in fixed template, or on tap) | Creator, S4 | Must | AUTO, AI | D-01, D6 |
 | UC-054 | Track agency pass-through payments | Creator | Should | AUTO | — |
 | UC-055 | See who owes me what | Creator, S4 | Must | AUTO | — |
-| UC-056 | Issue credit notes, cancellations and kill-fee invoices | Creator | Should | AUTO | — |
+| UC-056 | Issue credit notes (**Must**, E1), cancellations and kill-fee invoices (Should) | Creator | **Must** ↑ (credit notes) / Should (rest) | AUTO | — |
 | UC-057 | Add a payment link to an invoice | Creator | Could · Later | AUTO | D-12, D8 |
 | UC-058 | Get paid early on an invoice (partner lender) | Creator | Could · Later | AUTO | D8 |
 | **G. Payments** | | | | | |
@@ -345,6 +351,7 @@ not counted here.
 | UC-132 | Delete my account | Creator | Must | AUTO | — |
 | UC-133 | Shared activity log (creator, manager, helpers, AI) and undo | Creator, S1 | Must | AUTO | D21 |
 | UC-134 | Choose what automation may do on its own | Creator | Must | MANUAL | D6 |
+| UC-135 | Choose a plan and pay for BackstageHQ (new, E2) | Creator (payer) | Must (new) | MANUAL, AUTO | D4, D17, D30, D31, D32 |
 | **O. AI assistant** (new; D4, D6) | | | | | |
 | UC-140 | Ask the assistant about my business | Creator | Must (new) | AGENT | — |
 | UC-141 | Ask the assistant to do tasks in the app | Creator | Must (new) | AGENT | D6 |
@@ -372,7 +379,7 @@ not counted here.
 | C. Pricing | 1 | 1 | 1 |
 | D. Deals and contracts | 1 | 2 | 2 |
 | E. Delivery | 0 | 3 | 0 |
-| F. Invoicing and collections | 4 | 3 | 2 |
+| F. Invoicing and collections | 5 (UC-056 credit notes, E1) | 3 | 2 |
 | G. Payments | 2 | 0 | 0 |
 | H. Tax | 3 | 5 | 1 |
 | I. Compliance | 0 | 1 | 1 |
@@ -380,10 +387,13 @@ not counted here.
 | K. Other income | 0 | 2 | 1 |
 | L. Team | 0 | 0 | 1 |
 | M. Insights | 1 | 3 | 1 |
-| N. Trust and data | 5 | 0 | 0 |
+| N. Trust and data | 6 (UC-135, E2) | 0 | 0 |
 | O. AI assistant | 7 | 0 | 1 |
 | P. Manager (v1) | 6 | 1 | 0 |
-| **Total** | **41** | **27** | **11** |
+| **Total** | **43** | **27** | **11** |
+
+*(Amended after PRD, E1 and E2: 80 distinct use cases. UC-056 counts in both Must and Should, so
+the columns add to 81. UC-135 is new.)*
 
 **Which use cases AI or automation handles**
 
@@ -391,7 +401,7 @@ not counted here.
 |---|---|
 | **AI** (judgement or drafting; the creator always sees the source and can correct it) | UC-003, 004, 006, 010, 011, 012, 013, 014, 015, 017, 018, 020, 021, 030 (pre-fill), 031, 033, 034, 042, 053 (tone), 060 (fuzzy matching), 072 (reading the AIS file), 075, 076, 080, 081, 100, 120 (summary), 121, 123, 146 |
 | **AGENT** (assistant acting on request) | UC-140, 141, 145, 147, and any other use case when the creator asks the assistant to do it |
-| **AUTO** (rules and schedules; predictable) | UC-002, 013 (clash check), 015, 016, 020 (price maths), 022, 032, 040 (stage moves), 041, 050–058, 060, 061, 070–074, 077, 090, 091, 101, 102, 110, 111, 120, 121 (figures), 122, 130–133, 142, 143, 144, 146, 152, 153 (send gate), 155 |
+| **AUTO** (rules and schedules; predictable) | UC-002, 013 (clash check), 015, 016, 020 (price maths), 022, 032, 040 (stage moves), 041, 050–058, 060, 061, 070–074, 077, 090, 091, 101, 102, 110, 111, 120, 121 (figures), 122, 130–133, 135, 142, 143, 144, 146, 152, 153 (send gate), 155 |
 | **MANUAL only** | UC-001, 005, 124, 134, 150, 151, 154 (settings and access); UC-078 is done by a human CA partner |
 
 ### 5.0b Free vs paid (D4, proposed split for the PRD)
@@ -436,7 +446,8 @@ under this rule.
 - **Edge cases:** Not GST-registered (non-GST invoice). Sole proprietor trading name. Company
   or LLP (not in v1; D15; the data model must allow it later). Wrong PAN (format check).
   Special-category state (lower GST threshold). Changing PAN or GSTIN later: only the creator can,
-  with a second check (D25).
+  with a second check (D25). Lost phone or email: account recovery with a second check, never
+  through support alone. (Amended after PRD, E9.)
 - **Done when:** Given a new creator with no GSTIN, when they finish setup with name, PAN, state
   and bank details, then they can create a valid non-GST invoice without being asked anything else.
 
@@ -835,7 +846,11 @@ under this rule.
 - **Done when:** Given unpaid ₹50k (20 days), ₹30k (70 days) and ₹20k (95 days), when Money is
   opened, then the total is ₹1,00,000, split into the 0–30, 61–90 and 90+ buckets.
 
-##### UC-056 Issue credit notes, cancellations and kill-fee invoices — Should · AUTO
+##### UC-056 Issue credit notes, cancellations and kill-fee invoices — Must (credit notes) / Should (cancellations, kill-fee invoices) · AUTO
+- **Priority split (Amended after PRD, E1):** **Credit notes are Must**, because an invoice is
+  never edited after it is sent (UC-050), so a credit note is the only way to correct one.
+  Cancellations and kill-fee invoices stay Should. UC-056 is counted in both the Must and Should
+  columns in section 5.0; it keeps its ID so the PRD traceability holds.
 - **Actor:** Creator
 - **Goal:** Fix or cancel invoices correctly and claim kill fees.
 - **Trigger:** Wrong invoice, cancelled deal, or an amount change.
@@ -881,6 +896,11 @@ under this rule.
   amount (allowing for TDS), payer and reference. 3. **Confident matches are confirmed
   automatically** (D6). The creator is notified and can undo. Others are proposed for a tap.
   4. Stop reminders; update Money.
+- **What "confident" means (Amended after PRD, E6; PRD FR-144):** a match is confident only
+  when **all** of these are true: (a) the payer is the invoice's brand or a linked payer; (b) the
+  amount equals the invoice, or the invoice minus TDS at 1%, 2% or 10%; and (c) either the
+  reference contains the invoice number, or it is that payer's only open invoice of that amount.
+  Everything else is proposed for a tap.
 - **Edge cases:**
   - Payer name differs from the brand (parent company, agency).
   - One payment covers several invoices.
@@ -1240,6 +1260,35 @@ under this rule.
   send without a tap. Given automatic reminders are switched on, then the next reminder is sent
   using the template and appears in the log.
 
+##### UC-135 Choose a plan and pay for BackstageHQ — Must (new) · MANUAL, AUTO · D4, D17, D30, D31, D32
+*(Amended after PRD, E2. New use case; the PRD turns it into FR-290 to FR-295.)*
+- **Actor:** Creator as owner and payer. A manager paying instead is UC-155 (v1).
+- **Goal:** Move from the free tier to the paid tier (and back) without surprises, and never lose
+  data.
+- **Trigger:** The creator taps "Upgrade" (for example on a paid feature they opened), starts a
+  trial, a trial or renewal date arrives, or a payment fails.
+- **Main flow:** 1. The creator sees in plain words what free includes and what paid adds
+  (section 5.0b). 2. They start a trial of the paid plan, if one is offered (length and card
+  rules: PRD open question Q3). 3. They choose monthly or yearly and pay with an Indian payment
+  method (UPI or card). During the beta test, each creator is shown one of two price points
+  (D32; the prices are PRD open question Q1). 4. Paid features start and BackstageHQ emails a GST
+  invoice for the subscription to the payer. 5. If the trial ends unpaid, or a payment fails and
+  the retry period ends, the workspace moves to the free tier.
+- **Edge cases:**
+  - A free creator opens a paid feature: they see a plain explanation and an Upgrade button, never
+    a broken screen, and no AI cost is incurred.
+  - Moving to free: **no data is lost**. Automation and automatic reminders stop, and the creator
+    is told by email and in-app (and 3 days before and on the day a trial ends).
+  - A manager pays for the workspace: the 30-day grace in D30 applies (UC-155), and paying grants
+    no permissions (D17).
+  - Free-tier scam flags above the fair-use cap show "not checked", never "safe" (D31; cap is
+    PRD open question Q4).
+  - Payer is a different person from the owner: the BackstageHQ invoice goes to the payer.
+- **Done when:** Given a successful payment, when it is confirmed, then paid features start within
+  1 minute and a BackstageHQ GST invoice is emailed to the payer. Given a failed renewal, when the
+  7-day retry period ends, then the workspace moves to free, all records remain, automatic reminders
+  stop, and the creator is told by email and in-app.
+
 ---
 
 #### O. AI assistant (new)
@@ -1459,6 +1508,15 @@ for managers is on the roadmap (section 12).
     Deals with the same brand within 30 days are added together (D26).
   - "Create invoices" means the manager sees the PAN and bank account printed on invoices, even
     with "view bank and tax records" off. A note says so.
+  - **Gaps in the table above, settled in the PRD (Amended after PRD, E4; PRD Q11 and section 7):**
+    (a) There is no separate "view inbox" checkbox. A manager's inbox and DM visibility follows
+    "view deals", and covers business categories only; personal messages are never shown to
+    managers. (b) Issuing an invoice number and marking an invoice paid follow "send invoices":
+    a manager without that tick cannot do either.
+  - **What the two sensitive permissions mean (Amended after PRD, E5; PRD FR-266):**
+    "Accept a deal" = send the brand a message confirming the deal **and** move the deal to Won.
+    "Approve a contract" = mark the contract as approved **and** send the brand that confirmation.
+    BackstageHQ does no e-signing in v1.
 - **Done when:** Given "accept deals up to ₹50,000" is ticked, when the manager accepts a ₹40,000
   deal, then the acceptance goes out on the manager's tap. When they try to accept a ₹60,000 deal,
   then it goes to the creator's queue and nothing is sent.
@@ -1594,7 +1652,7 @@ approval is late.
 | NFR-009 | **Money numbers are exact** | One wrong rupee breaks trust | Must | Given any AI-extracted amount, when shown, then it carries its source. Apart from confident payment matches (D6, undoable), no extracted amount enters invoices, tax or reports without confirmation. |
 | NFR-010 | **Fast to first value** | Competitors lose users to manual entry | Must | Given a creator connects Gmail, when 15 minutes have passed, then they see their past deals and total owed. |
 | NFR-011 | **Easy export, no lock-in** | They want their CA to have everything | Must | UC-130, on every plan including free (D4). |
-| NFR-012 | **Reliability** | A missed payment or deadline costs money | Must | Scheduled reminders, digests and matching run on time on 99.5% of days or better. Failures alert our team and are retried. (The PRD will set the final target.) |
+| NFR-012 | **Reliability** | A missed payment or deadline costs money | Must | Scheduled reminders, digests and matching run on time on 99.5% of days or better. Failures alert our team and are retried. **Final targets (Amended after PRD, E7; PRD section 8.5):** scheduled jobs (reminders, digests, matching, threshold alerts) run within 1 hour of their time on 99.5% of days, with failures alerted and retried; a missed reminder is sent late only if still valid, never twice. App uptime 99.5% per month (NFR-042). Money and tax records: at most 1 hour of data lost and service back within 8 hours after a major failure, with a quarterly restore drill (NFR-043). |
 | NFR-013 | **Sent from my own account** | Brands should see the creator, not a tool | Must | Given any message to a brand, when sent, then it comes from the creator's Gmail or Instagram and appears in their Sent history. When a manager sends, it still comes from the creator's connected account, with the manager's name and role in the signature (D23). |
 | NFR-014 | **Explainable AI** | They need to know why | Must | Every AI label, match, draft and assistant step shows a one-line reason and a source link. |
 | NFR-015 | **Language** | Many creators think in Hindi or Hinglish | Must | v1 interface in English. The AI understands Hindi and Hinglish and replies in the creator's own style (D10). A multi-language interface may come in v2. |
@@ -1728,18 +1786,23 @@ Passionfroot takes 5–15% of each deal.
 
 ### 11.2 Still open
 
-**No open owner questions.** All former questions (OQ1–OQ21) are now decisions. OQ1 and OQ2
-were answered by D16–D21; the rest are D22–D40 above.
+**No open owner questions in this document.** All former questions (OQ1–OQ21) are now decisions.
+OQ1 and OQ2 were answered by D16–D21; the rest are D22–D40 above. The items in 11.3 wait on the
+PRD's open questions (`docs/02-prd/PRD.md`, section 15). (Amended after PRD, E8.)
 
 ### 11.3 To settle in the PRD (approach already agreed)
 
-| Item | Agreed approach | From |
-|---|---|---|
-| Paid-tier price | Estimate AI and hosting cost per creator (free and paid tiers), then test two prices with the first 20 customers | D32, NFR-018 |
-| Gmail verification budget and time limit | Application starts now. The PRD records the limit; if it is exceeded, launch a forwarding-only beta. | D33 |
-| Native-app trigger numbers | "Most weekly use on phones" and "paid retention holds", with the exact thresholds set in the PRD | D39 |
-| Free vs paid placement of editor, CA and family helper access | Not covered by D32, which only places manager access in the paid tier. Decide alongside the price. | D32 (gap) |
-| Cost of free-tier scam flags | Free scam flags mean ongoing AI reading for free users. Size this in the cost model and set any fair-use limit. | D31, NFR-018 |
+*(Amended after PRD, E8. Status column added. The PRD does not settle these five itself: each
+needs an owner answer to a PRD open question (`docs/02-prd/PRD.md`, section 15), so all stay
+**Open** here until that answer is recorded. The PRD's recommendation is in the question.)*
+
+| Item | Agreed approach | From | Status |
+|---|---|---|---|
+| Paid-tier price | Estimate AI and hosting cost per creator (free and paid tiers), then test two prices with the first 20 customers | D32, NFR-018 | **Open.** Cost model drafted in PRD section 10.1; the two prices are PRD Q1 |
+| Gmail verification budget and time limit | Application starts now. The PRD records the limit; if it is exceeded, launch a forwarding-only beta. | D33 | **Open.** Limit is PRD Q14 |
+| Native-app trigger numbers | "Most weekly use on phones" and "paid retention holds", with the exact thresholds set in the PRD | D39 | **Open.** Thresholds are PRD Q7 |
+| Free vs paid placement of editor, CA and family helper access | Not covered by D32, which only places manager access in the paid tier. Decide alongside the price. | D32 (gap) | **Open.** Placement is PRD Q8 (the PRD marks it "to decide" in section 4.3) |
+| Cost of free-tier scam flags | Free scam flags mean ongoing AI reading for free users. Size this in the cost model and set any fair-use limit. | D31, NFR-018 | **Partly settled.** PRD FR-294 requires a monthly fair-use cap, with "not checked, never safe" above it, and sizes the cost in section 10.1. The cap number is PRD Q4 |
 
 ---
 
@@ -1747,7 +1810,8 @@ were answered by D16–D21; the rest are D22–D40 above.
 
 **Purpose (D16):** the architecture plans for the full manager direction now, while v1 builds
 only the simple set. v2 and later items get short entries here and full use-case cards when they
-are scheduled. They are **not** counted in the 79 use cases.
+are scheduled. They are **not** counted in the 80 use cases (79 at first approval; UC-135 added
+after the PRD, E2).
 
 ### 12.1 v1 — simple (in the first release)
 
