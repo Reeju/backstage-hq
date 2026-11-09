@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-09 Lead / deal detail · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-09" data-title="GlowLeaf Skincare" data-fr="FR-080 to FR-083" data-nav="leads" data-back="s08-leads.html" data-states="ready,loading,error,new,cancelled">
+<main>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h"></div><div class="skel card-h" style="height:200px"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>This deal did not load.</b> Nothing was lost. <button class="btn btn-secondary btn-sm">Try again</button></div></div>
+
+  <div data-state="cancelled" hidden class="banner warn mb-3"><span aria-hidden="true">&#9888;</span><div><b>Deal cancelled</b> on 9 Nov. Reason: brand paused the campaign. Reminders for the open invoice have stopped. <a class="btn btn-primary btn-sm" href="s13-invoice-editor.html#credit">Issue credit note</a></div></div>
+
+  <div data-state="new" hidden class="stack">
+    <div class="card"><h2 class="h2">New deal</h2><p class="muted mb-3">Fill what you know. You can finish later.</p>
+      <label class="field"><span class="l">Brand</span><input class="input" placeholder="e.g. Velvet Bloom Cosmetics"></label>
+      <label class="field"><span class="l">Amount (&#8377;)</span><input class="input" inputmode="numeric" placeholder="e.g. 80,000"></label>
+      <label class="field"><span class="l">Bill to (brand or agency)</span><input class="input" placeholder="Who receives the invoice"></label>
+      <div class="banner warn"><span aria-hidden="true">&#9888;</span><span><b>Cannot invoice yet.</b> Missing: <b>amount</b> and <b>bill-to name</b>.</span></div>
+      <button class="btn btn-primary btn-block mt-3" disabled>Create invoice</button></div></div>
+
+  <div data-state="ready cancelled" class="grid gap-4 lg:grid-cols-3">
+    <div class="lg:col-span-2 stack">
+      <section class="card"><div class="flex gap-2 items-center flex-wrap"><h2 class="h2" style="margin:0">GlowLeaf Skincare</h2><span class="chip ok" data-state="ready">Active deal</span><span class="chip bad" data-state="cancelled" hidden>Cancelled</span></div>
+        <p class="muted">Won from lead on 18 Sep &middot; &#8377;1,20,000 &middot; Net 30 &middot; Brought in by you</p>
+        <div class="flex gap-2 mt-3 flex-wrap" data-state="ready"><a class="btn btn-primary" href="s13-invoice-editor.html">Create invoice</a><a class="btn btn-secondary" href="s11-draft-review.html">Reply to brand</a><button class="btn btn-secondary" data-show="#cancelsheet">Cancel deal</button></div></section>
+
+      <section class="card" aria-labelledby="f"><h2 class="h2" id="f">Deal details</h2>
+        <p class="muted mb-2">Fields marked <span class="chip ai">AI</span> were filled by AI from your emails. Confirm or edit them.</p>
+        <div class="row"><span class="grow muted">Brand</span><b>GlowLeaf Skincare</b></div>
+        <div class="row"><span class="grow muted">Marketing contact</span><b>Meera Nair &middot; meera@glowleaf.in</b></div>
+        <div class="row"><div class="grow"><span class="muted">Finance contact</span><br><b>accounts@glowleaf.in</b> <span class="chip ai">AI</span> <a class="src" href="s07-message.html">source: email 2 Oct "send invoices to accounts"</a></div><button class="btn btn-primary btn-sm" data-toast="Finance contact confirmed" data-undo>Confirm</button><button class="btn btn-secondary btn-sm">Edit</button></div>
+        <div class="row"><div class="grow"><span class="muted">PO number</span><br><b>GL/PO/4471</b> <span class="chip ai">AI</span> <a class="src" href="s07-message.html">source: email 2 Oct</a></div><button class="btn btn-primary btn-sm" data-toast="PO number confirmed">Confirm</button><button class="btn btn-secondary btn-sm">Edit</button></div>
+        <div class="row"><span class="grow muted">Bill to</span><b>GlowLeaf Skincare Pvt Ltd, Mumbai</b></div>
+        <div class="row"><span class="grow muted">Usage and exclusivity</span><b>Usage 60 days &middot; no exclusivity</b></div>
+        <div class="row"><span class="grow muted">Contract</span><a href="#">glowleaf-contract.pdf</a></div></section>
+
+      <section class="card" aria-labelledby="dv"><h2 class="h2" id="dv">Deliverables and dates</h2>
+        <div class="row"><span class="grow">Reel 1 &middot; go-live</span><b>14 Oct &middot; done</b></div><div class="row"><span class="grow">Reel 2 &middot; draft due</span><b>11 Nov</b></div><div class="row"><span class="grow">Reel 2 &middot; go-live</span><b>18 Nov</b></div>
+        <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g24">Gap G24</a></b> Deliverable stages (Brief, Draft, Approved&hellip;) are v1. In the MVP I show dates only.</div></section>
+
+      <section class="card" aria-labelledby="ms"><h2 class="h2" id="ms">Milestones and invoices</h2>
+        <div class="row"><div class="grow"><b>50% advance</b> &middot; &#8377;60,000<br><span class="muted">INV-2026-27-004 &middot; paid 12 Sep</span></div><span class="chip ok">Paid</span></div>
+        <div class="row"><div class="grow"><b>50% on go-live</b> &middot; &#8377;60,000<br><span class="muted">INV-2026-27-011 &middot; due today</span></div><a class="chip warn" href="s13-invoice-editor.html#sent">Sent, unpaid</a></div>
+        <p class="muted mt-2">&#8377;0 still to invoice.</p></section>
+    </div>
+
+    <div class="stack">
+      <section class="card" aria-labelledby="lm"><h2 class="h2" id="lm">Linked messages</h2>
+        <a class="row" href="s07-message.html" style="text-decoration:none;color:inherit">Email: "Re: Reel 2 brief" &middot; 6 Nov</a>
+        <a class="row" href="s07-message.html" style="text-decoration:none;color:inherit">Email: "PO attached" &middot; 2 Oct</a></section>
+      <section class="card" aria-labelledby="tl"><h2 class="h2" id="tl">Timeline</h2>
+        <div class="row"><span class="grow">Invoice 011 sent to accounts@glowleaf.in</span><span class="muted">10 Oct</span></div>
+        <div class="row"><span class="grow">Lead became a deal</span><span class="muted">18 Sep</span></div>
+        <a href="s20-activity.html" class="btn btn-ghost">Full activity log</a></section>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="cancelsheet" hidden role="dialog" aria-modal="true" aria-labelledby="ct"><div class="modal">
+    <h2 class="h2" id="ct">Cancel this deal?</h2>
+    <label class="field"><span class="l">Reason</span><select class="input"><option>Brand paused the campaign</option><option>Brand cancelled</option><option>I turned it down</option><option>Other</option></select></label>
+    <div class="banner warn mb-3"><span>Open invoice INV-2026-27-011 will be flagged for a credit note and its reminders stop. A kill-fee invoice is coming in a later release.</span></div>
+    <div class="flex gap-2"><button class="btn btn-secondary grow" data-close="cancelsheet">Keep deal</button><button class="btn btn-danger grow" data-toast="Deal cancelled. Use the Cancelled state button at the top to see the result." data-close="cancelsheet">Cancel deal</button></div>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g8">Gap G8</a></b> Reason list is mine.</div></div></div>
+</main>
+<script src="../assets/app.js"></script></body></html>

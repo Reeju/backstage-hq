@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-03 Connect sources · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-03" data-title="Connect your sources" data-fr="FR-010 to FR-013, FR-217" data-shell="none" data-states="ready,loading,error">
+<main class="mx-auto max-w-lg p-4 pt-6">
+  <p class="muted">Step 2 of 2</p>
+  <h1 class="text-2xl font-extrabold">Where do your brand deals arrive?</h1>
+  <p class="muted mb-4">Connect Gmail and we will show what brands owe you in about 15 minutes. You decide each connection and can disconnect any time.</p>
+
+  <div data-state="error" hidden class="banner bad mb-3" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Gmail was not connected.</b> Google did not give us permission, so nothing was read. Try again, or use the forwarding address below instead. <a href="#ready">Try again</a></div></div>
+
+  <section class="card" aria-labelledby="g">
+    <div class="flex items-center gap-3"><span aria-hidden="true" style="font-size:28px">&#9993;</span><div class="grow"><h2 class="h2" id="g" style="margin:0">Gmail</h2>
+      <p class="muted">Best way to start. Free: one-time import of past deals. Paid: we also watch new mail.</p></div></div>
+    <div data-state="ready error" class="mt-3">
+      <h3 class="h3 mb-1">Before Google asks you, here is the deal in plain words</h3>
+      <ul class="text-[15px] grid gap-1" style="padding-left:20px;list-style:disc">
+        <li><b>We read:</b> emails that look like brand work, invoices, payments and tax. Your last 12 months, to find past deals.</li>
+        <li><b>We keep:</b> only business emails. Personal, fan and newsletter mail is not stored, only its category and date.</li>
+        <li><b>We never:</b> delete, move, archive or send any email without your tap.</li>
+      </ul>
+      <p class="muted my-2">Google will ask for permission to read and send mail, nothing broader. <a href="x03-what-we-read.html#gmail">Read the full page</a> &middot; <a href="s25-settings-connections.html">How to disconnect</a></p>
+      <label class="field"><span class="l">How far back should we look?</span><select class="input"><option>12 months (recommended)</option><option>3 months</option><option>6 months</option><option>24 months</option></select></label>
+      <a class="btn btn-primary btn-block" href="s04-import-review.html">Continue to Google</a>
+    </div>
+    <div data-state="loading" hidden class="mt-3" aria-live="polite">
+      <div class="banner info"><span aria-hidden="true">&#8987;</span><span>Connecting to Gmail&hellip; then we start reading. First results show in a few minutes.</span></div>
+      <div class="skel mt-3" style="width:70%"></div><div class="skel mt-2" style="width:50%"></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="i">
+    <div class="flex items-center gap-3"><span aria-hidden="true" style="font-size:28px">&#9711;</span><div class="grow"><h2 class="h2" id="i" style="margin:0">Instagram DMs</h2><p class="muted">Paid. Needs a free Creator or Business Instagram account.</p></div><span class="chip">Coming soon</span></div>
+    <p class="mt-2 text-[15px]">Meta has not approved us yet. For now, take a screenshot of a brand DM and forward it to the WhatsApp number below, or upload it. <a href="s28-capture.html">Upload a screenshot</a></p>
+    <button class="btn btn-secondary btn-block mt-2" disabled>Connect Instagram (coming soon)</button>
+    <p class="muted mt-2">Have a personal account? <button class="btn btn-ghost" data-toggle="#igswitch" aria-expanded="false">How to switch to a Creator account</button></p>
+    <div id="igswitch" hidden class="banner info text-[15px]">Instagram app &rarr; Settings &rarr; Account type and tools &rarr; Switch to professional account &rarr; Creator. It is free and takes a minute. Nothing is stored until you connect.</div>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g26">Gap G26</a></b> "Coming soon" wording and switch steps are my copy; the PRD only says to explain the switch (FR-012).</div>
+  </section>
+
+  <section class="card" aria-labelledby="w">
+    <div class="flex items-center gap-3"><span aria-hidden="true" style="font-size:28px">&#128172;</span><div class="grow"><h2 class="h2" id="w" style="margin:0">WhatsApp forward-to number</h2><p class="muted">Paid. Forward a brand's message or a screenshot to <b>+91 80000 12345</b>. It replies with a short "Got it" only.</p></div></div>
+    <h3 class="h3 mt-3">Your phone numbers (only these are read)</h3>
+    <div class="row"><span class="grow">+91 98765 43210</span><span class="chip ok">&#10003; Verified</span></div>
+    <button class="btn btn-secondary btn-sm mt-2" data-toast="Verification code sent on WhatsApp (sample)">Add another number</button>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g21">Gap G21</a></b> How a creator verifies their own numbers and email addresses is not described; I show a simple add-and-verify list.</div>
+  </section>
+
+  <section class="card" aria-labelledby="f">
+    <h2 class="h2" id="f">Your private forwarding address</h2>
+    <p class="muted mb-2">For Outlook or other email: forward brand emails here. Only emails from your verified addresses are read.</p>
+    <div class="row"><code class="grow" style="font-size:15px">arjun-k7f2@in.backstagehq.example</code><button class="btn btn-secondary btn-sm" data-toast="Address copied">Copy</button></div>
+    <h3 class="h3 mt-3">Your verified email addresses</h3>
+    <div class="row"><span class="grow">arjun@arjuncreates.in</span><span class="chip ok">&#10003; Verified</span></div>
+  </section>
+
+  <a class="btn btn-primary btn-block mt-4" href="s04-import-review.html">Next: see what you are owed</a>
+  <a class="btn btn-ghost btn-block" href="s05-home.html">Skip for now</a>
+</main>
+<script src="../assets/app.js"></script></body></html>

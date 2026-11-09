@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BackstageHQ design mockups (MVP)</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="assets/tailwind-config.js"></script><link rel="stylesheet" href="assets/app.css"></head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<main id="main" class="mx-auto max-w-4xl p-4 pb-16">
+  <h1 class="text-3xl font-extrabold" style="color:#115E59">BackstageHQ: MVP mockups</h1>
+  <p class="muted mt-1">Clickable, static, sample data (creator "Arjun Mehta", Pune; today is Monday 9 November 2026). Built from the approved PRD (screens S-01 to S-30) and architecture. Nothing here sends anything or saves anything.</p>
+
+  <section class="card mt-4"><h2 class="h2">How to click through</h2>
+    <ul style="padding-left:20px;list-style:disc">
+      <li>Open any screen. It is phone-first; widen the window for the desktop layout (side menu).</li>
+      <li>The dark bar at the top of each screen has buttons for its <b>states</b>: Normal, Loading, Empty, Error and others. Tap them to see each one.</li>
+      <li><span class="chip ai">Violet</span> always means AI. AI suggestions show a source link, can be edited, and do nothing until a person taps. Green padlock notes mark the send rule.</li>
+      <li><a class="gapflag" href="#gaps">Gap Gn</a> pink dashed notes mark a placeholder I chose where the PRD is silent. All are listed below.</li>
+      <li>Needs internet once for the Tailwind script (<code>cdn.tailwindcss.com</code>). Without it, pages still open with the shared stylesheet, but layout is plainer. Design rules: <a href="design-system.md">design-system.md</a>.</li></ul></section>
+
+  <h2 class="h2 mt-6">MVP screens</h2>
+  <div style="overflow-x:auto"><table class="t" aria-label="Screens">
+    <thead><tr><th>ID</th><th>Screen</th><th>PRD</th><th>States shown</th></tr></thead><tbody>
+    <tr><td>S-01</td><td><a href="mockups/s01-sign-in.html">Sign up / sign in</a></td><td>FR-001, 002</td><td>Phone, code, wrong code, locked, new device</td></tr>
+    <tr><td>S-02</td><td><a href="mockups/s02-profile-setup.html">Profile setup</a></td><td>FR-003, 023</td><td>Normal, error (bad PAN)</td></tr>
+    <tr><td>S-03</td><td><a href="mockups/s03-connect.html">Connect sources</a></td><td>FR-010 to 013, 217</td><td>Normal, connecting, error</td></tr>
+    <tr><td>S-04</td><td><a href="mockups/s04-import-review.html">Import review</a></td><td>FR-020 to 022</td><td>Normal, loading (partial), empty, error</td></tr>
+    <tr><td>S-05</td><td><a href="mockups/s05-home.html">Home (Today)</a></td><td>FR-200, 201</td><td>Normal, loading, empty, error, free plan</td></tr>
+    <tr><td>S-06</td><td><a href="mockups/s06-inbox.html">Inbox</a></td><td>FR-040 to 045, 051</td><td>Normal, loading, empty, error, free plan</td></tr>
+    <tr><td>S-07</td><td><a href="mockups/s07-message.html">Message detail</a></td><td>FR-045, 046, 239</td><td>Normal, scam, hidden instructions, loading, error</td></tr>
+    <tr><td>S-08</td><td><a href="mockups/s08-leads.html">Leads list</a></td><td>FR-047, 048, 050</td><td>Normal, loading, empty, error</td></tr>
+    <tr><td>S-09</td><td><a href="mockups/s09-deal.html">Lead / deal detail</a></td><td>FR-080 to 083</td><td>Normal, loading, error, new deal, cancelled</td></tr>
+    <tr><td>S-10</td><td><a href="mockups/s10-quote.html">Quote builder</a></td><td>FR-070 to 072</td><td>Normal, loading, empty, error, barter</td></tr>
+    <tr><td>S-11</td><td><a href="mockups/s11-draft-review.html">Draft review (AI draft, edit, send on tap)</a></td><td>FR-049, 115, 116</td><td>Normal, loading, error, sent, no Gmail</td></tr>
+    <tr><td>S-12</td><td><a href="mockups/s12-invoices.html">Invoices list</a></td><td>FR-110 to 114</td><td>Normal, loading, empty, error</td></tr>
+    <tr><td>S-13</td><td><a href="mockups/s13-invoice-editor.html">Invoice editor and preview</a></td><td>FR-110 to 116, 120</td><td>Draft, loading, blocked, sent, bounced, credit note</td></tr>
+    <tr><td>S-14</td><td><a href="mockups/s14-money.html">Money (who owes me)</a></td><td>FR-124</td><td>Normal, loading, empty, error</td></tr>
+    <tr><td>S-15</td><td><a href="mockups/s15-payments.html">Payments</a></td><td>FR-140 to 147</td><td>Normal, loading, empty, error, statement, mark paid</td></tr>
+    <tr><td>S-16</td><td><a href="mockups/s16-tax.html">Tax</a></td><td>FR-150 to 152</td><td>Normal, loading, empty, "needs a CA check", GST registered</td></tr>
+    <tr><td>S-17</td><td><a href="mockups/s17-approvals.html">Approval queue</a></td><td>FR-236, 237</td><td>Normal, loading, empty, gate-blocked, after hours</td></tr>
+    <tr><td>S-18</td><td><a href="mockups/s18-assistant.html">Assistant (also a panel on every screen)</a></td><td>FR-230 to 235</td><td>Normal, thinking, empty, unavailable, free plan, 80% allowance</td></tr>
+    <tr><td>S-19</td><td><a href="mockups/s19-run-detail.html">Assistant run detail</a></td><td>FR-238</td><td>Normal, loading, failed step, undone, already sent</td></tr>
+    <tr><td>S-20</td><td><a href="mockups/s20-activity.html">Activity log</a></td><td>FR-213, 214</td><td>Normal, loading, empty, error</td></tr>
+    <tr><td>S-21</td><td><a href="mockups/s21-settings-profile.html">Settings: profile and sensitive details</a></td><td>FR-003, 004</td><td>Normal, loading, error</td></tr>
+    <tr><td>S-22</td><td><a href="mockups/s22-settings-automation.html">Settings: automation</a></td><td>FR-122, 215</td><td>Normal, automatic on, template paused, error, free plan</td></tr>
+    <tr><td>S-23</td><td><a href="mockups/s23-settings-rate-card.html">Settings: rate card and terms</a></td><td>FR-025, 026</td><td>Normal, loading, empty, error, free plan</td></tr>
+    <tr><td>S-24</td><td><a href="mockups/s24-settings-notifications.html">Settings: notifications</a></td><td>FR-201, 202</td><td>Normal, iPhone help, push blocked, free plan</td></tr>
+    <tr><td>S-25</td><td><a href="mockups/s25-settings-connections.html">Settings: connections</a></td><td>FR-015, 211</td><td>Normal, loading, empty, broken, disconnect dialog, revoked</td></tr>
+    <tr><td>S-26</td><td><a href="mockups/s26-settings-data.html">Settings: my data</a></td><td>FR-210, 212, 216</td><td>Normal, loading, export running, error, deletion pending</td></tr>
+    <tr><td>S-27</td><td><a href="mockups/s27-billing.html">Plan and billing</a></td><td>FR-290 to 293</td><td>Trial, paid, payment failed, free, loading</td></tr>
+    <tr><td>S-28</td><td><a href="mockups/s28-capture.html">Capture / upload</a></td><td>FR-014, 052</td><td>Normal, reading, AI proposal, malware stopped, error, free plan</td></tr>
+    <tr><td>S-29</td><td><a href="mockups/s29-second-check.html">Second-check dialog</a></td><td>FR-004, 210</td><td>Normal, wrong code, locked, done</td></tr>
+    <tr><td>S-30</td><td><a href="mockups/s30-price-test.html">Price-test report (internal)</a></td><td>FR-295</td><td>Normal, loading, empty, error</td></tr>
+    </tbody></table></div>
+
+  <h2 class="h2 mt-6">Not screens, but designed now (PRD section 6)</h2>
+  <div style="overflow-x:auto"><table class="t" aria-label="Extras"><thead><tr><th>ID</th><th>What</th><th>Contains</th></tr></thead><tbody>
+    <tr><td>X-01</td><td><a href="mockups/x01-messages.html">Digest, push, WhatsApp replies, reminder wording</a></td><td>Daily digest email and push, WhatsApp confirmations, the five reminder templates</td></tr>
+    <tr><td>X-02</td><td><a href="mockups/x02-documents.html">PDF layouts</a></td><td>Tax invoice, non-GST invoice, credit note, quote</td></tr>
+    <tr><td>X-03</td><td><a href="mockups/x03-what-we-read.html">"What we read" text</a></td><td>Gmail, Instagram, WhatsApp, forwarding and uploads</td></tr></tbody></table></div>
+  <p class="muted mt-2">v1 and later screens (S-31 to S-42: people and access, permissions, AIS match, year-end pack, deliverables, expenses and others) are not designed here, as the PRD marks them v1.</p>
+
+  <h2 class="h2 mt-6" id="gaps">PRD gaps and the placeholder chosen</h2>
+  <p class="muted mb-2">Each gap is marked on the screen where it matters. These are choices for the product owner to confirm or change in the PRD.</p>
+  <div style="overflow-x:auto"><table class="t" aria-label="Gaps"><thead><tr><th>#</th><th>Gap</th><th>Placeholder in the mockups</th></tr></thead><tbody>
+    <tr id="g1"><td>G1</td><td>FR-002: second factor must differ from the first; phone-only sign-ups have no second method.</td><td>Email code offered as the second method (S-01, S-29).</td></tr>
+    <tr id="g2"><td>G2</td><td>FR-003, FR-004: steps and order of setup not defined; unclear if a second check applies to the first bank entry; states with the lower GST threshold not listed.</td><td>Two steps, no second check on first entry (S-02).</td></tr>
+    <tr id="g3"><td>G3</td><td>FR-022 spreadsheet import has no screen in section 6.</td><td>Tab on S-04; look-back period control on S-03.</td></tr>
+    <tr id="g4"><td>G4</td><td>FR-291, FR-292: trial length, price and whether GST is included are open (Q1, Q3).</td><td>14 days, no card, Rs 499 + GST, Rs 4,990 a year (S-27).</td></tr>
+    <tr id="g5"><td>G5</td><td>FR-120: per-invoice switch-off, snooze and pause have no screen.</td><td>Reminders card on sent invoice (S-13).</td></tr>
+    <tr id="g6"><td>G6</td><td>FR-124 AC2 uses "marked disputed" but no requirement defines the action.</td><td>"Mark as disputed" button on sent invoice (S-13).</td></tr>
+    <tr id="g7"><td>G7</td><td>FR-113, FR-114: sent-invoice view and credit-note creation are needed but absent from the screen list.</td><td>S-13 reused for sent view; credit-note form inside S-13.</td></tr>
+    <tr id="g8"><td>G8</td><td>FR-047, FR-050, FR-083: merge/split, lost reason, cancel reasons and manual stage moves have no UI definition.</td><td>Split on lead card (S-08); reason list on cancel sheet (S-09).</td></tr>
+    <tr id="g9"><td>G9</td><td>FR-123, FR-202: brand sending window and creator quiet hours are open (Q10).</td><td>Mon to Sat 10:00 to 18:00 IST; quiet hours 22:00 to 08:00, editable (S-22, S-24).</td></tr>
+    <tr id="g10"><td>G10</td><td>FR-294, section 4.3: what a free creator sees in the Inbox (scam flags yes, sorting no) and the cap (Q4) are not specified.</td><td>Free-plan banner, scam labels only, "not checked this month" over a 500 cap (S-06).</td></tr>
+    <tr id="g11"><td>G11</td><td>FR-144, FR-010 AC2: auto-matches and reconnect alerts "notify with Undo" but no notification-centre screen exists.</td><td>"Recent" card on Home with Undo (S-05).</td></tr>
+    <tr id="g12"><td>G12</td><td>FR-234: allowance amount (Q5) and where it is shown.</td><td>300 a month, 80% banner and a footer count (S-18).</td></tr>
+    <tr id="g13"><td>G13</td><td>FR-295, S-30: how the BackstageHQ owner signs in; what "retention" and "collected after reminders" show before 3 months.</td><td>Separate staff-only page; "too early" for retention (S-30).</td></tr>
+    <tr id="g14"><td>G14</td><td>NFR-030, Q12: owner permission for support access has no screen.</td><td>"Support access" card (S-26).</td></tr>
+    <tr id="g15"><td>G15</td><td>NFR-027: list and end sessions has no screen.</td><td>"Devices and sessions" card (S-21).</td></tr>
+    <tr id="g16"><td>G16</td><td>FR-237 covers only outbound items, but FR-235 confirmation cards and payment proposals also wait for a tap, and FR-200 says "waiting for a tap".</td><td>S-17 has a second section "things to confirm" linking to S-15; Home counts outbound only.</td></tr>
+    <tr id="g17"><td>G17</td><td>FR-045: the "Report" button has no defined destination or content.</td><td>Plain confirmation only (S-06, S-07).</td></tr>
+    <tr id="g18"><td>G18</td><td>FR-123 vs FR-237: what happens to a reminder approved outside the sending window.</td><td>Held and sent at the next window opening, withdrawable (S-17).</td></tr>
+    <tr id="g19"><td>G19</td><td>FR-014 lists receipts and statements but expenses are v1 (UC-076).</td><td>Receipts and contracts are saved as attached files; statements go to Payments (S-28).</td></tr>
+    <tr id="g20"><td>G20</td><td>FR-111: SAC code, invoice wording and field order are not given (pending CA review D36).</td><td>SAC 998361 and my wording in the PDFs (X-02, S-13).</td></tr>
+    <tr id="g21"><td>G21</td><td>FR-011, FR-013: how a creator verifies their own emails and phone numbers is not described.</td><td>Add-and-verify list (S-03).</td></tr>
+    <tr id="g22"><td>G22</td><td>FR-212, Q9: no requirement to cancel a pending deletion; and what happens to legally required invoices on account deletion (FR-211 covers only disconnect).</td><td>"Cancel deletion" button (S-26); legal-retention warning copied from disconnect (S-25).</td></tr>
+    <tr id="g23"><td>G23</td><td>FR-230, FR-049: Hindi and Hinglish are required for assistant and drafts, but the PRD is silent on the app's own language.</td><td>English-only interface.</td></tr>
+    <tr id="g24"><td>G24</td><td>FR-200 lists "deadlines" on Home, but deliverable stages and date reminders are v1 (FR-100, FR-101).</td><td>Plain dates from the deal record (S-05, S-09).</td></tr>
+    <tr id="g25"><td>G25</td><td>FR-025: "per format and per platform" does not say which formats exist on which platform.</td><td>Grid of formats by Instagram and YouTube (S-23).</td></tr>
+    <tr id="g26"><td>G26</td><td>FR-012: wording for "coming soon" and the personal-to-creator account switch; UI for forwarding-only mode (D33) is undefined.</td><td>My copy (S-03, S-25).</td></tr>
+    <tr id="g27"><td>G27</td><td>FR-049: no control to choose draft language (English, Hindi, Hinglish).</td><td>Language picker on the draft (S-11).</td></tr>
+    <tr id="g28"><td>G28</td><td>FR-122, FR-201, FR-013: wording of reminder templates, digest and WhatsApp replies is not specified.</td><td>My copy (X-01); needs owner and CA review.</td></tr>
+    <tr id="g29"><td>G29</td><td>Documents disagree on stage names: PRD header says mockups are "Stage 3, then Stage 4 architecture"; the architecture calls itself Stage 3 and says mockups are not yet made.</td><td>None needed for design; fix the label in one document.</td></tr>
+  </tbody></table></div>
+</main></body></html>

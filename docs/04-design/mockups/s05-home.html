@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-05 Today · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-05" data-title="Today" data-fr="FR-200, FR-201" data-nav="home" data-states="ready,loading,empty,error,upgrade">
+<main>
+  <p class="muted mb-2">Monday 9 November, 2026 &middot; Good morning, Arjun</p>
+
+  <div data-state="error" hidden class="banner bad mb-3" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Gmail checks paused since 7:10 am.</b> Google needs you to reconnect. Everything below is from before then. <a class="btn btn-secondary btn-sm" href="s25-settings-connections.html">Reconnect Gmail</a></div></div>
+  <div data-state="upgrade" hidden class="banner info mb-3"><span aria-hidden="true">&#9432;</span><div><b>You are on the free plan.</b> Money, invoices and tax work as usual. Watching new emails, drafted replies and automatic reminders need the paid plan. <a href="s27-billing.html">See plans</a></div></div>
+
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:120px"></div><div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
+
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#127775;</div><h2 class="h2">Welcome, Arjun. Nothing to do yet.</h2>
+    <p class="muted mb-3">Connect Gmail and we will show what brands owe you in about 15 minutes. Or add your first deal by hand.</p>
+    <a class="btn btn-primary" href="s03-connect.html">Connect Gmail</a> <a class="btn btn-secondary" href="s09-deal.html">Add a deal</a></div>
+
+  <div data-state="ready error upgrade" class="stack">
+    <a href="s14-money.html" class="card block" style="text-decoration:none;color:inherit;background:#FFFBEB;border-color:#FDE68A">
+      <p class="muted">You are owed</p><p class="big" style="color:#92400E">&#8377;2,40,000</p>
+      <p class="muted">across 4 invoices &middot; <b>&#8377;60,000 due today</b> &middot; &#8377;40,000 disputed (not counted)</p></a>
+
+    <a href="s17-approvals.html" class="card flex items-center gap-3" style="text-decoration:none;color:inherit;border-color:#0F766E;border-width:2px">
+      <span class="badge" style="height:36px;min-width:36px;font-size:16px">4</span><div class="grow"><b>4 waiting for you</b><br><span class="muted">2 payment reminders, 1 follow-up, 1 reply. Nothing is sent until you tap.</span></div><span aria-hidden="true">&rarr;</span></a>
+
+    <section class="card" aria-labelledby="pit"><h2 class="h2" id="pit">New pitches</h2>
+      <a class="row" href="s07-message.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Velvet Bloom Cosmetics</b><br><span class="muted">2 Reels + 3 Stories, budget &#8377;80,000, go-live 15 Dec</span></div><span class="chip ok">Looks real</span></a>
+      <a class="row" href="s07-message.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Strideline Collabs Team</b><br><span class="muted">Asks you to download a .zip brief</span></div><span class="chip bad">&#9888; Likely scam</span></a>
+      <a class="row" href="s07-message.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Tulsi Organics</b><br><span class="muted">Writes from a Gmail address</span></div><span class="chip warn">Check this</span></a>
+      <div data-state="upgrade" hidden class="banner info mt-2">Free plan: scam checks only. Sorting and lead creation need the paid plan.</div></section>
+
+    <section class="card" aria-labelledby="dl"><h2 class="h2" id="dl">Deadlines</h2>
+      <div class="row"><div class="grow"><b>Nuvora Audio</b> &middot; YouTube integration goes live<br><span class="muted">Fri 13 Nov</span></div><a class="btn btn-ghost" href="s09-deal.html">Open</a></div>
+      <div class="row"><div class="grow"><b>GlowLeaf</b> &middot; Reel 2 draft due<br><span class="muted">Wed 11 Nov</span></div><a class="btn btn-ghost" href="s09-deal.html">Open</a></div>
+      <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g24">Gap G24</a></b> The PRD lists "deadlines" on Home, but deliverable stages and date reminders are v1. I show plain dates taken from the deal record only.</div></section>
+
+    <section class="card" aria-labelledby="rec"><h2 class="h2" id="rec">Recent</h2>
+      <div class="row"><div class="grow">&#10003; Payment matched: Kinetic Fitness &#8377;90,000, TDS &#8377;10,000 presumed<br><span class="muted">Yesterday, 11:42 am &middot; automatic</span></div><button class="btn btn-secondary btn-sm" data-toast="Match undone. Invoice is unpaid again and reminders restart from the next step." data-undo>Undo</button></div>
+      <div class="row"><div class="grow">&#9993; Daily digest sent at 8:30 am<br><span class="muted"><a href="x01-messages.html#digest">See what it looked like</a></span></div></div>
+      <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g11">Gap G11</a></b> The PRD says auto-matches "notify with Undo" but has no notification-centre screen. I show them in this Recent card.</div></section>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-28 Capture / upload · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-28" data-title="Add a file or photo" data-fr="FR-014, FR-052" data-nav="capture" data-states="ready,loading,proposal,quarantine,error,upgrade">
+<main class="max-w-2xl mx-auto stack">
+  <div data-state="upgrade" hidden class="banner info"><span>Free plan: you can upload files and attach them to deals and invoices, but the AI does not read them. <a href="s27-billing.html">Upgrade to have them read</a></span></div>
+  <div data-state="loading" hidden class="card" aria-live="polite" aria-busy="true"><b>payment-screenshot.jpg</b><p class="muted">Checking the file is safe, then reading it&hellip;</p><div class="skel mt-2" style="width:70%"></div><div class="skel mt-2" style="width:50%"></div></div>
+  <div data-state="quarantine" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>We stopped this file.</b> "brief-final.zip" looks unsafe, so it was kept away from everything and cannot be opened. Nothing was read or saved.</div></div>
+  <div data-state="error" hidden class="banner warn" role="alert"><span aria-hidden="true">&#9888;</span><div><b>We could not read this file right now.</b> It is saved safely. You can attach it to a deal yourself, or we can try again later. <div class="mt-2 flex gap-2"><button class="btn btn-secondary btn-sm" data-toast="Retrying (sample)">Try again</button><a class="btn btn-secondary btn-sm" href="s09-deal.html">Attach to a deal</a></div></div></div>
+
+  <section class="card" data-state="ready upgrade quarantine error"><h2 class="h2">Add anything</h2>
+    <p class="muted mb-3">Brand email PDFs, DM or WhatsApp screenshots, contracts, payment screenshots, bank statements. We work out what it is and propose what to do. Nothing is saved until you confirm.</p>
+    <label class="empty" style="display:block;cursor:pointer;padding:32px 16px"><div class="ic" aria-hidden="true">&#128247;</div><b>Tap to take a photo or choose a file</b><br><span class="muted">Photos, PDFs, CSV. Up to 20 MB.</span><input type="file" class="sr-only" aria-label="Choose a file"></label>
+    <div class="row mt-3"><div class="grow"><b>Or forward on WhatsApp</b><br><span class="muted">Send to +91 80000 12345 from your verified number. We reply "Got it, review in BackstageHQ" within a minute.</span></div></div></section>
+
+  <section class="ai-box" data-state="proposal" hidden aria-labelledby="pp"><span class="tag">&#10024; AI suggestion</span><h2 class="h3" id="pp">This looks like a payment screenshot</h2>
+    <p class="muted mb-2">We have not saved anything. Check the numbers, then confirm.</p>
+    <div class="row"><span class="grow">Amount <b>&#8377;87,500</b></span><a class="src" href="#">source: line 2</a></div>
+    <div class="row"><span class="grow">Date <b>8 Nov 2026</b></span><a class="src" href="#">source</a></div>
+    <div class="row"><span class="grow">Payer <b>Nuvora Audio Pvt Ltd</b></span><a class="src" href="#">source</a></div>
+    <div class="row"><span class="grow">Reference <b>NEFT-NVA-2210</b></span><a class="src" href="#">source</a></div>
+    <p class="mt-2">Could match: <b>INV-2026-27-010</b> (&#8377;1,00,000) &middot; short by &#8377;2,500 beyond expected TDS</p>
+    <div class="flex gap-2 mt-2 flex-wrap"><a class="btn btn-ai" href="s15-payments.html">Confirm as proposed payment</a><button class="btn btn-secondary" data-toast="Edit values (sample)">Edit</button><button class="btn btn-ghost" data-toast="Discarded">Not a payment</button></div></section>
+
+  <section class="card" data-state="ready upgrade"><h2 class="h2">Recent</h2>
+    <div class="row"><div class="grow"><b>Drift Sneakers DM screenshot</b><br><span class="muted">6 Nov &middot; became a lead</span></div><span class="chip ok">Lead</span></div>
+    <div class="row"><div class="grow"><b>glowleaf-contract.pdf</b><br><span class="muted">2 Oct &middot; attached to GlowLeaf deal</span></div><span class="chip">Saved</span></div>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g19">Gap G19</a></b> FR-014 mentions receipts and statements, but expense records are v1. In the MVP I save contracts and receipts as attached files only, and send statements to Payments.</div></section>
+</main>
+<script src="../assets/app.js"></script></body></html>

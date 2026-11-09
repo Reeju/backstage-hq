@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-04 Import review · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-04" data-title="We found your past deals" data-fr="FR-020 to FR-022" data-nav="home" data-assistant="off" data-states="ready,loading,empty,error">
+<main>
+  <div data-state="loading" hidden aria-live="polite">
+    <div class="banner info mb-3"><span aria-hidden="true">&#8987;</span><div><b>Still reading your emails&hellip; 4 minutes in.</b><br>Here is what we have so far. More deals may appear. Nothing is saved until you confirm.</div></div>
+    <div class="card"><p class="muted">Provisional total owed (so far)</p><p class="big">&#8377;1,30,000</p><div class="bar mt-2" role="progressbar" aria-label="Import progress" aria-valuenow="40"><i style="width:40%"></i></div><p class="muted mt-1">Read 612 of about 1,500 emails</p></div>
+    <div class="skel card-h mt-3"></div><div class="skel card-h"></div>
+  </div>
+
+  <div data-state="empty" hidden class="empty">
+    <div class="ic" aria-hidden="true">&#128269;</div><h2 class="h2">We did not find any brand deals</h2>
+    <p class="muted mb-3">We looked at the last 12 months. Try a longer period, add a deal by hand, or upload your old spreadsheet.</p>
+    <a class="btn btn-primary" href="#ready">Look back 24 months</a> <a class="btn btn-secondary" href="s09-deal.html">Add a deal by hand</a>
+  </div>
+
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>The import stopped.</b> Gmail did not answer. Nothing was saved or changed. We keep what we found so far and will try again in a few minutes. <div class="mt-2"><a class="btn btn-secondary btn-sm" href="#ready">Retry now</a> <a class="btn btn-ghost btn-sm" href="s25-settings-connections.html">Check Gmail connection</a></div></div></div>
+
+  <div data-state="ready">
+    <div class="card" style="background:#F0FDFA;border-color:#99F6E4"><p class="muted">Money you may be owed from past invoices</p>
+      <p class="big">&#8377;2,40,000</p>
+      <p class="muted">We found <b>6 deals</b> with <b>5 brands</b>. Check them, then confirm. Only confirmed deals count. <a href="s14-money.html">See how it will look</a></p></div>
+    <div class="tabs mt-3" role="tablist" aria-label="Import source">
+      <button role="tab" aria-selected="true" data-pressed>From Gmail</button><button role="tab" aria-selected="false" data-pressed data-toast="Spreadsheet import opens here (sample)">From a spreadsheet</button></div>
+    <div class="gapnote" style="margin-top:0;margin-bottom:12px"><b>Placeholder <a class="gapflag" href="../index.html#g3">Gap G3</a></b> Spreadsheet import (FR-022) has no screen in the list; I added a tab here. The look-back control (3 to 24 months) is on S-03.</div>
+
+    <div class="flex items-center gap-2 mb-2"><label class="check" style="min-height:44px"><input type="checkbox" aria-label="Select all 6"> <span><b>5 of 6 selected</b></span></label><span class="grow"></span><a class="btn btn-primary" href="s05-home.html">Confirm 5 deals</a></div>
+
+    <article class="card"><div class="flex gap-3"><input type="checkbox" checked aria-label="Select Nuvora Audio" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex flex-wrap gap-2 items-center"><h2 class="h3">Nuvora Audio</h2><span class="chip warn">Invoiced, unpaid</span><span class="chip">Email + DM</span></div>
+      <p class="muted">YouTube integration &middot; &#8377;1,00,000 &middot; invoiced 20 Oct 2026</p>
+      <p class="text-[14px]"><a class="src" href="s07-message.html">Source: email "Invoice INV-010" 20 Oct</a> &middot; <a class="src" href="s07-message.html">DM thread 3 Sep</a></p>
+      <p class="muted">Same deal found in email and DM, shown once.</p></div>
+      <button class="btn btn-secondary btn-sm" data-toast="Edit opens here (sample)">Edit</button></div></article>
+    <article class="card"><div class="flex gap-3"><input type="checkbox" checked aria-label="Select GlowLeaf" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex flex-wrap gap-2 items-center"><h2 class="h3">GlowLeaf Skincare</h2><span class="chip warn">Invoiced, unpaid</span></div>
+      <p class="muted">2 Reels &middot; &#8377;60,000 (second half) &middot; due 9 Nov</p><p class="text-[14px]"><a class="src" href="s07-message.html">Source: email 10 Oct</a></p></div><button class="btn btn-secondary btn-sm">Edit</button></div></article>
+    <article class="card"><div class="flex gap-3"><input type="checkbox" checked aria-label="Select Zestly Foods" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex flex-wrap gap-2 items-center"><h2 class="h3">Zestly Foods</h2><span class="chip bad">95 days unpaid</span></div>
+      <p class="muted">Reel + 3 Stories &middot; &#8377;50,000 &middot; invoiced 6 Aug 2026</p><p class="text-[14px]"><a class="src" href="s07-message.html">Source: email 6 Aug</a></p></div><button class="btn btn-secondary btn-sm">Edit</button></div></article>
+    <article class="card"><div class="flex gap-3"><input type="checkbox" checked aria-label="Select Kinetic Fitness" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex flex-wrap gap-2 items-center"><h2 class="h3">Kinetic Fitness</h2><span class="chip ok">Paid</span><span class="chip">TDS &#8377;10,000</span></div>
+      <p class="muted">Dedicated video &middot; &#8377;1,00,000 &middot; paid &#8377;90,000 on 4 Nov</p><p class="text-[14px]"><a class="src" href="s07-message.html">Source: bank alert email 4 Nov</a></p></div><button class="btn btn-secondary btn-sm">Edit</button></div></article>
+    <article class="card"><div class="flex gap-3"><input type="checkbox" checked aria-label="Select Kinetic Fitness second" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex flex-wrap gap-2 items-center"><h2 class="h3">Kinetic Fitness</h2><span class="chip warn">Invoiced, unpaid</span></div>
+      <p class="muted">3 Stories &middot; &#8377;30,000 &middot; invoiced 31 Aug 2026</p><p class="text-[14px]"><a class="src" href="s07-message.html">Source: email 31 Aug</a></p></div><button class="btn btn-secondary btn-sm">Edit</button></div></article>
+    <article class="card"><div class="flex gap-3"><input type="checkbox" aria-label="Select TravelNest" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex flex-wrap gap-2 items-center"><h2 class="h3">TravelNest via Pixelwave Media</h2><span class="chip ai">AI unsure</span></div>
+      <p class="muted">Reel &middot; &#8377;40,000? &middot; amount found in two emails with different numbers</p><p class="text-[14px]"><a class="src" href="s07-message.html">Source: email 22 Sep</a> &middot; <a class="src" href="s07-message.html">email 30 Sep</a></p>
+      <div class="ai-box mt-2"><span class="tag">&#10024; AI suggestion</span><p class="text-[15px]">Amount may be &#8377;40,000 or &#8377;45,000. Please check before confirming.</p></div></div><button class="btn btn-secondary btn-sm">Edit</button></div></article>
+    <p class="muted mt-3">Not right? Untick a deal to dismiss it. You can undo the whole import from the <a href="s20-activity.html">activity log</a>.</p>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

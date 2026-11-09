@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-27 Plan and billing · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-27" data-title="Plan and billing" data-fr="FR-290 to FR-293" data-nav="set-plan" data-states="trial,paid,failed,free,loading">
+<main class="max-w-2xl mx-auto stack">
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:160px"></div><div class="skel card-h"></div></div>
+  <div data-state="failed" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Your last payment did not go through.</b> We will retry until 16 Nov. After that your workspace moves to the free plan. All your records stay, and automatic reminders stop. <a class="btn btn-primary btn-sm mt-1" href="#" data-toast="Opens payment method update (sample)">Update payment method</a></div></div>
+  <div data-state="free" hidden class="banner info"><span aria-hidden="true">&#9432;</span><div><b>You are on the free plan.</b> No data was lost. Automation, drafted replies, payment detection and the assistant are off. Invoices, Money, GST meter and exports still work.</div></div>
+
+  <section class="card" aria-labelledby="pl"><h2 class="h2" id="pl">Your plan</h2>
+    <div data-state="trial"><p class="big">Paid plan, free trial</p><p class="muted">Day 9 of 14 &middot; <b>5 days left</b>, ends 14 Nov. No card was needed. We will remind you 3 days before and on the day. If you do nothing, you move to free and keep your data.</p><div class="bar my-2" role="progressbar" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" aria-label="Trial progress"><i style="width:64%"></i></div></div>
+    <div data-state="paid" hidden><p class="big">Paid plan</p><p class="muted">&#8377;499 a month + GST &middot; next payment 9 Dec 2026 via UPI Autopay</p></div>
+    <div data-state="failed" hidden><p class="big">Paid plan, payment failed</p><p class="muted">&#8377;499 a month + GST</p></div>
+    <div data-state="free" hidden><p class="big">Free plan</p><p class="muted">&#8377;0. Upgrade any time.</p></div>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g4">Gap G4</a></b> Trial length (14 days, no card), the &#8377;499 price and "+ GST" are the owner's open questions Q1 and Q3 and FR-292 does not say whether GST is included. All are placeholders. Creators are assigned one of two test prices; they only see their own.</div></section>
+
+  <section class="card" data-state="trial free" aria-labelledby="up"><h2 class="h2" id="up">Choose how to pay</h2>
+    <div class="grid gap-3 sm:grid-cols-2"><div class="card" style="border:2px solid #0F766E"><h3 class="h3">Monthly</h3><p class="big" style="font-size:26px">&#8377;499</p><p class="muted">+ GST, cancel any time</p></div><div class="card"><h3 class="h3">Yearly</h3><p class="big" style="font-size:26px">&#8377;4,990</p><p class="muted">+ GST, 2 months free</p></div></div>
+    <p class="muted my-2">Pay with UPI Autopay or card. You get a GST invoice from BackstageHQ by email.</p>
+    <a class="btn btn-primary btn-block" href="#" data-toast="Opens Razorpay UPI / card payment (sample). Paid features start within 1 minute.">Pay and keep the paid plan</a></section>
+
+  <section class="card"><h2 class="h2">What the paid plan adds</h2><ul style="padding-left:20px;list-style:disc"><li>Watching new emails and DMs, sorted and scam-checked</li><li>AI-drafted replies, quotes and follow-ups</li><li>Automatic and approve-each payment reminders</li><li>Payment detection and TDS matching</li><li>Daily digest with AI summary and the assistant (300 requests a month)</li></ul></section>
+
+  <section class="card" aria-labelledby="pi"><h2 class="h2" id="pi">Who pays</h2><div class="row"><span class="grow">Payer: <b>You (owner)</b><br><span class="muted">Someone else, such as a manager, can pay in a later release. Paying never gives anyone access.</span></span></div></section>
+  <section class="card" data-state="paid failed" hidden><h2 class="h2">BackstageHQ invoices</h2>
+    <div class="row"><div class="grow"><b>BHQ-2026-27-0412</b> &middot; 9 Nov<br><span class="muted">&#8377;499 + GST &#8377;89.82 = &#8377;588.82</span></div><button class="btn btn-secondary btn-sm" data-toast="PDF downloaded (sample)">PDF</button></div></section>
+  <section class="card" data-state="paid" hidden><button class="btn btn-danger" data-toast="Plan cancelled at period end. You keep paid features until 9 Dec; then free, nothing deleted.">Cancel plan</button></section>
+</main>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-18 Assistant · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-18" data-title="Assistant" data-fr="FR-230 to FR-235" data-nav="home" data-assistant="off" data-states="ready,loading,empty,error,upgrade,allowance">
+<main class="max-w-2xl mx-auto">
+  <p class="muted mb-2">On every screen this opens as a panel (tap "Ask assistant", bottom right). Here it is full screen. It knows which record is open, for example "this deal".</p>
+  <div data-state="upgrade" hidden class="card" style="text-align:center"><div class="ic" style="font-size:32px" aria-hidden="true">&#10024;</div><h2 class="h2">The assistant is part of the paid plan</h2><p class="muted mb-3">Ask "who owes me money?", have it draft invoices and replies, or move leads, in English, Hindi or Hinglish. It never sends anything without your tap. No AI cost is used on the free plan.</p><a class="btn btn-primary" href="s27-billing.html">Upgrade</a></div>
+
+  <div data-state="empty" hidden class="stack"><div class="empty"><div class="ic" aria-hidden="true">&#10024;</div><h2 class="h2">What can I do for you, Arjun?</h2><p class="muted">Try one of these, or type your own.</p></div>
+    <button class="btn btn-secondary btn-block" style="justify-content:flex-start">Who owes me money?</button><button class="btn btn-secondary btn-block" style="justify-content:flex-start">Kinetic ka reel add-on invoice bana do</button><button class="btn btn-secondary btn-block" style="justify-content:flex-start">Draft reminders for all overdue invoices</button><button class="btn btn-secondary btn-block" style="justify-content:flex-start">How close am I to the GST limit?</button></div>
+
+  <div data-state="ready loading error allowance" class="stack">
+    <div data-state="allowance" hidden class="banner warn"><span aria-hidden="true">&#9888;</span><div><b>You have used 80% of this month's assistant requests</b> (240 of 300). 60 left until 1 Dec. <a href="s27-billing.html">See plan</a><div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g12">Gap G12</a></b> The allowance (300) is the owner's open question Q5; wording and where it shows are mine.</div></div></div>
+
+    <div class="bubble me">Mujhe batao Kinetic Fitness ka invoice bana ke finance ko bhej do</div>
+    <div class="bubble bot"><b>Plan</b><ol style="padding-left:20px;margin:4px 0"><li>Create invoice draft for Kinetic Fitness (Reel add-on, &#8377;25,000)</li><li>Draft the email to accounts@kineticfit.in</li><li>Put the email in your approval queue</li></ol>
+      <b>Done.</b> The invoice is a <b>draft</b> and has no number yet. The email is waiting for your tap. I did not send anything.
+      <div class="flex gap-2 flex-wrap mt-2"><a class="btn btn-secondary btn-sm" href="s13-invoice-editor.html">Open draft</a><a class="btn btn-secondary btn-sm" href="s17-approvals.html">Review email</a><button class="btn btn-secondary btn-sm" data-toast="Run undone: draft removed, queued email withdrawn." data-undo>Undo this run</button></div>
+      <a class="src" href="s19-run-detail.html">See every step of this run</a></div>
+
+    <div class="bubble me">Mark INV-011 as paid</div>
+    <div class="bubble bot"><b>This needs your tap.</b> I will not record money on my own.
+      <div class="card mt-2" style="border-color:#DDD6FE"><b>Mark INV-2026-27-011 paid?</b><br><span class="muted">GlowLeaf Skincare &middot; &#8377;60,000 &middot; received today</span><div class="flex gap-2 mt-2"><button class="btn btn-primary btn-sm" data-toast="Marked paid (sample)" data-undo>Confirm</button><button class="btn btn-secondary btn-sm">Cancel</button></div></div></div>
+
+    <div class="bubble me">Turn on automatic reminders</div>
+    <div class="bubble bot">Only you can switch that on, and I can never change settings. You can do it yourself here. <a class="btn btn-secondary btn-sm" href="s22-settings-automation.html">Open Automation settings</a></div>
+
+    <div class="bubble me">Post my Reel on Instagram</div>
+    <div class="bubble bot">I can't do that yet. I did not change anything. I can help with deals, invoices, replies, payments and tax questions.</div>
+
+    <div class="bubble me">Am I near the GST limit?</div>
+    <div class="bubble bot">You are at <b>82%</b> of the &#8377;20,00,000 threshold (&#8377;16,40,000). <a class="src" href="s16-tax.html">Source: Tax screen</a><br><span class="chip warn">Not tax advice</span> Please check with your CA.</div>
+
+    <div data-state="loading" hidden class="bubble bot" aria-live="polite" aria-busy="true"><div class="skel" style="width:60%"></div><div class="skel mt-2" style="width:40%"></div><span class="muted">Working on it&hellip;</span></div>
+    <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>The assistant is unavailable right now.</b> Try again later. Your records and the approval queue still work, and automatic reminders (fixed templates) are not affected.<div class="mt-2"><button class="btn btn-secondary btn-sm" data-toast="Retrying (sample)">Try again</button></div></div></div>
+
+    <p class="muted">Allowance this month: 112 of 300 requests used.</p>
+  </div>
+  <div class="card mt-3" style="position:sticky;bottom:72px"><label class="sr-only" for="q">Message</label><div class="flex gap-2"><input id="q" class="input" placeholder="Ask in English, Hindi or Hinglish. Voice: use your keyboard's mic."><button class="btn btn-ai">Send</button></div></div>
+</main>
+<script src="../assets/app.js"></script></body></html>

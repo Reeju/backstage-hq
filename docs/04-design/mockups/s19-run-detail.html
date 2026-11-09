@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-19 Assistant run detail · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-19" data-title="Assistant run" data-fr="FR-238" data-nav="activity" data-back="s18-assistant.html" data-states="ready,loading,error,undone,sent">
+<main class="max-w-2xl mx-auto stack">
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:200px"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Step 3 failed, so the run stopped.</b> The email could not be drafted because the AI timed out. Steps 1 and 2 were done and are shown below. <b>Nothing was half-sent.</b></div></div>
+  <div data-state="undone" hidden class="banner ok" role="status"><span aria-hidden="true">&#10003;</span><div><b>Run undone at 9:05 am.</b> The invoice draft was removed and the queued email was withdrawn. This is in the activity log.</div></div>
+  <div data-state="sent" hidden class="banner warn"><span aria-hidden="true">&#9888;</span><div><b>Part of this run cannot be undone.</b> The email was already sent after your tap at 8:55 am. A sent email cannot be unsent. <button class="btn btn-secondary btn-sm mt-1" data-toast="Correction draft created, waiting in your queue">Draft a correction</button></div></div>
+
+  <div data-state="ready error undone sent" class="stack">
+    <section class="card"><p class="muted">Run on 9 Nov, 8:40 am &middot; for <b>Arjun Mehta</b> &middot; <span class="chip ai">Assistant</span></p>
+      <h2 class="h2 mt-1">"Create the invoice for Kinetic Fitness and send it to finance"</h2></section>
+    <section class="card"><h2 class="h2">Plan and steps</h2>
+      <div class="row"><span class="chip ok">&#10003;</span><div class="grow"><b>1. Find deal</b> "Kinetic Fitness, Sep campaign"<br><span class="muted">Looked up only your workspace</span></div></div>
+      <div class="row"><span class="chip ok" data-state="ready undone sent error">&#10003;</span><div class="grow"><b>2. Create invoice draft</b> &#8377;25,000, no number yet<br><span class="muted">Before: none &middot; After: draft for Kinetic Fitness</span></div><span class="chip" data-state="undone" hidden>Removed</span></div>
+      <div class="row"><span class="chip bad" data-state="error" hidden>&#10007;</span><span class="chip ok" data-state="ready undone sent">&#10003;</span><div class="grow"><b>3. Draft email to accounts@kineticfit.in</b><br><span class="muted">Contact already confirmed on the deal</span></div></div>
+      <div class="row"><span class="chip warn" data-state="ready">Queued</span><span class="chip ok" data-state="sent" hidden>Sent by you</span><span class="chip" data-state="undone" hidden>Withdrawn</span><span class="chip" data-state="error" hidden>Not started</span><div class="grow"><b>4. Put the email in your approval queue</b><br><span class="muted">The assistant cannot approve or send. <a href="s17-approvals.html">Open queue</a></span></div></div></section>
+    <section class="card"><h2 class="h2">Records changed</h2><p class="muted">1 invoice draft created. No deals moved. No money recorded.</p></section>
+    <div class="flex gap-2 flex-wrap" data-state="ready"><button class="btn btn-secondary" data-toast="Run undone (sample). If you changed these records afterwards, we warn you first." data-undo>Undo this run</button></div>
+    <p class="muted">If you edited the draft after the run, Undo warns you before reverting.</p>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

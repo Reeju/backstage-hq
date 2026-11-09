@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-13 Invoice editor and preview · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-13" data-title="Invoice" data-fr="FR-110 to FR-116, FR-120" data-nav="invoices" data-back="s12-invoices.html" data-states="ready,loading,error,sent,bounced,credit">
+<main>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:260px"></div></div>
+
+  <!-- DRAFT -->
+  <div data-state="ready error" class="grid gap-4 lg:grid-cols-5">
+    <div class="lg:col-span-3 stack">
+      <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Cannot create this invoice yet.</b> Missing: <b>bill-to name</b> and <b>amount</b>. <a href="s09-deal.html">Fix on the deal</a></div></div>
+      <section class="card"><h2 class="h2">Invoice draft <span class="chip">Draft</span></h2>
+        <div class="banner info mb-3"><span>You are not GST registered, so this is a <b>non-GST invoice</b> with no GST. Number <b>INV-2026-27-012</b> is given only when you confirm.</span></div>
+        <div class="row"><span class="grow muted">Bill to</span><b>Kinetic Fitness Pvt Ltd, Bengaluru, Karnataka</b></div>
+        <div class="row"><span class="grow muted">Send to (finance)</span><b>accounts@kineticfit.in</b></div>
+        <div class="row"><span class="grow muted">Also copy (marketing)</span><b>rohan@kineticfit.in</b></div>
+        <div class="row"><span class="grow muted">PO / vendor code</span><b>KF-PO-2209 &middot; V-8841</b></div>
+        <div class="row"><span class="grow muted">Issue date &middot; Due date</span><b>9 Nov 2026 &middot; 9 Dec 2026 (30 days)</b></div>
+        <table class="t mt-3" aria-label="Lines"><thead><tr><th>Description</th><th class="r">Amount</th></tr></thead><tbody><tr><td>Additional Instagram Reel (deal: Kinetic Fitness, Sep campaign)</td><td class="r amt">&#8377;25,000</td></tr><tr><td><b>Total</b></td><td class="r amt" style="font-size:20px">&#8377;25,000</td></tr></tbody></table>
+        <h3 class="h3 mt-4 mb-1">Your details (from your profile)</h3>
+        <p class="muted">Arjun Mehta &middot; PAN ABCDE1234F &middot; HDFC Bank ****7890. Taken only from your profile, never from emails. <a href="s21-settings-profile.html">Change in settings</a></p>
+        <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g20">Gap G20</a></b> Tax invoice fields (SAC code, place of supply, CGST/SGST/IGST lines) appear in <a href="x02-documents.html#invoice">the PDF layout</a>; the SAC code and wording are placeholders pending the CA review.</div></section>
+      <div class="flex gap-2 flex-wrap"><a class="btn btn-primary grow" href="#sent" data-toast="Confirmed as INV-2026-27-012 (sample). Locked from now on.">Confirm and issue number</a><button class="btn btn-secondary" data-toast="Draft saved">Save draft</button></div></div>
+    <aside class="lg:col-span-2"><section class="card"><h2 class="h3 mb-2">Preview</h2><div class="paper" style="font-size:13px"><b>NON-GST INVOICE</b><br>No.: (given on confirm) &middot; 9 Nov 2026<br><br><b>Arjun Mehta</b>, PAN ABCDE1234F<br>To: Kinetic Fitness Pvt Ltd<br><br>Additional Instagram Reel &mdash; &#8377;25,000<br><b>Total &#8377;25,000</b><br><br>Pay to: HDFC ****7890, IFSC HDFC0001234</div><a class="btn btn-ghost" href="x02-documents.html#invoice">Full PDF layout</a></section></aside>
+  </div>
+
+  <!-- SENT -->
+  <div data-state="sent bounced" hidden class="grid gap-4 lg:grid-cols-5" id="sent">
+    <div class="lg:col-span-3 stack">
+      <div data-state="bounced" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Not delivered.</b> The email to accounts@glowleaf.in bounced today. Check the address, then send again. <div class="flex gap-2 mt-2"><button class="btn btn-secondary btn-sm" data-toast="Opens contact edit (sample)">Fix finance contact</button><a class="btn btn-primary btn-sm" href="s11-draft-review.html">Review and resend</a></div></div></div>
+      <section class="card"><div class="flex gap-2 items-center flex-wrap"><h2 class="h2" style="margin:0">INV-2026-27-011</h2><span class="chip warn" data-state="sent">Sent, due today</span><span class="chip bad" data-state="bounced" hidden>Not delivered</span><span aria-label="Locked" class="chip">&#128274; Locked</span></div>
+        <p class="muted">GlowLeaf Skincare &middot; sent 10 Oct to accounts@glowleaf.in &middot; <b>&#8377;60,000</b></p>
+        <p class="muted mt-1">Sent invoices cannot be edited. To change anything, issue a credit note and a new invoice.</p>
+        <div class="flex gap-2 mt-3 flex-wrap"><a class="btn btn-secondary" href="s15-payments.html#mark">Mark paid</a><a class="btn btn-secondary" href="#credit">Issue credit note</a><button class="btn btn-secondary" data-toggle="#disp" aria-expanded="false">Mark as disputed</button></div>
+        <div id="disp" hidden class="mt-3"><label class="field"><span class="l">What is the dispute? (optional)</span><input class="input" placeholder="e.g. brand says Reel 2 was late"></label><button class="btn btn-primary btn-sm" data-toast="Marked disputed. Reminders paused. It now shows in the Disputed line on Money." data-undo>Mark disputed and pause reminders</button></div>
+        <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g6">Gap G6</a></b> FR-124 refers to "marked disputed" but no requirement says how. I added a button here. <a class="gapflag" href="../index.html#g7">Gap G7</a> A sent-invoice detail view is not in the screen list; I reuse S-13.</div></section>
+
+      <section class="card" aria-labelledby="rm"><h2 class="h2" id="rm">Payment reminders</h2>
+        <p class="muted mb-2">Mode: <b>Draft and wait for my tap</b> (set in <a href="s22-settings-automation.html">Automation</a>). Sent only Mon to Sat, 10:00 to 18:00.</p>
+        <div class="row"><span class="grow">3 days before due</span><span class="chip ok">Done 6 Nov</span><label class="check" style="min-height:44px"><input type="checkbox" checked aria-label="Step on"></label></div>
+        <div class="row"><span class="grow"><b>On due date (today)</b></span><a class="chip warn" href="s17-approvals.html">Waiting for your tap</a><label class="check"><input type="checkbox" checked aria-label="Step on"></label></div>
+        <div class="row"><span class="grow">+7 days</span><span class="chip">Scheduled 16 Nov</span><label class="check"><input type="checkbox" checked aria-label="Step on"></label></div>
+        <div class="row"><span class="grow">+15 days</span><span class="chip">Scheduled 24 Nov</span><label class="check"><input type="checkbox" checked aria-label="Step on"></label></div>
+        <div class="row"><span class="grow">+30 days</span><span class="chip">Scheduled 9 Dec</span><label class="check"><input type="checkbox" aria-label="Step off"></label></div>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-secondary btn-sm" data-toast="Snoozed 7 days: 'in process'" data-undo>Snooze: in process</button><button class="btn btn-secondary btn-sm" data-toast="Reminders paused for this invoice" data-undo>Pause all</button></div>
+        <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g5">Gap G5</a></b> FR-120 says steps can be switched off, snoozed or paused per invoice, but no screen is listed. I put the controls here.</div></section>
+    </div>
+    <aside class="lg:col-span-2"><section class="card"><h2 class="h3 mb-1">Timeline</h2><div class="row"><span class="grow">Reminder 3 days before sent</span><span class="muted">6 Nov</span></div><div class="row"><span class="grow">Sent to finance contact</span><span class="muted">10 Oct</span></div><div class="row"><span class="grow">Invoice confirmed</span><span class="muted">10 Oct</span></div></section></aside>
+  </div>
+
+  <!-- CREDIT NOTE -->
+  <div data-state="credit" hidden class="max-w-xl mx-auto stack" id="credit">
+    <section class="card"><h2 class="h2">Issue a credit note</h2>
+      <p class="muted mb-3">Against <b>INV-2026-27-011</b> &middot; GlowLeaf Skincare &middot; &#8377;60,000. This reduces what they owe. The original stays as it is.</p>
+      <label class="field"><span class="l">Credit amount (&#8377;)</span><input class="input" inputmode="numeric" value="10,000"></label>
+      <label class="field"><span class="l">Reason</span><select class="input"><option>Scope reduced</option><option>Deal cancelled</option><option>Error in invoice</option><option>Other</option></select></label>
+      <div class="banner info mb-3"><span>Outstanding becomes <b>&#8377;50,000</b>. Number will be <b>CN-2026-27-002</b> (its own sequence).</span></div>
+      <a class="btn btn-primary btn-block" href="s12-invoices.html" data-toast="Credit note issued (sample)">Issue credit note</a>
+      <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g7">Gap G7</a></b> Credit notes are an MVP requirement (FR-114) with no screen in the list. This form is my placeholder.</div></section>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-24 Notifications · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-24" data-title="Notifications" data-fr="FR-201, FR-202" data-nav="set-notif" data-states="ready,iphone,error,upgrade">
+<main class="max-w-2xl mx-auto stack">
+  <div data-state="iphone" hidden class="banner warn"><span aria-hidden="true">&#128241;</span><div><b>Push needs one extra step on iPhone.</b> Until you do it, we use email.<ol style="padding-left:20px;margin-top:6px"><li>Open this site in Safari.</li><li>Tap the Share button.</li><li>Tap "Add to Home Screen".</li><li>Open BackstageHQ from your home screen and turn push on.</li></ol></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Push is blocked in this browser.</b> Allow notifications for this site in your browser settings. Email keeps working in the meantime.</div></div>
+  <div data-state="upgrade" hidden class="banner info"><span>Free plan: the daily digest is a plain list. Paid adds an AI summary.</span></div>
+
+  <section class="card"><h2 class="h2">How should we reach you?</h2>
+    <label class="check"><input type="checkbox" checked><span><b>Web push</b><br><span class="muted">Instant alerts on this phone or computer.</span></span></label>
+    <label class="check"><input type="checkbox" checked><span><b>Email</b> to arjun@arjuncreates.in<br><span class="muted">Used when push is off or not working.</span></span></label></section>
+  <section class="card"><h2 class="h2">Daily digest</h2>
+    <label class="field"><span class="l">Send at</span><input class="input" type="time" value="08:30" style="max-width:160px"><span class="hint">Deliverables due, money due, payments received, new pitches with scam flags, items waiting. If there is nothing to report, we send nothing. <a href="x01-messages.html#digest">See an example</a></span></label></section>
+  <section class="card"><h2 class="h2">Quiet hours</h2>
+    <div class="flex gap-3 flex-wrap items-end"><label class="field" style="margin:0"><span class="l">From</span><input class="input" type="time" value="22:00"></label><label class="field" style="margin:0"><span class="l">To</span><input class="input" type="time" value="08:00"></label></div>
+    <p class="muted mt-2">Non-urgent alerts wait until the morning. These are about messages to you, not about when reminders go to brands.</p>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g9">Gap G9</a></b> Default hours are the owner's open question Q10.</div></section>
+  <section class="card"><h2 class="h2">GST threshold alerts</h2><p class="muted mb-2">Tell me when I reach</p><div class="flex gap-4 flex-wrap"><label class="check"><input type="checkbox" checked>50%</label><label class="check"><input type="checkbox" checked>75%</label><label class="check"><input type="checkbox" checked>90%</label></div></section>
+  <button class="btn btn-primary" data-toast="Notification settings saved">Save</button>
+</main>
+<script src="../assets/app.js"></script></body></html>

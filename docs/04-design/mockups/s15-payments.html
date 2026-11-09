@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-15 Payments · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-15" data-title="Payments" data-fr="FR-140 to FR-147" data-nav="payments" data-states="ready,loading,empty,error,statement,mark">
+<main>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h"></div><div class="skel card-h"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Payment detection is paused.</b> Gmail checks have stopped since 7:10 am, so new bank alerts are not being read. You can still mark invoices paid by hand or upload a statement. <a class="btn btn-secondary btn-sm" href="s25-settings-connections.html">Reconnect Gmail</a></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#8595;</div><h2 class="h2">No payments spotted yet</h2><p class="muted mb-3">When a bank alert or remittance email arrives, we match it to an invoice. You can also upload a statement or mark an invoice paid.</p><a class="btn btn-primary" href="#statement">Upload a statement</a> <a class="btn btn-secondary" href="#mark">Mark paid by hand</a></div>
+
+  <div data-state="ready error" class="stack">
+    <div class="flex gap-2 flex-wrap"><a class="btn btn-secondary btn-sm" href="#statement">Upload bank statement</a><a class="btn btn-secondary btn-sm" href="#mark">Mark paid by hand</a></div>
+
+    <section class="card" aria-labelledby="n" style="border:2px solid #0F766E"><h2 class="h2" id="n">Needs your tap (3)</h2>
+      <div class="ai-box mb-2"><span class="tag">&#10024; AI suggestion: proposed match</span>
+        <p><b>&#8377;87,500</b> from Nuvora Audio, 8 Nov &middot; <a class="src" href="s07-message.html">source: HDFC alert email</a></p>
+        <p class="muted">Matches INV-2026-27-010 (&#8377;1,00,000). With 10% TDS you would expect &#8377;90,000, so it is <b style="color:#92400E">short by &#8377;2,500 beyond expected TDS</b>. We did not auto-confirm.</p>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-primary btn-sm" data-toast="Confirmed as part payment (sample)" data-undo>Confirm match</button><button class="btn btn-secondary btn-sm">Edit amounts</button><button class="btn btn-ghost btn-sm" data-toast="Match rejected">Not this invoice</button></div></div>
+      <div class="ai-box mb-2"><span class="tag">&#10024; Question for you</span>
+        <p><b>&#8377;49,750</b> from Zestly Foods, 7 Nov, against INV-2026-27-007 (&#8377;50,000). The &#8377;250 gap does not fit 1%, 2% or 10% TDS.</p>
+        <p class="mt-1"><b>Is the &#8377;250 TDS or bank charges?</b> We will not record anything until you answer.</p>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-secondary btn-sm" data-toast="Recorded as bank charges">Bank charges</button><button class="btn btn-secondary btn-sm" data-toast="Recorded as TDS">TDS</button><button class="btn btn-secondary btn-sm" data-toast="Recorded as something else (sample)">Something else</button></div></div>
+      <div class="ai-box"><span class="tag">&#10024; Could not read this</span>
+        <p>Email from "Axis Bank" 6 Nov: "Credit of INR 12,000 ... ref NEFT-7781". <a class="src" href="s07-message.html">View email</a></p>
+        <p class="mt-1"><b>Is this a payment?</b> Nothing is recorded silently.</p>
+        <div class="flex gap-2 mt-2"><button class="btn btn-secondary btn-sm" data-toast="Opens payment form (sample)">Yes, record it</button><button class="btn btn-secondary btn-sm" data-toast="Dismissed">No</button></div></div></section>
+
+    <section class="card" aria-labelledby="a"><h2 class="h2" id="a">Done automatically</h2>
+      <div class="row"><div class="grow"><b>Kinetic Fitness &middot; &#8377;90,000</b> &middot; INV-2026-27-006 paid<br><span class="muted">Yesterday 11:42 am &middot; TDS &#8377;10,000 (10%) presumed &middot; same brand, same reference</span><br><a class="src" href="s07-message.html">source: HDFC alert email</a></div><button class="btn btn-secondary btn-sm" data-toast="Undone. Invoice is unpaid again; reminders restart from the next due step." data-undo>Undo</button></div>
+      <p class="muted mt-2">We only auto-confirm when brand, amount (allowing 1%, 2% or 10% TDS) and reference all fit. Change this in <a href="s22-settings-automation.html">Automation</a>.</p></section>
+    <section class="card"><h2 class="h2">TDS this tax year</h2><p class="muted">&#8377;10,000 recorded (Kinetic Fitness). <a href="s16-tax.html">See by brand</a></p></section>
+  </div>
+
+  <div data-state="statement" hidden class="stack" id="statement">
+    <section class="card"><h2 class="h2">Upload a bank statement</h2><p class="muted mb-3">PDF or CSV. Password-protected PDFs ask for the password, which is never stored.</p>
+      <label class="field"><span class="l">File</span><input class="input" type="file"></label>
+      <label class="field"><span class="l">PDF password (if asked)</span><input class="input" type="password" autocomplete="off"></label>
+      <button class="btn btn-primary" data-toast="Reading statement (sample)">Read statement</button></section>
+    <section class="card"><h2 class="h2">40 credits found</h2><p class="muted mb-2">Statement Oct to Nov &middot; 37 not related to brands</p>
+      <div class="row"><div class="grow">&#8377;90,000 &middot; 4 Nov &middot; KINETIC FITNESS</div><span class="chip ok">Already recorded</span></div>
+      <div class="row"><div class="grow">&#8377;87,500 &middot; 8 Nov &middot; NUVORA AUDIO</div><span class="chip ok">Already recorded</span></div>
+      <div class="row"><div class="grow">&#8377;49,750 &middot; 7 Nov &middot; ZESTLY FOODS</div><span class="chip ok">Already recorded</span></div>
+      <p class="muted mt-2">Credits already seen in emails are linked, never counted twice.</p></section>
+  </div>
+
+  <div data-state="mark" hidden class="max-w-xl mx-auto" id="mark"><section class="card"><h2 class="h2">Mark an invoice paid</h2>
+      <label class="field"><span class="l">Invoice</span><select class="input"><option>INV-2026-27-011 &middot; GlowLeaf &middot; &#8377;60,000</option><option>INV-2026-27-008 &middot; Kinetic &middot; &#8377;30,000</option></select></label>
+      <label class="field"><span class="l">Amount received (&#8377;)</span><input class="input" inputmode="numeric" value="54,000"></label>
+      <label class="field"><span class="l">Date received</span><input class="input" type="date" value="2026-11-09"></label>
+      <div class="banner info mb-3"><span>&#8377;6,000 less than the invoice = 10% TDS. We will record it for GlowLeaf, 2026-27. Is that right?</span></div>
+      <button class="btn btn-primary btn-block" data-toast="Marked paid, TDS recorded (sample)" data-undo>Confirm payment and TDS</button>
+      <p class="muted mt-2">Partial payments are fine. The rest stays owed.</p></section></div>
+</main>
+<script src="../assets/app.js"></script></body></html>

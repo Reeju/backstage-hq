@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-30 Price-test report (internal) · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-30" data-title="Price-test report (internal)" data-fr="FR-295, M12 to M14" data-shell="none" data-states="ready,loading,empty,error">
+<main class="mx-auto max-w-3xl p-4 pt-6 stack">
+  <div class="banner warn"><span aria-hidden="true">&#128274;</span><div><b>Internal. BackstageHQ owner only.</b> Not visible to creators. Shows counts and cost, never a creator's records.
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g13">Gap G13</a></b> The PRD does not say how the BackstageHQ owner signs in to this report or where it lives. I show it as a separate staff-only page.</div></div></div>
+  <h1 class="text-2xl font-extrabold">Price test: first 20 creators</h1>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:200px"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span>The report could not be built. Figures are not shown rather than guessed. <button class="btn btn-secondary btn-sm">Try again</button></span></div>
+  <div data-state="empty" hidden class="empty"><h2 class="h2">No creators on a price yet</h2><p class="muted">Creators are assigned a price point when they start their trial.</p></div>
+
+  <div data-state="ready" class="stack">
+    <section class="card"><h2 class="h2">By price point (as of 9 Nov 2026)</h2>
+      <div style="overflow-x:auto"><table class="t" aria-label="Price test results"><thead><tr><th>Measure</th><th class="r">A: &#8377;499</th><th class="r">B: &#8377;999</th><th>Target</th></tr></thead><tbody>
+      <tr><td>Creators assigned</td><td class="r">10</td><td class="r">10</td><td></td></tr>
+      <tr><td>Trial starts</td><td class="r">10</td><td class="r">10</td><td></td></tr>
+      <tr><td>Paid after trial (M12)</td><td class="r"><b>6</b> of 10</td><td class="r"><b>4</b> of 10</td><td>10 of 20</td></tr>
+      <tr><td>Paying after 3 months (M13)</td><td class="r muted">too early</td><td class="r muted">too early</td><td>70%</td></tr>
+      <tr><td>Variable cost per paying creator a month (M14)</td><td class="r">&#8377;148 <span class="chip warn">29.7%</span></td><td class="r">&#8377;171 <span class="chip ok">17.1%</span></td><td>30% of price</td></tr>
+      <tr><td>Collected after reminders (M3), total</td><td class="r">&#8377;3,10,000</td><td class="r">&#8377;4,20,000</td><td>trend up</td></tr></tbody></table></div>
+      <p class="muted mt-2">Variable cost = AI + per-creator running cost + payment-gateway fees.</p></section>
+    <section class="card"><h2 class="h2">Fixed platform cost (shown separately)</h2><p class="big">&#8377;21,500 <span class="muted" style="font-size:16px;font-weight:500">a month</span></p><p class="muted">Servers, database, monitoring, staging. Not spread across creators, so it does not distort the 30% test.</p></section>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-16 Tax · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-16" data-title="Tax" data-fr="FR-150 to FR-152" data-nav="tax" data-states="ready,loading,empty,error,registered">
+<main>
+  <div class="banner info mb-3" role="note"><span aria-hidden="true">&#9432;</span><b>Not tax or legal advice.</b>&nbsp;These are estimates from your records. Check with a CA.</div>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:150px"></div><div class="skel card-h"></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#167;</div><h2 class="h2">No income recorded yet</h2><p class="muted mb-3">Add income you already earned this tax year, or confirm your past deals, so the GST meter starts correctly.</p><a class="btn btn-primary" href="s02-profile-setup.html">Add opening total</a> <a class="btn btn-secondary" href="s04-import-review.html">Review past deals</a></div>
+
+  <div data-state="ready error registered" class="stack">
+    <section class="card" data-state="ready error" aria-labelledby="g"><h2 class="h2" id="g">GST threshold, 2026-27</h2>
+      <div data-state="ready"><p class="big">82% <span class="muted" style="font-size:16px;font-weight:500">of &#8377;20,00,000</span></p>
+        <div class="bar my-2" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100" aria-label="82 percent of GST threshold"><i style="width:82%;background:#B45309"></i></div>
+        <p>&#8377;16,40,000 counted so far. About <b>&#8377;3,60,000</b> left before you need to register.</p>
+        <p class="muted mt-1">Includes your opening total of &#8377;6,00,000. Threshold for Maharashtra.</p>
+        <details class="mt-2"><summary class="min-h-tap flex items-center cursor-pointer font-semibold">How was this worked out?</summary><p class="muted">Rule version IN-2026.1, checked a second time against your records and they agree. Based on: opening total &#8377;6,00,000 + 9 recorded payments &#8377;10,40,000. <a href="s12-invoices.html">See the records</a></p></details>
+        <div class="banner warn mt-2"><span>You passed 75% on 2 Nov. We alerted you once. Next alert at 90%. <a href="s24-settings-notifications.html">Change alert points</a></span></div>
+        <div class="row mt-2"><div class="grow"><b>May count (not included): &#8377;45,000</b><br><span class="muted">Affiliate commission from Meesho. Treatment is uncertain, ask your CA.</span></div></div></div>
+      <div data-state="error" hidden><div class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Needs a CA check.</b> Our two checks of your turnover did not agree, so we are not showing a number. Your records are unchanged. <a href="s12-invoices.html">See the records used</a></div></div></div>
+    </section>
+    <section class="card" data-state="registered" hidden><h2 class="h2">GST registration</h2><p>You entered a GSTIN, so the threshold meter is hidden. Your invoices are now GST tax invoices. GST summaries come in a later release.</p></section>
+
+    <section class="card" aria-labelledby="td"><h2 class="h2" id="td">TDS by brand, 2026-27</h2>
+      <table class="t"><thead><tr><th>Brand</th><th class="r">TDS</th><th>Status</th></tr></thead><tbody>
+      <tr><td>Kinetic Fitness</td><td class="r amt">&#8377;10,000</td><td><span class="chip ok">Recorded</span></td></tr>
+      <tr><td>GlowLeaf Skincare</td><td class="r amt">&#8377;6,000</td><td><span class="chip ok">Recorded</span></td></tr>
+      <tr><td>Nuvora Audio</td><td class="r amt">&#8377;10,000?</td><td><span class="chip warn">Waiting for your tap</span></td></tr></tbody></table>
+      <p class="muted mt-2">Matching with your government tax record (AIS) and the year-end pack come in a later release.</p></section>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

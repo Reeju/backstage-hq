@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-25 Connections · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-25" data-title="Connections" data-fr="FR-015, FR-211" data-nav="set-conn" data-states="ready,loading,empty,error,disconnect,revoked">
+<main class="max-w-2xl mx-auto stack">
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h"></div><div class="skel card-h"></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#128279;</div><h2 class="h2">Nothing connected yet</h2><p class="muted mb-3">Connect Gmail to find your past deals and watch new enquiries.</p><a class="btn btn-primary" href="s03-connect.html">Connect Gmail</a></div>
+
+  <div data-state="ready error disconnect revoked" class="stack">
+    <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Gmail checks paused since 7:10 am.</b> Google's permission expired. We kept everything we had. New mail will be picked up after you reconnect.</div></div>
+    <section class="card"><div class="flex items-center gap-3 flex-wrap"><span aria-hidden="true" style="font-size:24px">&#9993;</span><div class="grow"><h2 class="h3">Gmail &middot; arjun@arjuncreates.in</h2>
+      <p class="muted" data-state="ready disconnect">Connected. Last successful check <b>2 minutes ago</b>.</p><p class="muted" style="color:#B91C1C" data-state="error" hidden>Needs reconnecting. Last successful check <b>7:08 am</b>.</p><p class="muted" data-state="revoked" hidden>Revoked on 9 Nov 2026. Access ended at once.</p></div>
+      <span class="chip ok" data-state="ready disconnect">Active</span><span class="chip bad" data-state="error" hidden>Broken</span><span class="chip" data-state="revoked" hidden>Revoked</span></div>
+      <div class="flex gap-2 mt-3 flex-wrap"><a class="btn btn-primary btn-sm" data-state="error revoked" hidden href="s03-connect.html">Reconnect</a><button class="btn btn-danger btn-sm" data-show="#dsheet" data-state="ready error disconnect">Disconnect</button></div></section>
+    <section class="card"><div class="flex items-center gap-3 flex-wrap"><span aria-hidden="true" style="font-size:24px">&#9711;</span><div class="grow"><h2 class="h3">Instagram DMs</h2><p class="muted">Not connected. Waiting for Meta's approval.</p></div><span class="chip">Coming soon</span></div><p class="mt-2 muted">Forward a screenshot of a brand DM to the WhatsApp number instead. <a href="s28-capture.html">Upload one</a></p></section>
+    <section class="card"><div class="flex items-center gap-3 flex-wrap"><span aria-hidden="true" style="font-size:24px">&#128172;</span><div class="grow"><h2 class="h3">WhatsApp forward-to number</h2><p class="muted">+91 80000 12345 &middot; your verified number +91 98765 43210 &middot; last forward 6 Nov</p></div><span class="chip ok">Active</span></div><button class="btn btn-danger btn-sm mt-2" data-show="#dsheet">Remove my number</button></section>
+    <section class="card"><div class="flex items-center gap-3 flex-wrap"><span aria-hidden="true" style="font-size:24px">&#128233;</span><div class="grow"><h2 class="h3">Forwarding address</h2><p class="muted">arjun-k7f2@in.backstagehq.example &middot; last email received 3 Nov</p></div><span class="chip ok">Active</span></div></section>
+    <p class="muted">Google Calendar connects in a later release.</p>
+  </div>
+
+  <div class="modal-bg" id="dsheet" data-state="disconnect" hidden role="dialog" aria-modal="true" aria-labelledby="dt"><div class="modal">
+    <h2 class="h2" id="dt">Disconnect Gmail</h2>
+    <p class="muted mb-3">Access ends at once. What should happen to what we already have?</p>
+    <label class="check"><input type="radio" name="d" checked><span><b>Keep my confirmed records</b><br><span class="muted">Deals, invoices and payments stay. Raw email text is deleted.</span></span></label>
+    <label class="check"><input type="radio" name="d"><span><b>Delete everything from Gmail</b><br><span class="muted">Records created from it are removed too.</span></span></label>
+    <div class="banner warn my-3"><span><b>Heads up:</b> you have issued 8 invoices. The law requires invoices to be kept, so they cannot be deleted. They stay even if you choose delete everything.</span></div>
+    <div class="flex gap-2"><button class="btn btn-secondary grow" data-close="dsheet">Cancel</button><button class="btn btn-danger grow" data-close="dsheet" data-toast="Gmail disconnected. See the Revoked state.">Disconnect</button></div></div></div>
+</main>
+<script src="../assets/app.js"></script></body></html>

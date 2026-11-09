@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-20 Activity log · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-20" data-title="Activity log" data-fr="FR-213, FR-214" data-nav="activity" data-states="ready,loading,empty,error">
+<main>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:60px"></div><div class="skel card-h" style="height:60px"></div><div class="skel card-h" style="height:60px"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>The log did not load.</b> Entries are never lost or changed. <button class="btn btn-secondary btn-sm">Try again</button></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#9776;</div><h2 class="h2">Nothing matches these filters</h2><p class="muted mb-3">Try a different person, type or date.</p><button class="btn btn-secondary" data-toast="Filters cleared">Clear filters</button></div>
+
+  <div data-state="ready">
+    <p class="muted mb-2">A permanent record of everything that happened in your workspace. Nobody, including you, can edit or delete entries.</p>
+    <div class="grid gap-2 sm:grid-cols-3 mb-3">
+      <label class="field" style="margin:0"><span class="l">Who</span><select class="input"><option>Everyone</option><option>You</option><option>Assistant for Arjun</option><option>System</option></select></label>
+      <label class="field" style="margin:0"><span class="l">Type</span><select class="input"><option>All</option><option>Sent</option><option>Money</option><option>Settings</option><option>Sign-in</option></select></label>
+      <label class="field" style="margin:0"><span class="l">When</span><select class="input"><option>Last 7 days</option><option>This month</option><option>All time</option></select></label></div>
+    <div class="card" style="padding:4px 16px">
+      <div class="row"><div class="grow"><b>Assistant for Arjun</b> drafted an email to accounts@kineticfit.in<br><span class="muted">Today 8:41 am &middot; <a href="s19-run-detail.html">assistant run</a></span></div><span class="chip">Waiting</span></div>
+      <div class="row"><div class="grow"><b>System</b> blocked a send: "Follow-up to Brewbox" was edited after approval<br><span class="muted">Today 8:20 am &middot; send gate &middot; returned to your queue</span></div><span class="chip warn">Blocked</span></div>
+      <div class="row"><div class="grow"><b>You</b> sent an email: quote to Velvet Bloom Cosmetics<br><span class="muted">Today 10:14 am &middot; from arjun@arjuncreates.in</span></div><div><span class="chip">Cannot be unsent</span><br><button class="btn btn-ghost btn-sm" data-toast="Correction draft created (sample)">Draft a correction</button></div></div>
+      <div class="row"><div class="grow"><b>System</b> matched a payment: Kinetic Fitness &#8377;90,000, TDS &#8377;10,000 presumed<br><span class="muted">Yesterday 11:42 am &middot; automatic match</span></div><button class="btn btn-secondary btn-sm" data-toast="Undone. Invoice is unpaid again; reminders restart from the next step." data-undo>Undo</button></div>
+      <div class="row"><div class="grow"><b>You</b> moved lead Brewbox Coffee to Quoted<br><span class="muted">4 Nov, 3:02 pm</span></div><button class="btn btn-secondary btn-sm" data-toast="Lead returned to Talking" data-undo>Undo</button></div>
+      <div class="row"><div class="grow"><b>You</b> changed a setting: payment matching set to "auto-confirm with undo"<br><span class="muted">2 Nov, 9:10 am &middot; owner only</span></div></div>
+      <div class="row"><div class="grow"><b>You</b> signed in from a new device (Chrome on Windows)<br><span class="muted">1 Nov, 7:45 pm &middot; second check passed</span></div></div>
+      <div class="row"><div class="grow"><b>You</b> confirmed an import: 5 deals added, 1 dismissed<br><span class="muted">30 Oct, 6:02 pm &middot; source: Gmail</span></div><button class="btn btn-secondary btn-sm" data-toast="Import undone (sample)" data-undo>Undo</button></div>
+    </div>
+    <p class="muted mt-3">Messages you send show "cannot be unsent". Changes made inside BackstageHQ can be undone from their entry. Only you see everything here; other people (in a later release) see only what they are allowed to.</p>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-08 Leads · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-08" data-title="Leads" data-fr="FR-047, FR-048, FR-050" data-nav="leads" data-states="ready,loading,empty,error">
+<main>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>We could not load your leads.</b> Your data is safe. <button class="btn btn-secondary btn-sm" data-toast="Retrying (sample)">Try again</button></div></div>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#9734;</div><h2 class="h2">No leads yet</h2><p class="muted mb-3">When a brand emails or DMs you, it shows up here on its own. You can also add one yourself.</p><a class="btn btn-primary" href="s09-deal.html">Add a lead</a></div>
+
+  <div data-state="ready">
+    <div class="flex items-center gap-2 mb-2"><div class="tabs grow" role="tablist" aria-label="Stage" style="margin-bottom:0">
+      <button role="tab" aria-selected="false" data-pressed>New <span class="badge brand" style="margin-left:6px">2</span></button><button role="tab" aria-selected="false" data-pressed>Talking <span class="badge brand" style="margin-left:6px">1</span></button><button role="tab" aria-selected="true" data-pressed>All open</button><button role="tab" aria-selected="false" data-pressed>Quoted <span class="badge brand" style="margin-left:6px">1</span></button><button role="tab" aria-selected="false" data-pressed>Won</button><button role="tab" aria-selected="false" data-pressed>Lost</button></div>
+      <a class="btn btn-secondary btn-sm" href="s09-deal.html">+ Add</a></div>
+
+    <div class="ai-box mb-3" aria-labelledby="nd"><span class="tag">&#10024; Follow-up suggested</span>
+      <p id="nd"><b>Brewbox Coffee</b> has not replied to your &#8377;45,000 quote for 5 days. Want to nudge them?</p>
+      <div class="flex gap-2 mt-2 flex-wrap"><a class="btn btn-ai" href="s11-draft-review.html">Review drafted follow-up</a><button class="btn btn-secondary" data-toast="Follow-ups paused for Brewbox">Pause follow-ups</button><button class="btn btn-secondary" data-toast="Marked: replied elsewhere. No more nudges.">Replied elsewhere</button></div>
+      <p class="muted mt-1">Nothing is sent until you tap Send on the draft.</p></div>
+
+    <article class="card"><a href="s09-deal.html" style="text-decoration:none;color:inherit"><div class="flex gap-2 items-center flex-wrap"><h2 class="h3">Velvet Bloom Cosmetics</h2><span class="chip brand">New</span><span class="chip">Email</span></div>
+      <p class="muted">2 Reels + 3 Stories &middot; budget &#8377;80,000 &middot; go-live 15 Dec</p></a>
+      <div class="mt-2 flex gap-2 flex-wrap"><a class="btn btn-primary btn-sm" href="s10-quote.html">Build quote</a><a class="btn btn-secondary btn-sm" href="s11-draft-review.html">Reply</a></div></article>
+    <article class="card"><a href="s09-deal.html" style="text-decoration:none;color:inherit"><div class="flex gap-2 items-center flex-wrap"><h2 class="h3">Drift Sneakers</h2><span class="chip brand">New</span><span class="chip">Instagram DM + email</span><span class="chip">Merged</span></div>
+      <p class="muted">1 Reel &middot; budget &#8377;30,000 to &#8377;40,000 (range) &middot; same brand by DM and email within 14 days</p></a>
+      <button class="btn btn-ghost btn-sm" data-toast="Split into two leads (sample)" data-undo>Split into two leads</button></article>
+    <article class="card"><a href="s09-deal.html" style="text-decoration:none;color:inherit"><div class="flex gap-2 items-center flex-wrap"><h2 class="h3">Pixelwave Media (for TravelNest)</h2><span class="chip">Talking</span><span class="chip ai">AI: asked for brief</span></div>
+      <p class="muted">Agency &middot; 1 Reel &middot; budget not given</p></a>
+      <a class="btn btn-secondary btn-sm mt-2" href="s11-draft-review.html">Reply with questions</a></article>
+    <article class="card"><a href="s09-deal.html" style="text-decoration:none;color:inherit"><div class="flex gap-2 items-center flex-wrap"><h2 class="h3">Brewbox Coffee</h2><span class="chip warn">Quoted 5 days ago</span></div>
+      <p class="muted">1 Reel + 2 Stories &middot; quote &#8377;45,000 &middot; moved to Quoted automatically when you sent the quote</p></a>
+      <button class="btn btn-ghost btn-sm" data-toast="Lead moved back to Talking" data-undo>Undo move</button></article>
+    <article class="card"><a href="s09-deal.html" style="text-decoration:none;color:inherit"><div class="flex gap-2 items-center flex-wrap"><h2 class="h3">Nuvora Audio</h2><span class="chip ok">Won</span></div><p class="muted">Became a deal &middot; &#8377;1,00,000</p></a></article>
+
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g8">Gap G8</a></b> The PRD describes merge and split (FR-047) and "Lost" (FR-050) but gives no screens or fields. I put split on the lead card and show lost as a stage with no reason field. Moving a stage by hand also has no control specified; assumed from the lead detail.</div>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

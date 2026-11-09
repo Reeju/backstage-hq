@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-12 Invoices · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-12" data-title="Invoices" data-fr="FR-110 to FR-114" data-nav="invoices" data-states="ready,loading,empty,error">
+<main>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Invoices did not load.</b> Nothing is lost. <button class="btn btn-secondary btn-sm">Try again</button></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#8377;</div><h2 class="h2">No invoices yet</h2><p class="muted mb-3">Open a deal and tap "Create invoice". Details fill in for you, and you check them before it goes.</p><a class="btn btn-primary" href="s09-deal.html">Go to a deal</a></div>
+
+  <div data-state="ready">
+    <div class="tabs" role="tablist" aria-label="Filter"><button role="tab" aria-selected="true" data-pressed>All</button><button role="tab" aria-selected="false" data-pressed>Drafts <span class="badge brand" style="margin-left:6px">1</span></button><button role="tab" aria-selected="false" data-pressed>Sent</button><button role="tab" aria-selected="false" data-pressed>Overdue <span class="badge" style="margin-left:6px">3</span></button><button role="tab" aria-selected="false" data-pressed>Paid</button><button role="tab" aria-selected="false" data-pressed>Credit notes</button></div>
+    <div class="card" style="padding:4px 16px">
+      <a class="row" href="s13-invoice-editor.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Kinetic Fitness</b> <span class="chip">Draft</span><br><span class="muted">No number yet &middot; Reel add-on</span></div><span class="amt">&#8377;25,000</span></a>
+      <a class="row" href="s13-invoice-editor.html#sent" style="text-decoration:none;color:inherit"><div class="grow"><b>GlowLeaf Skincare</b> <span class="chip warn">Due today</span><br><span class="muted">INV-2026-27-011 &middot; sent 10 Oct</span></div><span class="amt">&#8377;60,000</span></a>
+      <a class="row" href="s13-invoice-editor.html#sent" style="text-decoration:none;color:inherit"><div class="grow"><b>Nuvora Audio</b> <span class="chip">Sent</span> <span class="chip brand">Payment spotted</span><br><span class="muted">INV-2026-27-010 &middot; due 19 Nov</span></div><span class="amt">&#8377;1,00,000</span></a>
+      <a class="row" href="s13-invoice-editor.html#sent" style="text-decoration:none;color:inherit"><div class="grow"><b>TravelNest (via Pixelwave)</b> <span class="chip bad">Disputed</span><br><span class="muted">INV-2026-27-009 &middot; reminders paused</span></div><span class="amt">&#8377;40,000</span></a>
+      <a class="row" href="s13-invoice-editor.html#sent" style="text-decoration:none;color:inherit"><div class="grow"><b>Kinetic Fitness</b> <span class="chip bad">70 days overdue</span><br><span class="muted">INV-2026-27-008</span></div><span class="amt">&#8377;30,000</span></a>
+      <a class="row" href="s13-invoice-editor.html#sent" style="text-decoration:none;color:inherit"><div class="grow"><b>Zestly Foods</b> <span class="chip bad">95 days overdue</span> <span class="chip">Imported</span><br><span class="muted">INV-2026-27-007</span></div><span class="amt">&#8377;50,000</span></a>
+      <a class="row" href="s13-invoice-editor.html#sent" style="text-decoration:none;color:inherit"><div class="grow"><b>Kinetic Fitness</b> <span class="chip ok">Paid</span><br><span class="muted">INV-2026-27-006 &middot; &#8377;90,000 received, TDS &#8377;10,000</span></div><span class="amt">&#8377;1,00,000</span></a>
+      <a class="row" href="s13-invoice-editor.html#credit" style="text-decoration:none;color:inherit"><div class="grow"><b>Credit note</b> <span class="chip">CN-2026-27-001</span><br><span class="muted">Against INV-2026-27-005 &middot; reduced it to &#8377;50,000</span></div><span class="amt">&minus;&#8377;10,000</span></a>
+    </div>
+    <p class="muted mt-3">Invoice numbers run in order with no gaps. Next number: <b>INV-2026-27-012</b>.</p>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

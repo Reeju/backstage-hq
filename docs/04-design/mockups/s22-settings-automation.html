@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-22 Automation · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-22" data-title="Automation" data-fr="FR-122, FR-215" data-nav="set-auto" data-states="ready,auto,paused,error,upgrade">
+<main class="max-w-2xl mx-auto stack">
+  <p class="muted">Only you can change these. The assistant and anyone you invite cannot, and any attempt is logged.</p>
+  <div data-state="upgrade" hidden class="banner info"><span>Automatic reminders, payment matching and the assistant are paid features. On the free plan, nothing here runs. <a href="s27-billing.html">See plans</a></span></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Setting not saved.</b> Nothing changed. Try again.</div></div>
+  <div data-state="paused" hidden class="banner warn"><span aria-hidden="true">&#9888;</span><div><b>Automatic reminders are paused.</b> You edited the "+7 days" template. Approve the new wording to switch them back on. Until then, reminders wait for your tap in the queue.</div></div>
+
+  <section class="card"><h2 class="h2">Replies and documents to brands</h2><div class="row"><div class="grow"><b>Always wait for my tap</b><br><span class="muted">Quotes, replies, invoices. This cannot be changed.</span></div><span class="chip ok">&#128274; Fixed</span></div></section>
+
+  <section class="card" aria-labelledby="rem"><h2 class="h2" id="rem">Payment reminders</h2>
+    <fieldset style="border:0;padding:0;margin:0"><legend class="sr-only">Reminder mode</legend>
+      <label class="check"><input type="radio" name="m" checked><span><b>Draft and wait for my tap</b> (recommended)<br><span class="muted">AI writes each reminder, firmer each step. You approve in the queue.</span></span></label>
+      <label class="check"><input type="radio" name="m"><span><b>Automatic, with fixed wording</b><br><span class="muted">Sent for you with wording you approve once. Only invoice number, amount, due date, brand and contact name are filled in. The AI writes no free text.</span></span></label></fieldset>
+    <div data-state="auto" hidden class="banner ok mt-2"><span aria-hidden="true">&#10003;</span><span><b>Automatic mode is on.</b> All 5 templates approved by you on 2 Nov. Reminders go out Mon to Sat, 10:00 to 18:00, at most one per invoice per day, and never after a payment is matched.</span></div>
+    <h3 class="h3 mt-4 mb-1">Wording for each step</h3>
+    <div class="row"><div class="grow"><b>3 days before due</b><br><span class="muted">"Hi {contact}, a friendly note that invoice {number} for {amount} is due on {due_date}..."</span></div><span class="chip ok">Approved</span><a class="btn btn-ghost btn-sm" href="x01-messages.html#templates">View</a></div>
+    <div class="row"><div class="grow"><b>On due date</b></div><span class="chip ok">Approved</span><a class="btn btn-ghost btn-sm" href="x01-messages.html#templates">View</a></div>
+    <div class="row"><div class="grow"><b>+7 days</b></div><span class="chip warn" data-state="paused" hidden>Edited, needs approval</span><span class="chip ok" data-state="ready auto error upgrade">Approved</span><a class="btn btn-ghost btn-sm" href="x01-messages.html#templates">Edit</a></div>
+    <div class="row"><div class="grow"><b>+15 days</b></div><span class="chip ok">Approved</span><a class="btn btn-ghost btn-sm" href="x01-messages.html#templates">View</a></div>
+    <div class="row"><div class="grow"><b>+30 days</b></div><span class="chip ok">Approved</span><a class="btn btn-ghost btn-sm" href="x01-messages.html#templates">View</a></div>
+    <div class="flex gap-2 mt-3 flex-wrap"><button class="btn btn-primary" data-state="paused" hidden data-toast="New wording approved. Automatic reminders are back on.">Approve new "+7 days" wording</button></div>
+    <h3 class="h3 mt-4 mb-1">When reminders may be sent</h3>
+    <div class="grid gap-2 sm:grid-cols-2"><label class="field" style="margin:0"><span class="l">Days</span><select class="input"><option>Monday to Saturday</option></select></label><label class="field" style="margin:0"><span class="l">Hours (IST)</span><select class="input"><option>10:00 to 18:00</option></select></label></div>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g9">Gap G9</a></b> The sending window is the owner's open question Q10. I show the proposed values as editable.</div></section>
+
+  <section class="card"><h2 class="h2">Payment matching</h2>
+    <label class="check"><input type="radio" name="p" checked><span><b>Auto-confirm confident matches, with Undo</b> (recommended)<br><span class="muted">Only when brand, amount (allowing 1%, 2% or 10% TDS) and reference all fit. You are told each time, with Undo.</span></span></label>
+    <label class="check"><input type="radio" name="p"><span><b>Always ask me</b><br><span class="muted">Every match waits for your tap.</span></span></label></section>
+  <section class="card"><h2 class="h2">Assistant</h2><div class="row"><div class="grow"><b>Internal updates: do them alone, with Undo</b><br><span class="muted">Moving stages, adding notes, drafts. Anything money-related, sending, deleting or changing settings always needs your tap.</span></div><span class="chip ok">&#128274; Fixed</span></div></section>
+  <button class="btn btn-primary" data-toast="Settings saved and logged">Save changes</button>
+</main>
+<script src="../assets/app.js"></script></body></html>

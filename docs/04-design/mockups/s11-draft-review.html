@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-11 Draft review · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-11" data-title="Review before sending" data-fr="FR-049, FR-072, FR-115, FR-116" data-nav="leads" data-back="s08-leads.html" data-states="ready,loading,error,sent,nogmail">
+<main class="max-w-2xl mx-auto">
+  <div data-state="loading" hidden aria-busy="true" aria-live="polite"><div class="banner info mb-3"><span>Drafting in your voice from your past replies and your rate card&hellip;</span></div><div class="skel card-h" style="height:220px"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>The AI could not write a draft right now.</b> Nothing was sent. You can write the message yourself, or try again later. Sending itself still works. <div class="mt-2 flex gap-2"><button class="btn btn-secondary btn-sm" data-toast="Retrying (sample)">Try again</button><button class="btn btn-primary btn-sm" data-toast="Blank message opens (sample)">Write it myself</button></div></div></div>
+  <div data-state="sent" hidden><div class="banner ok" role="status"><span aria-hidden="true">&#10003;</span><div><b>Sent from your Gmail at 10:14 am.</b> It is in your Sent folder, in the same thread. The lead moved to <b>Quoted</b> and a follow-up reminder starts in 5 days.<br><a href="s20-activity.html">See in activity log</a> &middot; <span class="muted">A sent email cannot be unsent.</span> <button class="btn btn-ghost btn-sm" data-toast="Correction draft created (sample)">Draft a correction</button></div></div></div>
+
+  <div data-state="ready nogmail" class="stack">
+    <div data-state="nogmail" hidden class="banner warn"><span aria-hidden="true">&#9888;</span><div><b>Gmail is not connected.</b> We cannot send this for you. Download the PDF and mark it as sent once you have emailed it yourself. <a class="btn btn-secondary btn-sm" href="s25-settings-connections.html">Connect Gmail</a></div></div>
+    <section class="card" aria-labelledby="dh"><h2 class="h2" id="dh">Quote to Velvet Bloom Cosmetics</h2>
+      <div class="row"><span class="muted" style="width:56px">From</span><span class="grow">arjun@arjuncreates.in (your Gmail)</span></div>
+      <div class="row"><span class="muted" style="width:56px">To</span><span class="grow">aarav@velvetbloom.in</span></div>
+      <div class="row"><span class="muted" style="width:56px">Subject</span><span class="grow">Re: Collab for our winter range, my quote</span></div>
+      <div class="row"><span class="muted" style="width:56px">Attached</span><span class="grow"><a href="x02-documents.html#quote">Quote-VelvetBloom.pdf</a> &middot; &#8377;1,09,000</span></div></section>
+
+    <section class="ai-box" aria-labelledby="ai"><span class="tag">&#10024; AI draft, in your voice</span>
+      <div class="flex gap-2 items-center flex-wrap mb-2"><h2 class="h3" id="ai" style="margin:0">Message</h2>
+        <label class="muted" for="lang">Language</label><select id="lang" class="input" style="width:auto"><option>English</option><option>Hindi</option><option>Hinglish</option></select>
+        <div class="gapnote" style="margin:0;padding:2px 8px"><a class="gapflag" href="../index.html#g27">Gap G27</a> language picker is my placeholder</div></div>
+      <label class="sr-only" for="body">Message text</label>
+      <textarea id="body" class="input" style="min-height:230px">Hi Aarav,
+
+Thank you for thinking of me for your winter launch. I would love to work with Velvet Bloom.
+
+For 2 Reels + 3 Stories with 1 month of usage on your page, my quote is Rs 1,09,000. The full breakdown is in the attached PDF. Payment terms are 30 days with a 50% advance.
+
+You mentioned a budget of Rs 80,000. If you share what matters most, I am happy to look at a version that fits.
+
+Warmly,
+Arjun</textarea>
+      <p class="muted mt-2"><b>Why this draft:</b> built from your rate card, the lead's deliverables, and the tone of your last 20 sent emails. It does not mention any other brand. <a class="src" href="s07-message.html">Aarav's email</a></p>
+      <p class="muted">You can edit freely. If you change the text after tapping Send, it will not go until you tap again.</p></section>
+
+    <div class="gate"><span aria-hidden="true">&#128274;</span><span>Nothing is sent until you tap Send. Your tap is recorded in the activity log.</span></div>
+    <div class="flex gap-2 flex-wrap sticky" style="bottom:72px"><button class="btn btn-primary grow" data-state="ready" data-toast="Sent from your Gmail (sample). Open the Sent state to see the result.">Send from my Gmail</button>
+      <button class="btn btn-primary grow" data-state="nogmail" hidden>Download PDF and mark as sent</button>
+      <button class="btn btn-secondary" data-toast="Saved as draft">Save draft</button><button class="btn btn-danger" data-toast="Draft discarded" data-undo>Discard</button></div>
+
+    <section class="card" data-state="nogmail" hidden>
+      <h2 class="h3">Invoice emails with no finance contact</h2><p class="muted">If a deal has no finance contact, we draft a short email asking the marketing contact for it. You send it on tap.</p></section>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

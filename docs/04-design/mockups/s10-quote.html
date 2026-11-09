@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-10 Quote builder · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-10" data-title="Quote for Velvet Bloom" data-fr="FR-070 to FR-072" data-nav="leads" data-back="s08-leads.html" data-states="ready,loading,empty,error,barter">
+<main>
+  <div data-state="loading" hidden aria-busy="true" aria-live="polite"><div class="banner info mb-3"><span>Pre-filling from the lead and your rate card&hellip;</span></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#9776;</div><h2 class="h2">Your rate card is empty</h2><p class="muted mb-3">We will not guess a price. Add your base rates once and every quote fills itself in.</p><a class="btn btn-primary" href="s23-settings-rate-card.html">Set up rate card</a> <button class="btn btn-secondary" data-toast="Blank quote opens (sample)">Build a quote by hand</button></div>
+  <div data-state="error" hidden class="banner warn mb-3" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Pre-fill is unavailable right now.</b> Add lines by hand; the maths still works. Pre-filled quotes are a paid feature that needs the AI.</div></div>
+
+  <div data-state="ready error barter" class="grid gap-4 lg:grid-cols-3">
+    <div class="lg:col-span-2 stack">
+      <section class="card"><h2 class="h2">Deliverables <span class="chip ai" data-state="ready barter">Pre-filled from the lead</span></h2><p class="muted mb-2">From Aarav Shah's email. <a class="src" href="s07-message.html">source</a></p>
+        <table class="t" aria-label="Quote lines"><thead><tr><th>Item</th><th class="r">Amount</th></tr></thead><tbody>
+        <tr><td>2 Instagram Reels<br><span class="muted">&#8377;40,000 each, from rate card</span></td><td class="r amt">&#8377;80,000</td></tr>
+        <tr><td>3 Instagram Stories<br><span class="muted">&#8377;8,000 each</span></td><td class="r amt">&#8377;24,000</td></tr>
+        <tr><td>Usage: brand page, 1 month<br><span class="muted">&#8377;5,000 per month</span></td><td class="r amt">&#8377;5,000</td></tr>
+        <tr data-state="barter" hidden><td>Barter: product kit (value &#8377;12,000)<br><span class="muted">Not counted in the total payable</span></td><td class="r amt" style="color:#57534E">&#8377;12,000 barter</td></tr>
+        </tbody></table>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-secondary btn-sm" data-toast="Add line (sample)">+ Usage</button><button class="btn btn-secondary btn-sm">+ Exclusivity %</button><button class="btn btn-secondary btn-sm">+ Rush</button><button class="btn btn-secondary btn-sm">+ Extra revisions</button></div></section>
+      <section class="card"><h2 class="h2">Terms (from your defaults)</h2>
+        <div class="row"><span class="grow">Payment terms</span><b>30 days</b></div><div class="row"><span class="grow">Advance</span><b>50%</b></div><div class="row"><span class="grow">Revisions</span><b>2 rounds</b></div><div class="row"><span class="grow">Kill fee</span><b>25%</b></div>
+        <a class="btn btn-ghost" href="s23-settings-rate-card.html">Change defaults</a></section>
+    </div>
+    <aside class="stack"><section class="card" style="position:sticky;top:132px" aria-labelledby="tt"><h2 class="h2" id="tt">Total</h2>
+      <div class="row"><span class="grow">Sum of lines</span><span class="amt">&#8377;1,09,000</span></div>
+      <div class="row"><span class="grow">GST</span><span class="muted">GST not applicable</span></div>
+      <div class="row"><span class="grow"><b>Total payable</b></span><span class="amt" style="font-size:22px">&#8377;1,09,000</span></div>
+      <div data-state="barter" hidden class="muted">Plus barter kit worth &#8377;12,000 (not payable).</div>
+      <div class="banner warn mt-2"><span><b>&#8377;29,000 above their budget</b> of &#8377;80,000. They may negotiate.</span></div>
+      <a class="btn btn-primary btn-block mt-3" href="s11-draft-review.html">Next: review the message</a>
+      <button class="btn btn-secondary btn-block mt-2" data-toast="Quote PDF downloaded (sample)">Download PDF</button>
+      <p class="muted mt-2">Sending moves the lead to Quoted and starts the 5-day follow-up clock. <a href="x02-documents.html#quote">See quote PDF</a></p></section></aside>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

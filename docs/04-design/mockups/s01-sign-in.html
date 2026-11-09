@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-01 Sign up / sign in · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-01" data-title="Sign up / sign in" data-fr="FR-001, FR-002" data-shell="none" data-states="ready,code,wrong,locked,device">
+<main class="mx-auto max-w-md p-4 pt-10">
+  <h1 class="text-2xl font-extrabold" style="color:#115E59">BackstageHQ</h1>
+  <p class="muted mb-6">The business side of your content, handled. Works on your phone.</p>
+
+  <!-- step 1: phone -->
+  <section data-state="ready" class="card" aria-labelledby="h1">
+    <h2 id="h1" class="h2">Sign up or sign in</h2>
+    <label class="field"><span class="l">Mobile number</span>
+      <input class="input" inputmode="tel" autocomplete="tel" value="+91 98765 43210" aria-describedby="p-h">
+      <span class="hint" id="p-h">We will text you a 6-digit code.</span></label>
+    <a class="btn btn-primary btn-block" href="#code" data-toast="Code sent (sample)">Send code</a>
+    <p class="muted text-center my-3">or</p>
+    <a class="btn btn-secondary btn-block" href="s02-profile-setup.html">Continue with Google</a>
+    <p class="muted mt-4">By continuing you agree to the terms and the <a href="x03-what-we-read.html">privacy page</a>.</p>
+  </section>
+
+  <!-- step 2: code -->
+  <section data-state="code" class="card" aria-labelledby="h2" hidden>
+    <h2 id="h2" class="h2">Enter your code</h2>
+    <p class="muted mb-3">Sent to +91 98765 43210. <a href="#ready">Change number</a></p>
+    <label class="field"><span class="l">6-digit code</span><input class="input" inputmode="numeric" autocomplete="one-time-code" value="482913" maxlength="6" style="letter-spacing:.3em;font-size:22px"></label>
+    <a class="btn btn-primary btn-block" href="s02-profile-setup.html">Continue</a>
+    <button class="btn btn-ghost btn-block mt-2" data-toast="New code sent (sample)">Send a new code</button>
+    <p class="muted mt-3">New here? A private workspace is created for you and you are its owner.</p>
+  </section>
+
+  <!-- wrong code -->
+  <section data-state="wrong" class="card" aria-labelledby="h3" hidden>
+    <h2 id="h3" class="h2">Enter your code</h2>
+    <label class="field"><span class="l">6-digit code</span><input class="input" inputmode="numeric" value="123456" aria-invalid="true" aria-describedby="e1" style="letter-spacing:.3em;font-size:22px">
+      <span class="err" id="e1" role="alert">That code is not right. You have 2 tries left.</span></label>
+    <button class="btn btn-primary btn-block">Try again</button>
+  </section>
+
+  <!-- locked after 5 -->
+  <section data-state="locked" class="card" hidden>
+    <div class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Too many wrong codes.</b><br>For your safety, sign-in is paused for 15 minutes. Try again at 4:45 pm. We have noted this attempt in your activity log.</div></div>
+    <p class="muted mt-3">Not you? Email support and we will help.</p>
+  </section>
+
+  <!-- second factor on new device -->
+  <section data-state="device" class="card" hidden>
+    <h2 class="h2">One more check</h2>
+    <p class="mb-3">You signed in with Google on a new browser. To protect your invoices and bank details, we need a second check before showing anything.</p>
+    <div class="banner info mb-3"><span aria-hidden="true">&#128241;</span><span>We will text a code to the phone ending <b>3210</b>.</span></div>
+    <label class="field"><span class="l">6-digit code</span><input class="input" inputmode="numeric" placeholder="000000" style="letter-spacing:.3em;font-size:22px"></label>
+    <a class="btn btn-primary btn-block" href="s05-home.html">Verify and continue</a>
+    <label class="check"><input type="checkbox" checked> <span>Remember this device for 30 days</span></label>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g1">Gap G1</a></b> If someone signed up with phone only, there is no second method. I show an email code as the alternative (requires a verified email).</div>
+  </section>
+</main>
+<script src="../assets/app.js"></script></body></html>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-21 Profile and sensitive details · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-21" data-title="Profile and bank" data-fr="FR-003, FR-004" data-nav="set-profile" data-states="ready,loading,error">
+<main class="max-w-2xl mx-auto stack">
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:200px"></div><div class="skel card-h"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Your change was not saved.</b> The code was not accepted or the connection dropped. Your bank details are unchanged. <a href="s29-second-check.html">Try again</a></div></div>
+
+  <div data-state="ready error" class="stack">
+    <section class="card"><h2 class="h2">Business profile</h2>
+      <label class="field"><span class="l">Legal name</span><input class="input" value="Arjun Mehta"></label>
+      <label class="field"><span class="l">Trading name</span><input class="input" value="Arjun Creates"></label>
+      <label class="field"><span class="l">State</span><select class="input"><option>Maharashtra</option></select><span class="hint">GST threshold used: &#8377;20,00,000</span></label>
+      <label class="field"><span class="l">Invoice number prefix</span><input class="input" value="INV"><span class="hint">Set once. Numbers run in order per tax year: INV-2026-27-012 is next.</span></label>
+      <label class="field"><span class="l">Handles</span><input class="input" value="@arjun.creates"></label>
+      <button class="btn btn-primary" data-toast="Saved">Save</button></section>
+
+    <section class="card" aria-labelledby="sd"><h2 class="h2" id="sd">&#128274; Sensitive details</h2>
+      <p class="muted mb-3">Only you can change these, and only with a one-time code. Every change is logged and emailed to you. Neither the assistant nor anyone else you invite can change them.</p>
+      <div class="row"><div class="grow"><span class="muted">PAN</span><br><b>ABCDE1234F</b></div><a class="btn btn-secondary btn-sm" href="s29-second-check.html">Change</a></div>
+      <div class="row"><div class="grow"><span class="muted">GSTIN</span><br><b>Not registered</b></div><a class="btn btn-secondary btn-sm" href="s29-second-check.html">Add</a></div>
+      <div class="row"><div class="grow"><span class="muted">Bank account for invoices</span><br><b>HDFC Bank ****7890 &middot; IFSC HDFC0001234</b></div><a class="btn btn-secondary btn-sm" href="s29-second-check.html">Change</a></div>
+      <p class="muted mt-2">Last change: bank account, 3 Oct, by you. A notice was sent to arjun@arjuncreates.in.</p></section>
+
+    <section class="card" aria-labelledby="ss"><h2 class="h2" id="ss">Devices and sessions</h2>
+      <div class="row"><div class="grow"><b>This device</b> &middot; Chrome on Android<br><span class="muted">Active now</span></div></div>
+      <div class="row"><div class="grow"><b>Chrome on Windows</b><br><span class="muted">Last used 1 Nov &middot; second check passed</span></div><button class="btn btn-secondary btn-sm" data-toast="Session ended" data-undo>End</button></div>
+      <button class="btn btn-danger btn-block mt-3" data-toast="Signed out everywhere else within 1 minute">Sign out everywhere</button>
+      <p class="muted mt-2">Sessions also end after 30 days of no use.</p>
+      <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g15">Gap G15</a></b> NFR-027 says the owner can see and end sessions but no screen holds it. I put it here.</div></section>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

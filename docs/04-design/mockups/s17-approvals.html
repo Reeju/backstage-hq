@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-17 Approval queue · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-17" data-title="Waiting for your tap" data-fr="FR-236, FR-237" data-nav="approvals" data-states="ready,loading,empty,error,weekend">
+<main>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:150px"></div><div class="skel card-h" style="height:150px"></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#10003;</div><h2 class="h2">All clear</h2><p class="muted">Nothing is waiting for you. Drafted replies and reminders will show up here for your tap.</p></div>
+  <div data-state="error" hidden class="banner bad mb-3" role="alert"><span aria-hidden="true">&#9888;</span><div><b>1 item was stopped and sent back.</b> "Follow-up to Brewbox Coffee" was edited after you approved it, so the send gate blocked it. Nothing left BackstageHQ. Please review and approve again. <a href="s20-activity.html">See in log</a></div></div>
+  <div data-state="weekend" hidden class="banner info mb-3"><span aria-hidden="true">&#9432;</span><div><b>It is Sunday evening.</b> Reminders go to brands only Mon to Sat, 10:00 to 18:00. If you approve now, they are held and sent on Monday at 10:00. You can still withdraw them until then.
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g18">Gap G18</a></b> The PRD sets a sending window for reminders (FR-123) but does not say what happens to items approved outside it. I chose "held until the window opens".</div></div></div>
+
+  <div data-state="ready error weekend" class="stack">
+    <div class="gate"><span aria-hidden="true">&#128274;</span><span>Nothing here has been sent. Each item goes out exactly as you see it, only after your tap. If anyone edits it afterwards, it comes back here.</span></div>
+
+    <div class="flex items-center gap-2 flex-wrap"><label class="check" style="min-height:44px"><input type="checkbox" id="all" aria-label="Select all"> <span>Select all</span></label><span class="grow muted">4 items</span>
+      <button class="btn btn-primary" data-toast="Approved 2 items. Each is sent and logged separately." data-state="ready error">Approve selected (2)</button><button class="btn btn-primary" hidden data-state="weekend" data-toast="Approved 2 items. Held until Monday 10:00.">Approve selected (2)</button></div>
+
+    <article class="card" aria-labelledby="i1"><div class="flex gap-3"><input type="checkbox" checked aria-label="Select reminder to GlowLeaf" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex gap-2 flex-wrap items-center"><h2 class="h3" id="i1">Payment reminder: due today</h2><span class="chip">Reminder</span><span class="chip ai">AI draft</span></div>
+        <p class="muted">To <b>accounts@glowleaf.in</b> &middot; copy meera@glowleaf.in &middot; From <b>arjun@arjuncreates.in</b></p>
+        <p class="muted"><b>Why:</b> INV-2026-27-011, &#8377;60,000, is due today. Step "on due date" of your reminder plan. <b>Drafted by</b> System for the reminder plan. Expires in 7 days.</p>
+        <div class="draft mt-2">Hi Meera, a friendly note that invoice INV-2026-27-011 for Rs 60,000 is due today. I have attached it again for convenience. Please let me know if anything is needed from my side. Thank you! Arjun</div>
+        <p class="muted mt-1">Attached: INV-2026-27-011.pdf</p>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-primary" data-toast="Approved and sent from your Gmail (sample)" data-state="ready error">Approve and send</button><button class="btn btn-primary" data-state="weekend" hidden data-toast="Approved. Held until Monday 10:00">Approve (send Mon 10:00)</button><a class="btn btn-secondary" href="s11-draft-review.html">Edit</a><button class="btn btn-ghost" data-toast="Rejected. The reminder step is skipped." data-undo>Reject</button></div></div></div></article>
+
+    <article class="card"><div class="flex gap-3"><input type="checkbox" checked aria-label="Select reminder to Zestly" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex gap-2 flex-wrap items-center"><h2 class="h3">Payment reminder: firm, 30+ days overdue</h2><span class="chip">Reminder</span><span class="chip ai">AI draft</span></div>
+        <p class="muted">To <b>accounts@zestlyfoods.in</b> &middot; From <b>arjun@arjuncreates.in</b></p>
+        <p class="muted"><b>Why:</b> INV-2026-27-007, &#8377;50,000, imported, 95 days old. First reminder BackstageHQ sends for it. Firmer than earlier steps. <b>Drafted by</b> System. Expires in 3 days (nudged on day 5).</p>
+        <div class="draft mt-2">Hi Rhea, invoice INV-2026-27-007 for Rs 50,000 is now well past its due date of 5 Sep. I would be grateful if you could share the payment date this week. If it has been paid, please send the remittance details so I can match it. Thanks, Arjun</div>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-primary" data-toast="Approved and sent (sample)">Approve and send</button><a class="btn btn-secondary" href="s11-draft-review.html">Edit</a><button class="btn btn-ghost" data-toast="Rejected" data-undo>Reject</button></div></div></div></article>
+
+    <article class="card"><div class="flex gap-3"><input type="checkbox" aria-label="Select follow-up to Brewbox" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex gap-2 flex-wrap items-center"><h2 class="h3">Follow-up: quote with no reply</h2><span class="chip">Follow-up</span><span class="chip ai">AI draft</span></div>
+        <p class="muted">To <b>hello@brewbox.in</b> &middot; Same thread as your quote &middot; From <b>arjun@arjuncreates.in</b></p>
+        <p class="muted"><b>Why:</b> quote of &#8377;45,000 sent 5 days ago, no reply. <b>Drafted by</b> System.</p>
+        <div class="draft mt-2">Hi team, just checking in on my quote for the Reel + Stories. Happy to adjust if the budget is tight. Warmly, Arjun</div>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-primary" data-toast="Approved and sent (sample)">Approve and send</button><a class="btn btn-secondary" href="s11-draft-review.html">Edit</a><button class="btn btn-ghost" data-toast="Rejected" data-undo>Reject</button></div></div></div></article>
+
+    <article class="card"><div class="flex gap-3"><input type="checkbox" aria-label="Select reply to Pixelwave" style="width:22px;height:22px;margin-top:4px;accent-color:#0F766E">
+      <div class="grow"><div class="flex gap-2 flex-wrap items-center"><h2 class="h3">Reply to Pixelwave Media: ask for brief</h2><span class="chip">Reply</span><span class="chip ai">Drafted by assistant</span></div>
+        <p class="muted">To <b>shreya@pixelwave.in</b> &middot; From <b>arjun@arjuncreates.in</b></p>
+        <p class="muted"><b>Why:</b> you asked the assistant "reply to Pixelwave and ask for the brief and budget". <b>Requested by</b> you, 8:40 am. <a href="s19-run-detail.html">See the assistant run</a></p>
+        <div class="draft mt-2">Hi Shreya, thanks for reaching out about TravelNest. Could you share the brief, usage period and budget? That will help me quote properly. Best, Arjun</div>
+        <p class="muted mt-1">The assistant cannot approve this itself. Only your tap sends it.</p>
+        <div class="flex gap-2 mt-2 flex-wrap"><button class="btn btn-primary" data-toast="Approved and sent (sample)">Approve and send</button><a class="btn btn-secondary" href="s11-draft-review.html">Edit</a><button class="btn btn-ghost" data-toast="Rejected" data-undo>Reject</button></div></div></div></article>
+
+    <section class="card" aria-labelledby="tc"><h2 class="h2" id="tc">Also waiting: things to confirm (not sent anywhere)</h2>
+      <a class="row" href="s15-payments.html" style="text-decoration:none;color:inherit"><div class="grow"><b>3 payment questions</b><br><span class="muted">1 proposed match, 1 TDS question, 1 unreadable alert</span></div><span aria-hidden="true">&rarr;</span></a>
+      <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g16">Gap G16</a></b> FR-237 describes only items that leave BackstageHQ. Assistant confirmation cards (FR-235) and payment proposals also need a tap but are not outbound. I list them in this second section; Home counts only the 4 outbound items.</div></section>
+    <p class="muted">Items not touched for 7 days expire unsent, with a nudge on day 5.</p>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

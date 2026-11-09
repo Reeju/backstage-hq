@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-02 Profile setup · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-02" data-title="Set up your business" data-fr="FR-003, FR-023" data-shell="none" data-states="ready,error">
+<main class="mx-auto max-w-lg p-4 pt-6">
+  <p class="muted" aria-live="polite">Step 1 of 2 &middot; about 2 minutes</p>
+  <div class="bar my-2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Setup progress"><i style="width:50%"></i></div>
+  <h1 class="text-2xl font-extrabold mt-4">Just what your first invoice needs</h1>
+  <p class="muted mb-4">Everything else can wait. We will ask for it only when you need it.</p>
+
+  <form class="card" onsubmit="return false">
+    <label class="field"><span class="l">Your legal name (as on PAN)</span><input class="input" value="Arjun Mehta" autocomplete="name"></label>
+    <label class="field"><span class="l">Business type</span>
+      <select class="input"><option>Individual</option><option>Sole proprietor</option></select>
+      <span class="hint">Companies and LLPs are not supported yet.</span></label>
+    <label class="field"><span class="l">PAN</span>
+      <input class="input" value="ABCDE1234F" style="text-transform:uppercase" data-state="ready" aria-describedby="pan-h">
+      <input class="input" value="ABCDE12345" style="text-transform:uppercase" data-state="error" hidden aria-invalid="true" aria-describedby="pan-e">
+      <span class="hint" id="pan-h" data-state="ready">10 characters, like ABCDE1234F.</span>
+      <span class="err" id="pan-e" data-state="error" role="alert" hidden>That PAN does not look right. It should be 5 letters, 4 numbers, 1 letter.</span></label>
+    <label class="field"><span class="l">State</span>
+      <select class="input"><option>Maharashtra</option><option>Karnataka</option><option>Delhi</option></select>
+      <span class="hint">Decides which GST threshold applies to you.</span></label>
+    <h2 class="h3 mb-2 mt-4">Bank account for your invoices</h2>
+    <label class="field"><span class="l">Account holder name</span><input class="input" value="Arjun Mehta"></label>
+    <div class="grid gap-3 sm:grid-cols-2">
+      <label class="field"><span class="l">Account number</span><input class="input" inputmode="numeric" value="" placeholder="e.g. 50100234567890"></label>
+      <label class="field"><span class="l">IFSC</span><input class="input" value="HDFC0001234"></label>
+    </div>
+    <details class="mb-3"><summary class="min-h-tap flex items-center font-semibold cursor-pointer">Optional: GSTIN, trading name, handles</summary>
+      <label class="field mt-2"><span class="l">GSTIN (only if you are registered)</span><input class="input" placeholder="Skip if you are not registered"><span class="hint">No GSTIN means non-GST invoices. You can add it later.</span></label>
+      <label class="field"><span class="l">Trading name</span><input class="input" placeholder="e.g. Arjun Creates"></label>
+      <label class="field"><span class="l">Instagram and YouTube handles</span><input class="input" value="@arjun.creates"></label>
+    </details>
+    <details class="mb-3"><summary class="min-h-tap flex items-center font-semibold cursor-pointer">Income already earned this tax year (2026-27)</summary>
+      <label class="field mt-2"><span class="l">Opening total, in rupees</span><input class="input" inputmode="numeric" value="6,00,000">
+        <span class="hint">Helps the GST threshold meter start correctly (FR-023). Skip if you are new this year.</span></label>
+    </details>
+    <a class="btn btn-primary btn-block" href="s03-connect.html">Save and continue</a>
+    <a class="btn btn-ghost btn-block mt-1" href="s03-connect.html">Skip for now, I will add it when I invoice</a>
+  </form>
+  <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g2">Gap G2</a></b> The PRD lists the fields but not the steps, the order, or whether the second check applies to the first bank entry (it applies to later changes, FR-004). I used two steps and no second check on first entry. Which states have the lower GST threshold is also not listed.</div>
+</main>
+<script src="../assets/app.js"></script></body></html>

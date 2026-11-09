@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-14 Money · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-14" data-title="Money: who owes me" data-fr="FR-124" data-nav="money" data-states="ready,loading,empty,error">
+<main>
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:110px"></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>We could not work out the total.</b> We never show a guess for money. <button class="btn btn-secondary btn-sm">Try again</button></div></div>
+  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#127881;</div><h2 class="h2">Nobody owes you anything right now</h2><p class="muted mb-3">When you send an invoice it shows up here until it is paid.</p><a class="btn btn-primary" href="s09-deal.html">Create an invoice</a></div>
+
+  <div data-state="ready" class="stack">
+    <section class="card" style="background:#FFFBEB;border-color:#FDE68A"><p class="muted">Total owed to you</p><p class="big" style="color:#92400E">&#8377;2,40,000</p><p class="muted">4 invoices &middot; 3 brands &middot; &#8377;40,000 disputed is shown separately below</p></section>
+
+    <section class="card" aria-labelledby="age"><h2 class="h2" id="age">By age</h2>
+      <div class="row"><span class="grow">0 to 30 days</span><div style="width:40%"><div class="bar" aria-hidden="true"><i style="width:67%"></i></div></div><span class="amt" style="width:96px;text-align:right">&#8377;1,60,000</span></div>
+      <div class="row"><span class="grow">31 to 60 days</span><div style="width:40%"><div class="bar" aria-hidden="true"><i style="width:0%"></i></div></div><span class="amt" style="width:96px;text-align:right">&#8377;0</span></div>
+      <div class="row"><span class="grow">61 to 90 days</span><div style="width:40%"><div class="bar" aria-hidden="true"><i style="width:13%;background:#B45309"></i></div></div><span class="amt" style="width:96px;text-align:right">&#8377;30,000</span></div>
+      <div class="row"><span class="grow"><b>Over 90 days</b></span><div style="width:40%"><div class="bar" aria-hidden="true"><i style="width:21%;background:#B91C1C"></i></div></div><span class="amt" style="width:96px;text-align:right;color:#B91C1C">&#8377;50,000</span></div></section>
+
+    <section class="card" aria-labelledby="br"><h2 class="h2" id="br">By brand</h2>
+      <a class="row" href="s12-invoices.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Nuvora Audio</b><br><span class="muted">1 invoice &middot; payment of &#8377;87,500 spotted, needs your tap</span></div><span class="amt">&#8377;1,00,000</span></a>
+      <a class="row" href="s12-invoices.html" style="text-decoration:none;color:inherit"><div class="grow"><b>GlowLeaf Skincare</b><br><span class="muted">1 invoice &middot; due today</span></div><span class="amt">&#8377;60,000</span></a>
+      <a class="row" href="s12-invoices.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Zestly Foods</b> <span class="chip">Imported</span><br><span class="muted">1 invoice &middot; 95 days &middot; &#8377;49,750 credit spotted, needs a question answered</span></div><span class="amt">&#8377;50,000</span></a>
+      <a class="row" href="s12-invoices.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Kinetic Fitness</b><br><span class="muted">1 invoice &middot; 70 days</span></div><span class="amt">&#8377;30,000</span></a></section>
+
+    <section class="card" aria-labelledby="nx"><h2 class="h2" id="nx">Next expected</h2>
+      <div class="row"><div class="grow"><b>Nuvora Audio</b> &middot; due 19 Nov</div><span class="amt">&#8377;1,00,000</span></div>
+      <div class="row"><div class="grow"><b>GlowLeaf</b> &middot; due today. A reminder is waiting for your tap.</div><span class="amt">&#8377;60,000</span></div></section>
+
+    <section class="card" aria-labelledby="ds" style="border-color:#FECACA"><h2 class="h2" id="ds">Disputed (not in the total)</h2>
+      <div class="row"><div class="grow"><b>TravelNest via Pixelwave</b> &middot; INV-2026-27-009<br><span class="muted">48 days &middot; reminders paused</span></div><span class="amt">&#8377;40,000</span></div></section>
+    <section class="card" aria-labelledby="pp"><h2 class="h2" id="pp">Part-paid and short-paid</h2><p class="muted">None right now. When a brand pays less than the invoice, the gap shows here.</p></section>
+    <p class="muted">Amounts match what the assistant tells you. <a href="s16-tax.html">Not tax advice</a>.</p>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>

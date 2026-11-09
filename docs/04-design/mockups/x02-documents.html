@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>X-02 Invoice, credit note and quote PDFs · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="X-02" data-title="Document layouts (PDF)" data-fr="FR-110 to FR-114, FR-072" data-nav="invoices" data-back="s12-invoices.html">
+<main class="max-w-3xl mx-auto stack">
+  <p class="muted">Not screens: PDF layouts. Bank and PAN always come from the profile, never from emails. The same HTML later becomes the PDF.</p>
+
+  <section id="invoice"><h2 class="h2">Tax invoice (GST-registered creator, for comparison)</h2>
+    <div class="paper"><div class="flex justify-between flex-wrap gap-2"><div><b style="font-size:18px">TAX INVOICE</b><br>No. INV-2026-27-013<br>Date 9 Nov 2026 &middot; Due 9 Dec 2026</div><div style="text-align:right"><b>Arjun Mehta (Arjun Creates)</b><br>Pune, Maharashtra<br>PAN ABCDE1234F<br>GSTIN 27ABCDE1234F1Z5</div></div><hr style="margin:12px 0">
+      <b>Bill to:</b> Kinetic Fitness Pvt Ltd, Bengaluru, Karnataka &middot; GSTIN 29AAAAA0000A1Z5<br>PO KF-PO-2209 &middot; Vendor code V-8841 &middot; Place of supply: Karnataka (29)
+      <table class="t mt-3"><thead><tr><th>Description</th><th>SAC</th><th class="r">Amount</th></tr></thead><tbody><tr><td>Instagram Reel, brand promotion</td><td>998361</td><td class="r">&#8377;25,000.00</td></tr><tr><td colspan="2" class="r">IGST 18% (inter-state)</td><td class="r">&#8377;4,500.00</td></tr><tr><td colspan="2" class="r"><b>Total</b></td><td class="r"><b>&#8377;29,500.00</b></td></tr></tbody></table>
+      <p class="muted mt-2">Pay to: HDFC Bank, A/c ****7890, IFSC HDFC0001234. Same-state invoices show CGST 9% + SGST 9% instead.</p></div>
+    <h2 class="h2 mt-4">Non-GST invoice (Arjun today)</h2>
+    <div class="paper"><div class="flex justify-between flex-wrap gap-2"><div><b style="font-size:18px">INVOICE (non-GST)</b><br>No. INV-2026-27-012<br>Date 9 Nov 2026 &middot; Due 9 Dec 2026</div><div style="text-align:right"><b>Arjun Mehta</b><br>Pune, Maharashtra<br>PAN ABCDE1234F</div></div><hr style="margin:12px 0"><b>Bill to:</b> Kinetic Fitness Pvt Ltd, Bengaluru<table class="t mt-3"><tbody><tr><td>Additional Instagram Reel</td><td class="r">&#8377;25,000.00</td></tr><tr><td class="r"><b>Total</b></td><td class="r"><b>&#8377;25,000.00</b></td></tr></tbody></table><p class="muted mt-2">Supplier is not registered under GST. No GST charged. Pay to: HDFC ****7890.</p></div>
+    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g20">Gap G20</a></b> SAC 998361, wording and field order are placeholders until the CA review (D36).</div></section>
+
+  <section id="credit"><h2 class="h2">Credit note</h2><div class="paper"><b style="font-size:18px">CREDIT NOTE</b> No. CN-2026-27-001 &middot; 20 Oct 2026<br>Against invoice INV-2026-27-005 (&#8377;60,000) &middot; Reason: scope reduced<br><b>Credit &#8377;10,000.00</b> &middot; Balance due on original: &#8377;50,000.00</div></section>
+
+  <section id="quote"><h2 class="h2">Quote</h2><div class="paper"><b style="font-size:18px">QUOTE</b> for Velvet Bloom Cosmetics &middot; valid 14 days<table class="t mt-2"><tbody><tr><td>2 Instagram Reels (&#8377;40,000 each)</td><td class="r">&#8377;80,000</td></tr><tr><td>3 Instagram Stories (&#8377;8,000 each)</td><td class="r">&#8377;24,000</td></tr><tr><td>Usage: 1 month on brand page</td><td class="r">&#8377;5,000</td></tr><tr><td class="r"><b>Total (GST not applicable)</b></td><td class="r"><b>&#8377;1,09,000</b></td></tr></tbody></table><p class="muted mt-2">Terms: 30 days, 50% advance, 2 revision rounds, 25% kill fee.</p></div></section>
+</main>
+<script src="../assets/app.js"></script></body></html>

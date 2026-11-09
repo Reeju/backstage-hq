@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-23 Rate card and terms · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-23" data-title="Rate card and terms" data-fr="FR-025, FR-026" data-nav="set-rate" data-states="ready,loading,empty,error,upgrade">
+<main class="max-w-2xl mx-auto stack">
+  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h" style="height:240px"></div></div>
+  <div data-state="error" hidden class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>The AI could not propose a rate card.</b> You can still fill it in by hand. <button class="btn btn-secondary btn-sm">Try again</button></div></div>
+  <div data-state="upgrade" hidden class="banner info"><span>Free plan: fill your rate card by hand. On the paid plan, AI proposes a first one from your past deals. <a href="s27-billing.html">See plans</a></span></div>
+  <div data-state="empty" hidden class="stack"><div class="empty"><h2 class="h2">Your rate card is empty</h2><p class="muted">We never invent prices. With no past deals, add your own base rates below.</p></div>
+    <section class="card"><table class="t" aria-label="Empty rate card"><thead><tr><th>Format</th><th>Instagram</th><th>YouTube</th></tr></thead><tbody><tr><td>Reel</td><td><input class="input" aria-label="Reel Instagram" placeholder="&#8377;"></td><td class="muted">n/a</td></tr><tr><td>Story</td><td><input class="input" aria-label="Story" placeholder="&#8377;"></td><td class="muted">n/a</td></tr><tr><td>YouTube integration</td><td class="muted">n/a</td><td><input class="input" aria-label="Integration" placeholder="&#8377;"></td></tr></tbody></table></section></div>
+
+  <div data-state="ready upgrade error" class="stack">
+    <section class="ai-box" data-state="ready"><span class="tag">&#10024; AI suggestion</span><h2 class="h3">First rate card from your past deals</h2><p class="muted mb-2">Based on 9 confirmed deals. Review every number. Nothing changes until you accept. <a class="src" href="s04-import-review.html">source deals</a></p>
+      <div class="flex gap-2 flex-wrap"><button class="btn btn-ai btn-sm" data-toast="Accepted into your rate card (sample)" data-undo>Accept all</button><button class="btn btn-secondary btn-sm">Edit first</button><button class="btn btn-ghost btn-sm" data-toast="Dismissed">Dismiss</button></div></section>
+
+    <section class="card" aria-labelledby="bp"><h2 class="h2" id="bp">Base price</h2>
+      <table class="t" aria-label="Base prices"><thead><tr><th>Format</th><th class="r">Instagram</th><th class="r">YouTube</th></tr></thead><tbody>
+      <tr><td>Reel</td><td class="r"><input class="input" style="width:110px;text-align:right" aria-label="Reel Instagram" value="40,000"></td><td class="r muted">n/a</td></tr>
+      <tr><td>Story</td><td class="r"><input class="input" style="width:110px;text-align:right" aria-label="Story" value="8,000"></td><td class="r muted">n/a</td></tr>
+      <tr><td>Static post</td><td class="r"><input class="input" style="width:110px;text-align:right" aria-label="Static" value="15,000"></td><td class="r muted">n/a</td></tr>
+      <tr><td>YouTube integration</td><td class="r muted">n/a</td><td class="r"><input class="input" style="width:110px;text-align:right" aria-label="Integration" value="1,00,000"></td></tr>
+      <tr><td>Dedicated video</td><td class="r muted">n/a</td><td class="r"><input class="input" style="width:110px;text-align:right" aria-label="Dedicated" value="1,60,000"></td></tr></tbody></table>
+      <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g25">Gap G25</a></b> The PRD says "per format and per platform" but not which formats exist on which platform. I used a simple grid.</div></section>
+
+    <section class="card" aria-labelledby="ad"><h2 class="h2" id="ad">Add-ons</h2>
+      <div class="row"><span class="grow">Usage rights, per month</span><input class="input" style="width:110px;text-align:right" aria-label="Usage per month" value="5,000"></div>
+      <div class="row"><span class="grow">Exclusivity (% on top)</span><input class="input" style="width:110px;text-align:right" aria-label="Exclusivity percent" value="40"></div>
+      <div class="row"><span class="grow">Rush (% on top)</span><input class="input" style="width:110px;text-align:right" aria-label="Rush percent" value="25"></div>
+      <div class="row"><span class="grow">Extra revision round</span><input class="input" style="width:110px;text-align:right" aria-label="Extra revision" value="3,000"></div>
+      <p class="muted mt-2">Example: 1 Reel with 30-day exclusivity = &#8377;40,000 + 40% = <b>&#8377;56,000</b>, each part listed on the quote.</p></section>
+
+    <section class="card" aria-labelledby="dt"><h2 class="h2" id="dt">Default terms</h2>
+      <div class="grid gap-3 sm:grid-cols-2"><label class="field"><span class="l">Payment terms (days)</span><input class="input" inputmode="numeric" value="30"></label><label class="field"><span class="l">Advance (%)</span><input class="input" inputmode="numeric" value="50"></label><label class="field"><span class="l">Kill fee (%)</span><input class="input" inputmode="numeric" value="25"></label><label class="field"><span class="l">Revision rounds included</span><input class="input" inputmode="numeric" value="2"></label></div>
+      <p class="muted">Used by new quotes and invoices. An invoice dated today is due in 30 days.</p></section>
+    <button class="btn btn-primary" data-toast="Rate card saved and logged">Save</button>
+  </div>
+</main>
+<script src="../assets/app.js"></script></body></html>
