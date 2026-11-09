@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved** (Stage 1). Amended after the PRD with edits E1–E9 (`docs/02-prd/PRD.md`, section 13). Owner decisions D1–D40 are in section 11; the five items in 11.3 wait on PRD open questions. |
+| Status | **Approved** (Stage 1). Amended after the PRD with edits E1–E9 (`docs/02-prd/PRD.md`, section 13). Amended after the architecture with edit P1 (NFR-002; `docs/03-architecture/architecture.md`, section 27). Owner decisions D1–D40 are in section 11; the five items in 11.3 wait on PRD open questions. |
 | Stage | 1 of the playbook (`docs/PLAYBOOK.md`) |
 | Input | Owner's research summary and owner's decisions (Nov 2026) |
 | Next | Owner approves. Then Stage 2 (PRD), which settles the items listed in section 11.3. |
@@ -1642,7 +1642,7 @@ approval is late.
 | ID | Need | Why the creator cares | Priority | Done when (Given / When / Then) |
 |---|---|---|---|---|
 | NFR-001 | **Deal confidentiality** | Rates and terms are often under NDA | Must | Given any creator's data, when another creator or a helper without permission requests it, then access is refused and logged. |
-| NFR-002 | **Keep only what we need** | Inbox and DMs hold personal life too | Must | Given an email or DM classified as personal, when processed, then only its category label and date are kept. |
+| NFR-002 | **Keep only what we need** | Inbox and DMs hold personal life too | Must | Given an email or DM classified as personal, when processed, then only its category label, date and the provider's message ID are kept. No content is stored: no sender, subject, body or attachment. The ID lets the message be fetched again if the creator re-sorts it, and stops it being read twice; it reveals nothing on its own. (Amended after architecture, P1; PRD FR-044.) |
 | NFR-003 | **Consent before any data use beyond the service** | Fear their deals train models or help competitors | Must | Given default settings, when models are improved or benchmarks calculated, then no creator's data is used unless they opted in (UC-124). Consent is specific, plain, off by default, never a condition of service, and as easy to withdraw as to give. This follows India's DPDP Act and, as we expand, other countries' laws (D13). |
 | NFR-004 | **Security of money and tax data** | PAN, bank and income are high-value targets | Must | Given a new device, when signing in, then a second factor is required. Data is encrypted in storage and in transit. |
 | NFR-005 | **Indian data law** | DPDP Act 2023 and its 2025 Rules | Must | Given a deletion request, when processed, then data is erased within the published period. |

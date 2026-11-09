@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Status | **Draft for owner approval.** Not committed. |
+| Status | **Approved** (Stage 2, commit d0aef41). Amended after the architecture with edits P1–P4 (`docs/03-architecture/architecture.md`, section 27). |
 | Stage | 2 of the playbook (`docs/PLAYBOOK.md`). Gate: owner approves MVP scope, permission matrix and acceptance criteria. |
 | Input | Approved `docs/01-usecases/use-cases.md` (79 use cases, decisions D1–D40). |
 | Next | Stage 3 mockups for every MVP screen in section 6, then Stage 4 architecture. |
@@ -112,10 +112,16 @@ the MVP with the first 20 customers.
 | M11 | Wrong auto-matches | Auto-confirmed payment matches later undone as wrong | ≤ 1 in 100 | G2, G5 |
 | M12 | Willingness to pay | Of the first 20 beta customers, how many pay at one of the two test prices after the trial | ≥ 10 of 20 | G6 |
 | M13 | Paid retention | Paying creators still paying after 3 months | ≥ 70% | G6 |
-| M14 | Cost to run | AI + hosting per paying creator per month as a share of price | ≤ 30% | G6 |
+| M14 | Cost to run | **Variable** cost per paying creator per month (AI plus per-creator running cost, including payment-gateway fees) as a share of price. Fixed platform cost is reported separately (FR-295). See note below. | ≤ 30% | G6 |
 | M15 (v1) | Delegation safety | Manager actions that exceeded permissions | **Zero** | G7 |
 | M16 (v1) | TDS recovered | ₹ TDS matched in AIS plus ₹ TDS chased from brands, per creator per year | Reported in the year-end pack | G8 |
 | M17 | Time saved (self-reported) | Monthly 1-question survey: "hours of admin saved this week" | Median ≥ 3 hours/week | G1–G4 |
+
+**How M14 is measured (Amended after architecture, P2).** Fixed platform cost (servers, database,
+monitoring, staging) does not grow with each creator. With 20 beta creators, fixed hosting alone is
+about ₹850–1,250 per creator a month (architecture section 24.3), so M14 would fail at any price if
+it were spread over them. M14 therefore counts only the cost that grows with each creator, which is
+what the price test is for. Fixed platform cost is shown as its own monthly total in FR-295.
 
 **Native-app trigger (D39, proposed thresholds).** Start the native app when, for two months in a
 row: (a) at least **70%** of weekly active creators do most of their sessions on a phone, **and**
@@ -382,10 +388,13 @@ Later.)
   or changed.
 
 **FR-044 Keep only business content** · Must · MVP · NFR-002, UC-017 · Free
-For messages sorted as fan, personal, newsletter or spam, only the category and date are kept. The
-content is not stored.
-- AC1: Given an email sorted as personal, when processed, then only its category label and date
-  exist in storage.
+For messages sorted as fan, personal, newsletter or spam, only the category, the date and the
+provider's message ID (for example Gmail's) are kept. The content is not stored: no sender, subject,
+body or attachment. The ID is kept so the message can be fetched again if the creator re-sorts it
+(AC2), and so it is never read, or paid for, twice. It reveals nothing on its own. (Amended after
+architecture, P1.)
+- AC1: Given an email sorted as personal, when processed, then only its category label, date and
+  the provider's message ID exist in storage, and no sender, subject, body or attachment is stored.
 - AC2: Given the creator re-sorts a personal email as business, when they do, then the content is
   fetched again from Gmail on demand.
 
@@ -1111,10 +1120,12 @@ rather than a false "safe".
   checked this month" and never "safe".
 
 **FR-295 Price-test reporting** · Must · MVP · D32 · —
-Internal report for the owner: trial starts, conversions and retention by price point, and cost per
-creator (M12–M14).
+Internal report for the owner: trial starts, conversions and retention by price point, variable
+cost per creator, and fixed platform cost shown separately (M12–M14). (Amended after architecture,
+P2.)
 - AC1: Given 20 beta creators across two price points, when the owner opens the report, then
-  conversions and cost per creator are shown per price point.
+  conversions and variable cost per creator are shown per price point, and fixed platform cost is
+  shown as a separate monthly total.
 
 ## 6. Screen list
 
@@ -1300,7 +1311,7 @@ NFR-025 onwards. All are Must for the MVP unless stated.
 | NFR-009 | Exact money numbers | No AI-extracted amount enters invoices, tax or reports without confirmation, except confident payment matches (FR-144) |
 | NFR-014 | Explainable AI | Every label, match, draft and assistant step shows a reason and a source link |
 | NFR-046 | **Test sets before each release**: sorting (M6), scams (M7), extraction, matching, hidden instructions (FR-239 AC2), Hinglish drafts | Given a model or prompt change, when tested, then no metric falls below its target, or the change is not released |
-| NFR-018 (final) | Cost to run | Measured monthly per free and paid creator (FR-295); paid-tier AI + hosting ≤ 30% of the price (M14) |
+| NFR-018 (final) | Cost to run | Measured monthly per free and paid creator (FR-295); paid-tier **variable** cost (AI plus per-creator running cost, including payment-gateway fees) ≤ 30% of the price (M14). Fixed platform cost is reported separately, because spread over 20 beta creators it is ₹850–1,250 each and would fail M14 at any price. (Amended after architecture, P2.) |
 
 ## 9. Integrations
 
@@ -1351,9 +1362,13 @@ the assistant. Prices use the per-token rates in `CLAUDE.md` as a stand-in, at �
 | Assistant, ~50 requests | ~₹100–150 | Paid |
 | Tax cross-checks, matching, digest summaries | ~₹10–30 | Paid |
 | Hosting, storage, SMS, WhatsApp, email per creator | ~₹30–80 | Both |
-| **Total, paid creator** | **~₹250–350 per month** | |
+| Payment-gateway fee on the subscription (~2% of the price, plus GST on the fee) | ~₹12–24 at ₹499–999 | Paid |
+| **Total, paid creator** | **~₹260–375 per month** | |
 | **Total, free creator** (scam flags, hosting) | **~₹40–100 per month** | |
 | One-time import (12 months of email) | ~₹200–300 once | Free (D31) |
+
+The payment-gateway fee line was missing from the first draft. It grows with each paying creator,
+so it counts in M14. (Amended after architecture, P3.)
 
 Fixed yearly costs not in these figures: the Gmail security assessment (D12), Meta and WhatsApp
 fees, the CA review (D36), the external security review (NFR-029).
@@ -1367,7 +1382,7 @@ because of scam flags (D31), so a fair-use cap is needed (FR-294).
 | Item | Recommendation (you decide, Q1) |
 |---|---|
 | Two prices | **₹499/month** and **₹999/month**, each with a yearly option at two months free |
-| Why | ₹499 is 2.5x the tracker anchor but covers cost at ~30–40%; ₹999 tests whether "money collected" justifies a premium. Both are far below one late ₹50,000 invoice. |
+| Why | ₹499 is 2.5x the tracker anchor, but on the §10.1 estimate (~₹260–375 per paid creator) its variable cost is ~50–75% of the price, so it misses M14 (≤ 30%) unless the assistant allowance or AI cost comes down. ₹999 comes in at ~26–38%, near the target. ₹999 also tests whether "money collected" justifies a premium. Both are far below one late ₹50,000 invoice. (Amended after architecture, P2/P3.) |
 | How | First 20 customers split between the two at random; same features; same trial |
 | Decide when | After 20 customers have finished their trial; compare M12–M14 per price |
 | Manager pays (v1) | Same price as the creator plan until the v2 per-creator manager plan (M2-15) |
@@ -1406,7 +1421,8 @@ Likelihood and impact: H = high, M = medium, L = low.
 ## 12. Assumptions to verify (platform facts not checked for this draft)
 
 No web research was done for this PRD. These facts matter to scope and must be verified before
-Stage 4 is approved.
+Stage 4 is approved. The checks made for the architecture are recorded in 12.1. (Amended after
+architecture, P4.)
 
 | # | Assumption | If wrong |
 |---|---|---|
@@ -1423,6 +1439,20 @@ Stage 4 is approved.
 | A11 | AI providers offer contracts with no training on customer data and short retention | Choice of provider; NFR-035 |
 | A12 | GST: ₹20L threshold for services in most states, ₹10L in special-category states; IGST vs CGST+SGST by place of supply; TDS on creator fees mostly at 10% (now under section 393 of the 2025 Act), with 1% and 2% cases | Rule set; CA review (D36) |
 | A13 | Advance-tax and TDS-certificate dates under the 2025 Act are unchanged from the old ones | Later features (UC-073, UC-074) |
+
+### 12.1 Verification results (2026-11)
+
+*(Amended after architecture, P4. Results from `docs/03-architecture/architecture.md`, section
+28.1, checked by web search in 2026-11.)* A2, A5, A7, A8, A10, A12 and A13 are not yet verified.
+
+| # | Finding (2026-11) | Effect | Sources |
+|---|---|---|---|
+| A1 | `gmail.readonly` is a restricted scope and needs a yearly independent security assessment (CASA Tier 2); `gmail.send` is only "sensitive". Vendor price claims for the assessment range from about US$540 to tens of thousands (unverified). | Get quotes from 2–3 authorised labs now. They decide whether the ₹3 lakh budget in Q14 holds. | [Unipile guide](https://www.unipile.com/integrating-google-oauth-2-0-user-authentication-into-your-app/), [Nango Google security review](https://nango.dev/docs/api-integrations/google-shared/google-security-review), [Latenode community thread](https://community.latenode.com/t/is-casa-tier-2-assessment-necessary-for-all-gmail-api-apps-options-for-indie-developers/22861) (vendor sources; prices unverified) |
+| A1 (testing mode) | Before verification, a Google app in testing mode is limited to 100 test users, and its refresh tokens (the creator's saved Gmail connection) expire after 7 days. | A Gmail beta before verification would mean reconnecting every week, so run the beta forwarding-only until approved (D33, section 10.3). | [Unipile refresh-token guide](https://www.unipile.com/google-oauth-refresh-token/), [Sailjada post](https://tech.sailjada.com/posts/2026-05-06-2046.html) |
+| A3/A4 | Confirmed by Meta docs: messaging works on professional accounts, with a 24-hour reply window. "Human agent" extensions and 2026 changes are unclear in secondary sources. | No MVP effect (replies are v1, FR-053). Re-check before v1. | [Meta Instagram messaging API](https://developers.facebook.com/documentation/instagram-platform/instagram-api-with-instagram-login/messaging-api) |
+| A6 | Secondary sources say WhatsApp service messages may be charged from 1 Oct 2026, after 1,000 free a month. Not yet confirmed on Meta's pricing page. | Small: each forward's confirmation is one message (about ₹0–5 per paid creator a month). Verify on Meta's pricing page. | [Meta pricing page](https://developers.facebook.com/docs/whatsapp/pricing), [AiSensy Oct 2026 update](https://m.aisensy.com/blog/whatsapp-pricing-update-october-2026/) |
+| A9 | DPDP Rules notified Nov 2025. Notice to the Data Protection Board "without delay", with details within 72 hours (sources differ). The start date of Rule 7 (breach notice) is phased. | Our 24-hour readiness (NFR-037) covers it. Counsel to confirm the timing and start date. | [SCC Online](https://www.scconline.com/blog/post/2025/12/26/digital-personal-data-protection-rules-2025-key-highlights/), [Bar & Bench](https://www.barandbench.com/view-point/meity-notifies-final-digital-personal-data-protection-rules-2025), [DPDP Rule 7 text summary](https://www.dpdpa.com/dpdparules/rule7.html) |
+| A11 | On Amazon Bedrock, prompts are not used for training and not shared with model makers; retention is configurable per account. Claude Sonnet 5, Opus 5 and Haiku 4.5 are available with **India in-country processing on Bedrock**. Claude on Google Vertex is **not** offered in Mumbai. | Supports NFR-035 and the architecture's AI choice. Confirm the chosen models do not need the provider data-sharing mode. | [AWS ML blog](https://aws.amazon.com/blogs/machine-learning/amazon-bedrock-expands-claude-model-availability-to-india-cross-region-inference/), [CRN Asia](https://www.crnasia.com/india/news/2026/anthropic-takes-claude-inference-live-in-india-opens-path-to-regulated-ai-deployments), [Business Today](https://www.businesstoday.in/technology/news/story/anthropic-claude-models-get-local-inference-in-india-via-amazon-bedrock-what-it-means-for-you-559534-2026-10-05), [Google Cloud data residency](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/data-residency), [AWS Bedrock data protection](https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html), [AWS Bedrock data retention](https://docs.aws.amazon.com/bedrock/latest/userguide/data-retention.html) |
 
 ## 13. Proposed edits to the use-case document
 

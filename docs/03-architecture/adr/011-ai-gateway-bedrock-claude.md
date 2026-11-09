@@ -16,7 +16,8 @@ creator (FR-295, M14), allowances (FR-234, FR-294), and graceful failure (NFR-04
   handles outages.
 - Provider: **Claude on Amazon Bedrock with the India in-country profile.** Haiku 4.5 for sorting and
   scam signals. Sonnet 5 for extraction, drafts, the assistant and the tax cross-check. Model IDs are
-  pinned in config.
+  pinned in config. These are the versions offered in the India profile as of October 2026. We move
+  to newer Haiku or Sonnet versions once they reach that profile and pass the eval suite.
 - Calls that read outside content have no tools and return only allowed JSON fields. Only a signed-in
   person's chat starts an assistant run. Assistant tools are Actions (ADR-007); there is no send tool.
   Drafts may only address confirmed contacts.

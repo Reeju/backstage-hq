@@ -1197,6 +1197,11 @@ model. It:
 
 ### 14.2 Models by job **[Sign-off S2]**
 
+The versions below are the ones confirmed with India in-country processing as of October 2026
+(A11). Newer Claude models (for example the 5.5 family) usually reach the direct API first. When a
+newer Haiku or Sonnet is offered in the India profile, we move to it as a config change, but only
+after it passes the eval suite for that job.
+
 | Purpose | Model (Bedrock India) | Why |
 |---|---|---|
 | Sorting, scam signals | Claude Haiku 4.5 | High volume, cheap. Runs after free header checks remove obvious newsletters and notifications. |
