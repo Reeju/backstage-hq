@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-05 Today · BackstageHQ</title>
 <script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
-<body data-id="S-05" data-title="Today" data-fr="FR-200, FR-201" data-nav="home" data-states="ready,loading,empty,error,upgrade">
+<body data-id="S-05" data-title="Today" data-fr="FR-200, FR-201" data-nav="home" data-zero-in="empty" data-states="ready,loading,empty,error,upgrade">
 <main>
   <p class="muted mb-2">Monday 9 November, 2026 &middot; Good morning, Arjun</p>
 
@@ -19,8 +19,12 @@
       <p class="muted">You are owed</p><p class="big" style="color:#92400E">&#8377;2,40,000</p>
       <p class="muted">across 4 invoices &middot; <b>&#8377;60,000 due today</b> &middot; &#8377;40,000 disputed (not counted)</p></a>
 
-    <a href="s17-approvals.html" class="card flex items-center gap-3" style="text-decoration:none;color:inherit;border-color:#0F766E;border-width:2px">
+    <a href="s17-approvals.html" class="card flex items-center gap-3" style="text-decoration:none;color:inherit;border-color:#2563EB;border-width:2px">
       <span class="badge" style="height:36px;min-width:36px;font-size:16px">4</span><div class="grow"><b>4 waiting for you</b><br><span class="muted">2 payment reminders, 1 follow-up, 1 reply. Nothing is sent until you tap.</span></div><span aria-hidden="true">&rarr;</span></a>
+
+    <a href="s17-approvals.html#tc" class="card flex items-center gap-3" style="text-decoration:none;color:inherit">
+      <span class="badge" style="height:36px;min-width:36px;font-size:16px;background:#fff;color:#2563EB;border:2px solid #2563EB">2</span><div class="grow"><b>2 to confirm</b><br><span class="muted">1 proposed payment match, 1 TDS question. Nothing leaves BackstageHQ.</span></div><span aria-hidden="true">&rarr;</span></a>
+    <p class="muted" style="margin-top:-4px">4 to send, 2 to confirm. The Waiting button at the top counts both (6). Payment matches can also be confirmed on <a href="s15-payments.html">Payments</a>.</p>
 
     <section class="card" aria-labelledby="pit"><h2 class="h2" id="pit">New pitches</h2>
       <a class="row" href="s07-message.html" style="text-decoration:none;color:inherit"><div class="grow"><b>Velvet Bloom Cosmetics</b><br><span class="muted">2 Reels + 3 Stories, budget &#8377;80,000, go-live 15 Dec</span></div><span class="chip ok">Looks real</span></a>

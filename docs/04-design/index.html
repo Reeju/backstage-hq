@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BackstageHQ design mockups (MVP)</title>
-<script src="https://cdn.tailwindcss.com"></script><script src="assets/tailwind-config.js"></script><link rel="stylesheet" href="assets/app.css"></head>
+<script src="https://cdn.tailwindcss.com"></script><script src="assets/tailwind-config.js"></script><link rel="stylesheet" href="assets/app.css"><link rel="icon" type="image/svg+xml" href="assets/favicon.svg"></head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <main id="main" class="mx-auto max-w-4xl p-4 pb-16">
-  <h1 class="text-3xl font-extrabold" style="color:#115E59">BackstageHQ: MVP mockups</h1>
-  <p class="muted mt-1">Clickable, static, sample data (creator "Arjun Mehta", Pune; today is Monday 9 November 2026). Built from the approved PRD (screens S-01 to S-30) and architecture. Nothing here sends anything or saves anything.</p>
+  <img src="assets/logo.svg" alt="BackstageHQ" style="height:44px;width:auto;display:block;margin-bottom:12px">
+  <h1 class="text-3xl font-extrabold" style="color:#0F172A;letter-spacing:-.02em">BackstageHQ: MVP mockups</h1>
+  <p class="muted mt-1">Clickable, static, sample data (creator "Arjun Mehta", Pune; today is Monday 9 November 2026). Built from the approved PRD (screens S-01 to S-30, plus S-43 search) and architecture. Nothing here sends anything or saves anything.</p>
 
   <section class="card mt-4"><h2 class="h2">How to click through</h2>
     <ul style="padding-left:20px;list-style:disc">
@@ -13,7 +14,7 @@
       <li>The dark bar at the top of each screen has buttons for its <b>states</b>: Normal, Loading, Empty, Error and others. Tap them to see each one.</li>
       <li><span class="chip ai">Violet</span> always means AI. AI suggestions show a source link, can be edited, and do nothing until a person taps. Green padlock notes mark the send rule.</li>
       <li><a class="gapflag" href="#gaps">Gap Gn</a> pink dashed notes mark a placeholder I chose where the PRD is silent. All are listed below.</li>
-      <li>Needs internet once for the Tailwind script (<code>cdn.tailwindcss.com</code>). Without it, pages still open with the shared stylesheet, but layout is plainer. Design rules: <a href="design-system.md">design-system.md</a>.</li></ul></section>
+      <li>Needs internet once for the Tailwind script (<code>cdn.tailwindcss.com</code>) and the Inter font (Google Fonts). Without it, pages still open with the shared stylesheet and a system font, but layout is plainer. Design rules: <a href="design-system.md">design-system.md</a>.</li></ul></section>
 
   <h2 class="h2 mt-6">MVP screens</h2>
   <div style="overflow-x:auto"><table class="t" aria-label="Screens">
@@ -48,17 +49,20 @@
     <tr><td>S-28</td><td><a href="mockups/s28-capture.html">Capture / upload</a></td><td>FR-014, 052</td><td>Normal, reading, AI proposal, malware stopped, error, free plan</td></tr>
     <tr><td>S-29</td><td><a href="mockups/s29-second-check.html">Second-check dialog</a></td><td>FR-004, 210</td><td>Normal, wrong code, locked, done</td></tr>
     <tr><td>S-30</td><td><a href="mockups/s30-price-test.html">Price-test report (internal)</a></td><td>FR-295</td><td>Normal, loading, empty, error</td></tr>
+    <tr><td>S-43</td><td><a href="mockups/s43-search.html">Search</a></td><td>FR-205, NFR-047, 048</td><td>Results, amount, brand list, Hindi, no results, no Gmail, before typing, loading, error, free plan</td></tr>
     </tbody></table></div>
+  <p class="muted mt-2"><b>About search (S-43):</b> the search box is in the desktop top bar on every screen ("/" focuses it; typing then Enter, or a click, opens S-43), and a magnifier button in every phone header opens it full-screen. Search words are never kept: there is no "recent searches" list, and the words are not put in the page address (only the mockup's state name is). No AI runs, so search is free; the violet "Ask the assistant" row appears for paid plans only, and nothing counts against the allowance until the words are sent in the assistant. The sample results for "nuv" and "&#2342;&#2367;&#2357;&#2366;&#2354;&#2368;" use a few extra sample records (an Instagram DM and an older Nuvora message, quote and files, an older Kinetic invoice and payment, Mithaas Studio) that appear on no other screen.</p>
 
   <h2 class="h2 mt-6">Not screens, but designed now (PRD section 6)</h2>
   <div style="overflow-x:auto"><table class="t" aria-label="Extras"><thead><tr><th>ID</th><th>What</th><th>Contains</th></tr></thead><tbody>
     <tr><td>X-01</td><td><a href="mockups/x01-messages.html">Digest, push, WhatsApp replies, reminder wording</a></td><td>Daily digest email and push, WhatsApp confirmations, the five reminder templates</td></tr>
     <tr><td>X-02</td><td><a href="mockups/x02-documents.html">PDF layouts</a></td><td>Tax invoice, non-GST invoice, credit note, quote</td></tr>
     <tr><td>X-03</td><td><a href="mockups/x03-what-we-read.html">"What we read" text</a></td><td>Gmail, Instagram, WhatsApp, forwarding and uploads</td></tr></tbody></table></div>
-  <p class="muted mt-2">v1 and later screens (S-31 to S-42: people and access, permissions, AIS match, year-end pack, deliverables, expenses and others) are not designed here, as the PRD marks them v1.</p>
+  <p class="muted mt-2">v1 and later screens (S-31 to S-42, which are not in the MVP: people and access, permissions, AIS match, year-end pack, deliverables, expenses and others) are not designed here, as the PRD marks them v1.</p>
 
   <h2 class="h2 mt-6" id="gaps">PRD gaps and the placeholder chosen</h2>
   <p class="muted mb-2">Each gap is marked on the screen where it matters. These are choices for the product owner to confirm or change in the PRD.</p>
+  <p class="banner ok mb-2"><span aria-hidden="true">&#10003;</span><span>All 29 gaps below were closed by PRD amendments M1 to M29 (commit 3f754e9). The list is kept as the record of what was open when the mockups were approved.</span></p>
   <div style="overflow-x:auto"><table class="t" aria-label="Gaps"><thead><tr><th>#</th><th>Gap</th><th>Placeholder in the mockups</th></tr></thead><tbody>
     <tr id="g1"><td>G1</td><td>FR-002: second factor must differ from the first; phone-only sign-ups have no second method.</td><td>Email code offered as the second method (S-01, S-29).</td></tr>
     <tr id="g2"><td>G2</td><td>FR-003, FR-004: steps and order of setup not defined; unclear if a second check applies to the first bank entry; states with the lower GST threshold not listed.</td><td>Two steps, no second check on first entry (S-02).</td></tr>

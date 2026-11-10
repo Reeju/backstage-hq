@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-43 Search · BackstageHQ</title>
+<script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
+<body data-id="S-43" data-title="Search" data-fr="FR-205, NFR-047, NFR-048" data-nav="search" data-back="s05-home.html" data-states="results,amount,brand,hindi,none,nogmail,hint,loading,error,upgrade">
+<main>
+  <!-- Phone: the search field lives here (full-screen search, Q25). On desktop the field is in the top bar. -->
+  <form class="srchp" role="search" onsubmit="return false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" id="srchpIn" aria-label="Search brands, senders, invoices and amounts" placeholder="Search brands, invoices or amounts" autocomplete="off"></form>
+
+  <!-- Before typing -->
+  <div data-state="hint" hidden data-q="">
+    <section class="card"><h2 class="h2">Search</h2>
+      <p>Search by brand, sender, subject, invoice number or amount.</p>
+      <p class="muted mt-2">Starts after 2 letters. "80k", "&#8377;80,000" and "1.2L" all work for amounts.</p>
+      <p class="muted mt-2">The words you type are not saved, so there are no recent searches here.</p></section>
+  </div>
+
+  <!-- Loading -->
+  <div data-state="loading" hidden data-q="nuv" aria-busy="true"><p class="sr-only" role="status">Searching</p>
+    <div class="skel" style="width:120px;margin:4px 0 12px"></div>
+    <div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
+
+  <!-- Error: never shown as "no matches" -->
+  <div data-state="error" hidden data-q="nuv" class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Search isn't working right now.</b> Nothing was changed. <button type="button" class="btn btn-secondary btn-sm" data-toast="Trying again (sample)">Try again</button></div></div>
+
+  <!-- No results (Gmail connected) and no results (Gmail not connected) -->
+  <div data-state="none nogmail" hidden data-q="fabindia" class="stack">
+    <section class="card"><h2 class="h2" role="status">No matches for &ldquo;fabindia&rdquo; in Arjun Creates</h2>
+      <p class="muted mb-2">Search only looks at names, subjects, numbers and amounts that BackstageHQ keeps. It does not find:</p>
+      <ul style="padding-left:20px;list-style:disc" class="muted">
+        <li>Personal and fan messages, newsletters and spam. We don't keep them, so they can't be found.</li>
+        <li>Words inside emails, drafts and files.</li>
+        <li>Hindi and Roman spellings of the same word. They are searched separately ("diwali" does not find &#2342;&#2367;&#2357;&#2366;&#2354;&#2368;).</li></ul>
+      <div data-state="none" class="mt-3"><a class="btn btn-secondary" href="https://mail.google.com/mail/u/0/#search/fabindia" target="_blank" rel="noopener">Search in Gmail <span class="sr-only">(opens in a new tab)</span><span aria-hidden="true">&nearr;</span></a>
+        <p class="muted mt-2">Opens your own Gmail search in a new tab with the same words. BackstageHQ does not read or keep what Gmail shows.</p></div>
+    </section>
+  </div>
+
+  <!-- Results, free plan, and the brand view share one list. Words are matched at the start of a word ("nuv" finds Nuvora). -->
+  <div data-state="results upgrade brand" hidden data-q="nuv" data-fscope>
+    <div data-state="upgrade" hidden class="banner info mb-3"><span aria-hidden="true">&#9432;</span><span><b>Free plan.</b> Search covers your own deals, invoices, payments and files, and the messages your free Inbox shows. Same search, no assistant row.</span></div>
+
+    <div data-state="results upgrade" hidden>
+      <p class="muted mb-2" role="status"><b>15 results</b> for &ldquo;nuv&rdquo; in Arjun Creates</p>
+      <div class="tabs sfil" role="group" aria-label="Show only one type">
+        <button type="button" aria-pressed="true" data-g="all">All 15</button><button type="button" aria-pressed="false" data-g="msg">Messages 7</button><button type="button" aria-pressed="false" data-g="brand">Brands and contacts 2</button><button type="button" aria-pressed="false" data-g="lead">Leads and deals 1</button><button type="button" aria-pressed="false" data-g="quote">Quotes 1</button><button type="button" aria-pressed="false" data-g="inv">Invoices and credit notes 1</button><button type="button" aria-pressed="false" data-g="pay">Payments 1</button><button type="button" aria-pressed="false" data-g="file">Files 2</button></div>
+    </div>
+
+    <div data-state="brand" hidden>
+      <p class="mb-2"><a class="btn btn-ghost" href="#results">&larr; Back to results</a></p>
+      <section class="card mb-3"><h2 class="h2">Nuvora Audio</h2>
+        <p class="muted">nuvoraaudio.in &middot; Priya (Marketing) &middot; priya@nuvoraaudio.in</p>
+        <p class="muted mt-1" role="status">Everything for this brand: 7 messages, 1 deal, 1 quote, 1 invoice, 1 payment.</p>
+        <p class="muted mt-1">A full brand page comes later. For now this list is it.</p></section>
+    </div>
+
+    <div class="stack">
+      <section class="card sg" data-g="msg" aria-labelledby="r-msg"><div class="sg-h"><h2 class="h3" id="r-msg">Messages <span class="muted">(7)</span></h2></div>
+        <div>
+          <a class="sr" href="s07-message.html"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio &middot; Priya (Marketing)</span><span class="t2">Re: Go-live date for your integration &middot; Today &middot; Gmail</span></span><span class="chip">Ongoing deal</span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+          <a class="sr risk" href="s07-message.html#scam"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio Support &middot; help@<mark>nuv</mark>ora-pay.co</span><span class="t2">Urgent: update your bank details to receive payment &middot; 7 Nov &middot; Gmail</span></span><span class="chip bad">&#9888; Likely scam</span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+          <a class="sr" href="s07-message.html"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio &middot; Priya (Marketing)</span><span class="t2">Invoice INV-2026-27-010 received &middot; 7 Nov &middot; Gmail</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+          <a class="sr" href="s07-message.html"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio &middot; Priya (Marketing)</span><span class="t2">Re: Integration brief and deliverables &middot; 28 Oct &middot; Gmail</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+          <a class="sr" href="s07-message.html"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio &middot; Priya (Marketing)</span><span class="t2">Contract for your signature &middot; 22 Oct &middot; Gmail</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+          <div id="r-more-msg" hidden>
+            <a class="sr" href="s07-message.html"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio &middot; Priya (Marketing)</span><span class="t2">Rate confirmation for 1 integration video &middot; 15 Oct &middot; Gmail</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+            <a class="sr" href="s07-message.html"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1">@<mark>nuv</mark>oraaudio</span><span class="t2">&ldquo;Hi Arjun, loved your earbuds review&rdquo; &middot; 3 Oct &middot; Instagram DM</span></span><span class="chip warn">Check this</span><span class="go" aria-hidden="true">&rsaquo;</span></a></div>
+        </div>
+        <button type="button" class="more" data-more="#r-more-msg" aria-expanded="false" data-all="Show all (7)">Show all (7)</button></section>
+
+      <section class="card sg" data-g="brand" data-state="results upgrade" hidden aria-labelledby="r-brand"><div class="sg-h"><h2 class="h3" id="r-brand">Brands and contacts <span class="muted">(2)</span></h2></div>
+        <a class="sr" href="#brand"><span class="ti" data-i="brand" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio</span><span class="t2"><mark>nuv</mark>oraaudio.in &middot; everything for this brand</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+        <a class="sr" href="#brand"><span class="ti" data-i="brand" aria-hidden="true"></span><span class="tx"><span class="t1">Priya (Marketing)</span><span class="t2">priya@<mark>nuv</mark>oraaudio.in &middot; at <mark>Nuv</mark>ora Audio</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+
+      <section class="card sg" data-g="lead" aria-labelledby="r-lead"><div class="sg-h"><h2 class="h3" id="r-lead">Leads and deals <span class="muted">(1)</span></h2></div>
+        <a class="sr" href="s09-deal.html"><span class="ti" data-i="lead" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio</span><span class="t2">1 integration video &middot; &#8377;1,00,000 &middot; In progress, go-live 20 Nov</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+
+      <section class="card sg" data-g="quote" aria-labelledby="r-quote"><div class="sg-h"><h2 class="h3" id="r-quote">Quotes <span class="muted">(1)</span></h2></div>
+        <a class="sr" href="s10-quote.html"><span class="ti" data-i="quote" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio</span><span class="t2">&#8377;1,00,000 &middot; Accepted &middot; 20 Oct</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+
+      <section class="card sg" data-g="inv" aria-labelledby="r-inv"><div class="sg-h"><h2 class="h3" id="r-inv">Invoices and credit notes <span class="muted">(1)</span></h2></div>
+        <a class="sr" href="s13-invoice-editor.html#sent"><span class="ti" data-i="invoice" aria-hidden="true"></span><span class="tx"><span class="t1">INV-2026-27-010 &middot; <mark>Nuv</mark>ora Audio</span><span class="t2">&#8377;1,00,000 &middot; Sent, due 19 Nov</span></span><span class="chip brand">Payment spotted</span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+
+      <section class="card sg" data-g="pay" aria-labelledby="r-pay"><div class="sg-h"><h2 class="h3" id="r-pay">Payments <span class="muted">(1)</span></h2></div>
+        <a class="sr" href="s15-payments.html"><span class="ti" data-i="payment" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora Audio</span><span class="t2">&#8377;87,500 &middot; 8 Nov &middot; waiting for your confirmation</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+
+      <section class="card sg" data-g="file" data-state="results upgrade" hidden aria-labelledby="r-file"><div class="sg-h"><h2 class="h3" id="r-file">Files <span class="muted">(2)</span></h2></div>
+        <a class="sr" href="s09-deal.html"><span class="ti" data-i="file" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>Nuv</mark>ora_agreement_signed.pdf</span><span class="t2">Attached to the <mark>Nuv</mark>ora Audio deal &middot; opens the deal with the file</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a>
+        <a class="sr" href="s28-capture.html"><span class="ti" data-i="file" aria-hidden="true"></span><span class="tx"><span class="t1"><mark>nuv</mark>ora-brief.pdf</span><span class="t2">Not attached to anything yet &middot; opens Add a file</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+    </div>
+  </div>
+
+  <!-- Amount search -->
+  <div data-state="amount" hidden data-q="80k" data-fscope>
+    <p class="muted mb-2" role="status"><b>3 results</b> for exactly &#8377;80,000 <span class="chip brand" style="margin-left:6px">Read &ldquo;80k&rdquo; as &#8377;80,000</span></p>
+    <div class="tabs sfil" role="group" aria-label="Show only one type">
+      <button type="button" aria-pressed="true" data-g="all">All 3</button><button type="button" aria-pressed="false" data-g="lead">Leads and deals 1</button><button type="button" aria-pressed="false" data-g="inv">Invoices and credit notes 1</button><button type="button" aria-pressed="false" data-g="pay">Payments 1</button></div>
+    <div class="stack">
+      <section class="card sg" data-g="lead" aria-labelledby="a-lead"><div class="sg-h"><h2 class="h3" id="a-lead">Leads and deals <span class="muted">(1)</span></h2></div>
+        <a class="sr" href="s09-deal.html"><span class="ti" data-i="lead" aria-hidden="true"></span><span class="tx"><span class="t1">Velvet Bloom Cosmetics</span><span class="t2">2 Reels + 3 Stories &middot; budget <mark>&#8377;80,000</mark> &middot; New lead</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+      <section class="card sg" data-g="inv" aria-labelledby="a-inv"><div class="sg-h"><h2 class="h3" id="a-inv">Invoices and credit notes <span class="muted">(1)</span></h2></div>
+        <a class="sr" href="s13-invoice-editor.html#sent"><span class="ti" data-i="invoice" aria-hidden="true"></span><span class="tx"><span class="t1">INV-2026-27-004 &middot; Kinetic Fitness</span><span class="t2"><mark>&#8377;80,000</mark> &middot; Paid &middot; issued 12 Aug</span></span><span class="chip ok">Paid</span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+      <section class="card sg" data-g="pay" aria-labelledby="a-pay"><div class="sg-h"><h2 class="h3" id="a-pay">Payments <span class="muted">(1)</span></h2></div>
+        <a class="sr" href="s15-payments.html"><span class="ti" data-i="payment" aria-hidden="true"></span><span class="tx"><span class="t1">Kinetic Fitness</span><span class="t2"><mark>&#8377;80,000</mark> &middot; 2 Sep &middot; matched to INV-2026-27-004</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+    </div>
+    <p class="muted mt-3">Amounts match exactly, with or without &#8377; and commas, or as k, L or lakh. Invoices match on the amount before GST and on the total. There are no ranges yet.</p>
+  </div>
+
+  <!-- Hindi (Devanagari) -->
+  <div data-state="hindi" hidden data-q="&#2342;&#2367;&#2357;&#2366;&#2354;&#2368;" class="stack">
+    <p class="muted" role="status"><b>2 results</b> for <span lang="hi">&ldquo;&#2342;&#2367;&#2357;&#2366;&#2354;&#2368;&rdquo;</span> in Arjun Creates</p>
+    <section class="card sg" aria-labelledby="h-msg"><div class="sg-h"><h2 class="h3" id="h-msg">Messages <span class="muted">(1)</span></h2></div>
+      <a class="sr" href="s07-message.html"><span class="ti" data-i="msg" aria-hidden="true"></span><span class="tx"><span class="t1">Mithaas Studio &middot; Kavya (Brand manager)</span><span class="t2" lang="hi"><mark lang="hi">&#2342;&#2367;&#2357;&#2366;&#2354;&#2368;</mark> &#2325;&#2376;&#2306;&#2346;&#2375;&#2344; &#2325;&#2375; &#2354;&#2367;&#2319; &#2325;&#2379;&#2354;&#2376;&#2348; <span lang="en">&middot; 6 Nov &middot; Gmail</span></span></span><span class="chip brand">Brand pitch</span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+    <section class="card sg" aria-labelledby="h-lead"><div class="sg-h"><h2 class="h3" id="h-lead">Leads and deals <span class="muted">(1)</span></h2></div>
+      <a class="sr" href="s09-deal.html"><span class="ti" data-i="lead" aria-hidden="true"></span><span class="tx"><span class="t1">Mithaas Studio</span><span class="t2"><span lang="hi"><mark lang="hi">&#2342;&#2367;&#2357;&#2366;&#2354;&#2368;</mark> &#2325;&#2376;&#2306;&#2346;&#2375;&#2344;</span> &middot; 2 Reels &middot; budget &#8377;60,000 &middot; New lead</span></span><span class="go" aria-hidden="true">&rsaquo;</span></a></section>
+    <div class="banner info"><span aria-hidden="true">&#9432;</span><span>Hindi words find Hindi spellings only. Searching &ldquo;diwali&rdquo; in English letters will not find these, and the other way round. Try both if you are not sure.</span></div>
+  </div>
+
+  <!-- Ask the assistant: paid plans only, under results only. Opening it sends nothing to the AI. -->
+  <div data-state="results amount brand hindi" hidden class="mt-3">
+    <a class="ask" href="s18-assistant.html"><span aria-hidden="true" style="color:#6D28D9;font-size:20px">&#10022;</span><span class="grow" style="flex:1;min-width:0"><b>Ask the assistant instead</b><br><span class="muted">Opens the assistant with your words filled in. Nothing goes to the AI, and nothing counts against your monthly allowance, until you send it there.</span></span><span class="chip ai">Paid plan</span></a>
+  </div>
+
+  <p class="muted mt-4">Search is plain keyword search. No AI runs, it costs nothing, and the words you type are never saved.</p>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+(function () {
+  var P = {
+    msg: '<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>',
+    brand: '<path d="M3 21h18M5 21V7l7-4 7 4v14M9 11h2M13 11h2M9 15h2M13 15h2"/>',
+    lead: '<path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5L2.6 9.8l6.5-.9z"/>',
+    quote: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14l2 2 4-4"/>',
+    invoice: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+    payment: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+    file: '<path d="M21 12l-8.5 8.5a5 5 0 0 1-7-7L14 5a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L15 7"/>'
+  };
+  document.querySelectorAll('.ti[data-i]').forEach(function (e) { e.innerHTML = '<svg viewBox="0 0 24 24" focusable="false">' + P[e.dataset.i] + '</svg>'; });
+  // "Show all (N)" per group
+  document.addEventListener('click', function (e) {
+    var m = e.target.closest('button[data-more]'); if (!m) return;
+    var x = document.querySelector(m.dataset.more); x.hidden = !x.hidden;
+    m.setAttribute('aria-expanded', String(!x.hidden)); m.textContent = x.hidden ? m.dataset.all : 'Show fewer';
+    var f = e.target.closest('[data-fscope]');
+  });
+  // Type chips: narrow to one group
+  document.querySelectorAll('.sfil').forEach(function (bar) {
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-g]'); if (!b) return;
+      bar.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      var scope = bar.closest('[data-fscope]'), g = b.dataset.g;
+      scope.querySelectorAll('section[data-g]').forEach(function (s) { s.dataset.off = (g !== 'all' && s.dataset.g !== g) ? '1' : ''; s.style.display = s.dataset.off ? 'none' : ''; });
+    });
+  });
+})();
+</script></body></html>

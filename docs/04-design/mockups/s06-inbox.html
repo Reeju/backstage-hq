@@ -1,29 +1,31 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-06 Inbox · BackstageHQ</title>
 <script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
-<body data-id="S-06" data-title="Inbox" data-fr="FR-040 to FR-045, FR-051" data-nav="inbox" data-states="ready,loading,empty,error,upgrade">
+<body data-id="S-06" data-title="Inbox" data-fr="FR-040 to FR-045, FR-051" data-nav="inbox" data-wide="1" data-states="ready,loading,empty,error,upgrade">
 <main>
-  <div data-state="error" hidden class="banner bad mb-3" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Gmail checks paused since 7:10 am.</b> We will catch up when it is back. <a class="btn btn-secondary btn-sm" href="s25-settings-connections.html">Reconnect</a></div></div>
-  <div data-state="upgrade" hidden class="banner warn mb-3"><span aria-hidden="true">&#9888;</span><div><b>Free plan: scam checks only.</b> New messages show a scam label but are not sorted or turned into leads. 3 messages this month were <b>not checked</b> because the free limit was reached (never shown as "safe"). <a href="s27-billing.html">Upgrade</a>
-    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g10">Gap G10</a></b> What a free creator sees in the inbox is not specified. I show scam labels only, with "not checked this month" over the Q4 cap (proposed 500).</div></div></div>
+  <div data-state="error" hidden class="banner bad mb-3 gut" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Gmail checks paused since 7:10 am.</b> We will catch up when it is back. <a class="btn btn-secondary btn-sm" href="s25-settings-connections.html">Reconnect</a></div></div>
+  <div data-state="upgrade" hidden class="banner warn mb-3 gut"><span aria-hidden="true">&#9888;</span><div><b>Free plan: scam checks only.</b> New emails and Instagram DMs get a scam label but are not sorted or turned into leads. Both share one limit of 500 messages a month. 3 messages this month were <b>not checked this month</b> because the limit was reached (never shown as "safe"). <a href="s27-billing.html">Upgrade</a>
+    <div class="gapnote"><b>Settled by PRD (G10, M10)</b> Free creators get scam flags on emails and DMs under one 500-message monthly cap (section 4.3, FR-012, FR-294, D31). Over the cap: "not checked this month".</div></div></div>
 
-  <div data-state="ready upgrade error">
+  <!-- Phone and tablet: one list. From 1240px wide: list | thread | context, as in the owner's reference. -->
+  <div data-state="ready upgrade error" class="p3 lst">
+   <div class="pane-list">
     <div class="tabs" role="tablist" aria-label="Category">
       <button role="tab" aria-selected="true" data-pressed>All <span class="badge brand" style="margin-left:6px">9</span></button>
       <button role="tab" aria-selected="false" data-pressed>Brand pitches</button><button role="tab" aria-selected="false" data-pressed>Ongoing deals</button>
       <button role="tab" aria-selected="false" data-pressed>Invoices and payments</button><button role="tab" aria-selected="false" data-pressed>Tax</button>
       <button role="tab" aria-selected="false" data-pressed>Possible scam <span class="badge" style="margin-left:6px">1</span></button></div>
 
-    <article class="card"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
+    <article class="card sel"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
       <div class="flex gap-2 items-center flex-wrap"><b>Aarav Shah &middot; Velvet Bloom Cosmetics</b><span class="chip brand">Brand pitch</span><span class="chip ok">Looks real</span></div>
       <p>Collab for our winter range</p><p class="muted">Why: asks for 2 Reels and 3 Stories with a budget. &middot; 8:52 am &middot; via Gmail</p></a>
       <div class="mt-2 flex gap-2 flex-wrap"><a class="btn btn-secondary btn-sm" href="s07-message.html">Make lead</a><button class="btn btn-ghost btn-sm" data-toggle="#mv1" aria-expanded="false">Move to another category</button></div>
       <div id="mv1" hidden class="mt-2"><label class="field"><span class="l">Move to</span><select class="input"><option>Agency</option><option>Ongoing deal</option><option>PR gifting</option><option>Fan or personal</option><option>Newsletter or spam</option></select><span class="hint">Applies to this sender, for you only.</span></label><button class="btn btn-primary btn-sm" data-toast="Moved. Future emails from this sender will be sorted the same way." data-undo>Move</button></div></article>
 
-    <article class="card" style="border-color:#FECACA"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
+    <article class="card scam"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
       <div class="flex gap-2 items-center flex-wrap"><b>Strideline Collabs Team</b><span class="chip bad">&#9888; Likely scam</span></div>
       <p>Paid campaign brief, please download</p><p class="muted">Why flagged: domain does not match the brand; asks you to download a file. &middot; 7:31 am &middot; via Gmail</p></a>
-      <div class="mt-2 flex gap-2"><button class="btn btn-secondary btn-sm" data-toast="Marked safe. We will not flag this sender for the same reasons again." data-undo>Mark safe</button><button class="btn btn-secondary btn-sm" data-toast="Reported to the BackstageHQ team. Thank you.">Report</button></div>
+      <div class="mt-2 flex gap-2"><button class="btn btn-secondary btn-sm" data-toast="Marked safe. We will not flag this sender for the same reasons again." data-undo>Mark safe</button><button class="btn btn-secondary btn-sm" data-toast="Sender flagged for you only. Nothing was shared. To report it, use the platform's own report option, or cybercrime.gov.in or helpline 1930.">Report</button></div>
       <p class="muted mt-1">We never block or hide messages. Gmail is untouched.</p></article>
 
     <article class="card"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
@@ -33,11 +35,11 @@
     <article class="card"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
       <div class="flex gap-2 items-center flex-wrap"><b>@drift.sneakers</b><span class="chip brand">Brand pitch</span><span class="chip">Instagram DM</span><span class="chip warn">Check this</span></div>
       <p>"Hey! Love your reels. Budget 30 to 40k for 1 reel."</p><p class="muted">Why: asks for one Reel with a budget range. &middot; Yesterday</p></a>
-      <div data-state="upgrade" hidden class="muted">Free plan: DMs are not watched.</div></article>
+      <div data-state="upgrade" hidden class="muted">Free plan: DMs get a scam label only, like emails. Sorting and leads need the paid plan. Emails and DMs share one limit of 500 messages a month; past it, messages show "not checked this month", never "safe".</div></article>
 
     <article class="card"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
       <div class="flex gap-2 items-center flex-wrap"><b>HDFC Bank Alert</b><span class="chip ok">Invoice or payment</span></div>
-      <p>Rs 87,500.00 credited to A/c XX7890</p><p class="muted">Why: bank credit alert. Matched as a proposed payment. <a href="s15-payments.html">See payment</a></p></a></article>
+      <p>Rs 87,500.00 credited to A/c XX7890</p><p class="muted">Why: bank credit alert. Matched as a proposed payment.</p></a><p class="mt-2"><a href="s15-payments.html">See payment</a></p></article>
 
     <article class="card"><a href="s07-message.html" style="text-decoration:none;color:inherit;display:block">
       <div class="flex gap-2 items-center flex-wrap"><b>Nuvora Audio &middot; Priya (Marketing)</b><span class="chip">Ongoing deal</span></div>
@@ -46,9 +48,30 @@
     <article class="card"><div class="flex gap-2 items-center flex-wrap"><b>Message from someone</b><span class="chip">Not checked this month</span></div>
       <p class="muted">Free limit reached, so we did not check this one. It is not "safe", it is unchecked.</p></article>
     <p class="muted text-center">Personal, fan and newsletter mail (14 this week) is not stored. Only its category and date are kept.</p>
+   </div>
+
+   <!-- wide screens only: the selected conversation (same content as S-07, Normal state) -->
+   <section class="only-wide pane-thread" data-state="ready error" aria-label="Selected message">
+     <h2 class="h2">Collab for our winter range</h2><p class="muted">Aarav Shah &lt;aarav@velvetbloom.in&gt; &middot; Today 8:52 am &middot; Gmail</p>
+     <p class="mt-3">Hi Arjun, we loved your skincare reels! We are planning a winter launch and would like <mark style="background:#EDE9FE">2 Reels + 3 Stories</mark>. Our <mark style="background:#EDE9FE">budget is &#8377;80k</mark> and we would like to go live on <mark style="background:#EDE9FE">15 Dec</mark>. Usage on our page for 30 days. Let us know your rates. Aarav, Brand Manager, Velvet Bloom</p>
+     <div class="mt-2 muted">Category: <span class="chip brand">Brand pitch</span> Why: asks for deliverables with a budget.</div>
+   </section>
+   <div class="only-wide pane-ctx stack" data-state="ready error">
+     <section class="card" aria-labelledby="sc6"><h2 class="h3" id="sc6">Safety check</h2><p class="mt-1"><span class="chip ok">Looks real</span> Sender domain matches velvetbloom.in. No download or fee requests.</p></section>
+     <section class="ai-box" data-state="ready" aria-labelledby="ex6"><div class="ai-head"><span class="tag">&#10022; AI-prepared suggestion</span><span class="chip approve">Needs your approval</span></div><h2 class="h3" id="ex6">What we read in this email</h2><p class="muted mb-2">Check each value. Nothing is saved as a lead until you tap "Create lead".</p>
+        <div class="row"><span class="grow">Brand <b>Velvet Bloom Cosmetics</b></span><a class="src" href="#">source</a></div>
+        <div class="row"><span class="grow">Deliverables <b>2 Reels + 3 Stories</b></span><a class="src" href="#">source</a></div>
+        <div class="row"><span class="grow">Budget <b>&#8377;80,000</b></span><a class="src" href="#">source</a></div>
+        <div class="row"><span class="grow">Go-live <b>15 Dec 2026</b></span><a class="src" href="#">source</a></div>
+        <div class="row"><span class="grow">Usage <b>30 days on brand page</b></span><a class="src" href="#">source</a></div>
+        <div class="row"><span class="grow">Exclusivity <b style="color:#92400E">Not mentioned</b></span><span class="chip warn">Missing</span></div>
+        <div class="row"><span class="grow">Finance contact <b style="color:#92400E">Not given</b></span><span class="chip warn">Missing</span></div>
+        <div class="flex gap-2 mt-3 flex-wrap"><a class="btn btn-primary" href="s08-leads.html" data-toast="Lead created in New (sample)">Create lead</a><button class="btn btn-secondary" data-toast="Edit fields (sample)">Edit values</button></div></section>
+     <section class="ai-box" data-state="error" hidden aria-labelledby="ex6b"><span class="tag">&#10022; AI unavailable</span><h2 class="h3" id="ex6b">We could not read this email just now</h2><p class="my-2">The AI is not responding. Your message is safe and nothing was changed. Try again later, or create the lead yourself.</p><div class="flex gap-2"><button class="btn btn-secondary" data-toast="Retrying (sample)">Try again</button><a class="btn btn-primary" href="s08-leads.html">Create lead by hand</a></div></section>
+   </div>
   </div>
 
-  <div data-state="loading" hidden aria-busy="true"><div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
-  <div data-state="empty" hidden class="empty"><div class="ic" aria-hidden="true">&#9993;</div><h2 class="h2">No brand messages yet</h2><p class="muted mb-3">New brand emails and DMs appear here within 5 minutes, sorted and checked. Gmail is connected and last checked 2 minutes ago.</p><a class="btn btn-secondary" href="s28-capture.html">Forward or upload one</a></div>
+  <div data-state="loading" hidden aria-busy="true" class="gut"><div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div><div class="skel card-h"></div></div>
+  <div data-state="empty" hidden class="empty gut"><div class="ic" aria-hidden="true">&#9993;</div><h2 class="h2">No brand messages yet</h2><p class="muted mb-3">New brand emails and DMs appear here within 5 minutes, sorted and checked. Gmail is connected and last checked 2 minutes ago.</p><a class="btn btn-secondary" href="s28-capture.html">Forward or upload one</a></div>
 </main>
 <script src="../assets/app.js"></script></body></html>

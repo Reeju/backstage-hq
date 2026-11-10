@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 244 48" width="244" height="48" role="img" aria-label="BackstageHQ">
+  <title>BackstageHQ</title>
+  <g transform="scale(0.75)">
+    <rect width="64" height="64" rx="16" fill="#2563EB"/>
+    <rect x="17" y="12" width="8.5" height="40" rx="4.25" fill="#FFFFFF"/>
+    <circle cx="33.5" cy="37.5" r="10" fill="none" stroke="#FFFFFF" stroke-width="8.5"/>
+  </g>
+  <!-- Wordmark is live text with a safe font stack. textLength pins the width, so the lockup keeps its
+       shape even when Inter is not installed (this SVG cannot load web fonts when used as an image). -->
+  <text x="58" y="34" font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="800" fill="#0F172A" textLength="150" lengthAdjust="spacingAndGlyphs">backstage</text>
+  <text x="212" y="37" font-family="Inter, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="800" fill="#2563EB" textLength="27" lengthAdjust="spacingAndGlyphs">HQ</text>
+</svg>
