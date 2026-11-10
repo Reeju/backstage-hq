@@ -5,8 +5,8 @@
 | | |
 |---|---|
 | Status | **Proposed. Draft for owner approval.** Not committed. |
-| Stage | Architecture stage of `docs/PLAYBOOK.md` (row 4 in the playbook table; the `/architecture` command calls it "Stage 3"). |
-| Inputs | Approved `docs/02-prd/PRD.md` (FR / NFR IDs below refer to it) and approved `docs/01-usecases/use-cases.md` (amended after the PRD, edits E1–E9). `docs/04-design/mockups/` is empty: no mockups exist yet (see section 27). |
+| Stage | Stage 4 of `docs/PLAYBOOK.md` (3 = mockups, 4 = architecture). Older labels that say "Stage 3" (the `/architecture` command and the commit message of 1abed76) are wrong; history is left as it is. (Amended after mockups, AR1.) |
+| Inputs | Approved `docs/02-prd/PRD.md` (FR / NFR IDs below refer to it) and approved `docs/01-usecases/use-cases.md` (amended after the PRD, edits E1–E9; after this architecture, P1; after the mockups, E10 and E12). Approved mockups in `docs/04-design/` (commit 0382fad). The mockups changed the PRD only through edits M1–M29 (commit 3f754e9, PRD section 14A); the resulting changes to this document are AR1–AR4, listed in section 27. (Amended after mockups, AR1.) The owner's decision of 2026-11-10 to put global search in the MVP added PRD edit M30 (FR-205, NFR-047, NFR-048, screen S-43); the resulting change here is AR5 (section 16A). (Amended after mockups, AR5.) |
 | Decisions | One ADR per major decision in `docs/03-architecture/adr/` (index in section 29). All ADRs are **Proposed**. |
 | Rule | This document does not change the PRD or the use cases. Where they need a change, it is listed in section 27 as a proposed edit. |
 
@@ -15,7 +15,7 @@
 - Sections 2–5: the picture, the stack, the rules we design by, the code layout.
 - Section 6: the data model (Mermaid ERDs).
 - Sections 7–18: how each concern works (flows, API, sign-in, permissions, isolation, encryption,
-  jobs, AI, audit, files, billing, privacy).
+  jobs, AI, audit, files, global search (16A), billing, privacy).
 - Sections 19–23: environments, CI/CD, tests, monitoring, backups.
 - Section 24: **what it costs to run.**
 - Section 26: **decisions only you can make** (marked **[Sign-off S#]** where they appear).
@@ -56,6 +56,7 @@
 | AI or outside service down: app keeps working; send gate and template reminders need no AI (NFR-044, NFR-045) | AI sits behind one gateway with a circuit breaker. Template reminders and the send gate never call AI. Each connection shows "paused since". | §14.5 |
 | DPDP erasure within the published period; backups age out within 90 days (NFR-005) | A deletion job runs at day 30. Database backups are kept 14 days and file versions 30 days, so every copy is gone well inside 90 days. | §18, §23 |
 | Cost to run ≤ 30% of price (M14, NFR-018) | Cheapest model that passes each test set, one AI gateway that meters every call per workspace, allowance and fair-use caps enforced before calling AI, and a small fixed footprint. | §14.6, §24 |
+| Global search finds only what the workspace stores, never another workspace, a personal message or a hidden field; typed words are never kept (FR-205, NFR-047, NFR-048) (Amended after mockups, AR5.) | One `search_entry` table inside PostgreSQL holding only plaintext business fields, under the same forced RLS. Search requests are `POST`, never logged; role filters are applied in the query so counts never include hidden records. No AI, no extra system. | §16A, ADR-020 |
 | No India-residency promise, regions listed (D11, NFR-006) | Primary data and AI processing in India (Mumbai, Hyderabad backups). Other processors listed on the privacy page. This is a fact we publish, not a promise. | §24, §26 |
 
 ---
@@ -154,6 +155,7 @@ builders and read by a non-programmer owner.
 | Front end | **Server-rendered HTML + HTMX + a little Alpine.js**, installable web app (PWA) | Small pages load fast on mid-range Android. Stage 3 HTML mockups become templates almost directly. One language. | React SPA | 001 |
 | CSS | Tailwind CSS (standalone CLI, no Node) | Mobile-first utility classes. The mockup designer and builders all know it. | Plain CSS | 001 |
 | Database | **PostgreSQL 17 on Amazon RDS** | Exact money maths, transactions, row-level security, full-text search, point-in-time restore. | Aurora Serverless | 003 |
+| Search | **PostgreSQL full-text search** on one `search_entry` table (with the `btree_gin` extension) (Amended after mockups, AR5.) | No search engine to run, back up or secure; the same RLS isolates it; costs nothing per search. | OpenSearch | 020 |
 | Background jobs | **Procrastinate** (job queue stored in PostgreSQL) behind our own thin `jobs` module | A job is queued in the same transaction as the change, so jobs are never lost or phantom. No extra system to run. | Celery + SQS | 006 |
 | Hosting | **AWS ap-south-1 (Mumbai)**: ECS Fargate containers, ALB, RDS, S3, KMS, Secrets Manager | Managed, no servers to patch. Same region as users and as the India in-country Claude service. **[Sign-off S1]** | Google Cloud Run; Render | 002 |
 | AI | **Claude on Amazon Bedrock, India in-country profile**: Haiku 4.5 for sorting and scam signals, Sonnet 5 for extraction, drafts and the assistant | Hindi/Hinglish quality and vision for screenshots. AWS terms: no training, no sharing with the model maker. Processing stays in India. **[Sign-off S2]** | Anthropic API direct; Gemini on Vertex | 011 |
@@ -230,11 +232,14 @@ its tables and exposes Actions and Selectors. Folders do not reach into each oth
 | `billing` | subscriptions, entitlements, Razorpay webhooks, BackstageHQ's own invoices | Platform-level |
 | `platform` | staff access grants, exports, deletions, retention purge, internal price-test report (S-30), invariant monitors | |
 | `jobs` | thin wrapper over Procrastinate: queues, locks, retry policy | Lets us swap the queue library |
+| `search` | the `search_entry` table, the word splitter and amount reader (pure Python), the search Selector and view (Amended after mockups, AR5.) | Owns no business data: each module supplies its own records' searchable words through a `search.py` file in its own folder (§16A) |
 
 **Checked boundaries (import-linter in CI).** `rules` imports nothing from Django. Only
 `outbound.gate` imports `connections.*.send_client`. Only `ai.gateway` imports the Bedrock SDK.
 Only `files.crypto` imports KMS. Views import Actions and Selectors, never models of another
-module.
+module. `search.tokenize` and `search.amounts` import nothing from Django, like `rules`, and no
+module's `search.py` may read a column ending in `_enc` (checked by a test, §16A). (Amended after
+mockups, AR5.)
 
 ---
 
@@ -378,9 +383,10 @@ erDiagram
         uuid id PK
         uuid workspace_id FK
         uuid staff_user_id FK
-        uuid granted_by FK "owner"
-        timestamptz expires_at
-        string reason
+        uuid granted_by FK "owner, after second check"
+        timestamptz expires_at "granted + 24 h"
+        timestamptz ended_at "owner ended early"
+        string reason "one support case"
     }
     SHARE_LINK {
         uuid id PK
@@ -415,6 +421,8 @@ erDiagram
     DEAL ||--o{ MILESTONE : "split into"
     DEAL ||--o{ DELIVERABLE : includes
     WORKSPACE ||--o{ RATE_CARD_ITEM : prices
+    ORGANISATION ||--o{ MESSAGE : "brand of (FR-041)"
+    WORKSPACE ||--o{ FILE : stores
 
     CONNECTION {
         uuid id PK
@@ -450,8 +458,10 @@ erDiagram
         string scam_level "none, check, likely, not_checked"
         jsonb scam_reasons
         bool has_ai_instructions
-        string from_address "business only"
+        string from_name "business only (AR5)"
+        string from_address "business only; email or Instagram handle"
         string subject "business only"
+        uuid organisation_id FK "brand link, FR-041 (AR5)"
         bytea body_enc "business only, null otherwise"
         date received_on
     }
@@ -499,6 +509,7 @@ erDiagram
         uuid id PK
         uuid organisation_id FK
         string role "marketing, finance, other"
+        string name "AR5"
         string email
         string confirmed_by "person only"
     }
@@ -570,7 +581,25 @@ erDiagram
         string platform
         bigint base_paise
     }
+    FILE {
+        uuid id PK
+        uuid workspace_id FK
+        string original_name "plaintext, searchable (AR5)"
+        string content_type
+        bigint size_bytes
+        string storage_key "private bucket, app-encrypted"
+        string scan_status "pending, clean, infected"
+        string attached_type "deal, invoice, message, etc.; null if unattached"
+        uuid attached_id
+    }
 ```
+
+**Added for global search (Amended after mockups, AR5.)** `message.from_name` keeps the sender's
+display name next to `from_address` (business messages only, null otherwise, like `subject`).
+`message.organisation_id` records the brand link that FR-041 already makes, so a message can be
+found by its brand. `contact.name` holds the contact's name. The `file` table was implied by
+section 16 but not drawn; the file's name stays plaintext so it can be listed and searched, while
+the file content stays encrypted (§12).
 
 **Minimal storage of personal mail (FR-044).** For messages sorted as fan, personal, newsletter or
 spam, the `MESSAGE` row keeps only `category`, `received_on`, `channel` and `external_id`. Sender,
@@ -654,7 +683,7 @@ erDiagram
         string step "minus3, due, plus7, plus15, plus30"
         date due_on
         date sent_on "unique with invoice"
-        string status "pending, queued, sent, skipped"
+        string status "pending, queued, held, sent, skipped"
         uuid outbound_message_id FK
     }
     REMINDER_TEMPLATE {
@@ -767,7 +796,8 @@ erDiagram
         uuid requested_by_user_id FK
         uuid assistant_run_id FK
         bytea content_fingerprint
-        string status "draft, queued, approved, sending, sent, blocked, expired, withdrawn"
+        string status "draft, queued, approved, held, sending, sent, blocked, expired, withdrawn"
+        timestamptz send_after "held reminders: next window opening, display only"
         string rfc822_message_id UK
         string provider_message_id
         timestamptz expires_at
@@ -877,6 +907,43 @@ v1 tables, added by migrations when scheduled: `invitation`, commission tables, 
 `ais_entry`, `tds_certificate`, `expense`, `barter_item`, `vendor_document`,
 `calendar_event_link`, deliverable stage history.
 
+### 6.7 Search index (Amended after mockups, AR5.)
+
+```mermaid
+erDiagram
+    WORKSPACE ||--o{ SEARCH_ENTRY : has
+    MESSAGE ||--o| SEARCH_ENTRY : "found by"
+    INVOICE ||--o| SEARCH_ENTRY : "found by"
+
+    SEARCH_ENTRY {
+        uuid id PK
+        uuid workspace_id FK "RLS forced"
+        string record_type "message, organisation, contact, lead, deal, quote, invoice, credit_note, payment, file"
+        uuid message_id FK "one of these ten is set; ON DELETE CASCADE"
+        uuid organisation_id FK
+        uuid contact_id FK
+        uuid lead_id FK
+        uuid deal_id FK
+        uuid quote_id FK
+        uuid invoice_id FK
+        uuid credit_note_id FK
+        uuid payment_id FK
+        uuid file_id FK
+        tsvector search_vector "words only, weighted; never amounts"
+        bigint_array amounts_paise "exact amounts, kept apart from words"
+        timestamptz occurred_at "for most recent first"
+        string view_action_type "permission needed to open the record"
+        uuid scope_membership_id "own-deals scope, v1; null if none"
+        int index_version "word-splitter version"
+    }
+```
+
+One row per searchable record. It is a **derived copy** of plaintext fields that already exist
+elsewhere, so it can be rebuilt from the records at any time and dropping it loses nothing. Only
+two records are drawn above; each of the ten foreign keys points at its own table, exactly one is
+set (a `CHECK` rule), each is unique, and each deletes the entry when its record is deleted.
+Details in section 16A.
+
 ---
 
 ## 7. Key flows
@@ -928,8 +995,10 @@ sequenceDiagram
     W->>D: Save approval with fingerprint of the exact content, queue send job (one transaction)
     K->>D: Lock the message row, recompute the fingerprint
     K->>K: Approver is a human, permission still valid now, rules and plan allow it
-    K->>K: Reminders only, not paid or disputed, none sent today, inside sending hours
-    alt any check fails
+    K->>K: Reminders only, not paid or disputed or paused, none sent today, inside sending window
+    alt only the sending window fails (reminder)
+        K->>D: Mark held with send_after, show "Scheduled for" in queue (re-checked when the window opens)
+    else any other check fails
         K->>D: Mark blocked, log refusal, return item to owner's queue
     else all checks pass
         K->>D: Mark sending with attempt ID
@@ -979,6 +1048,7 @@ sequenceDiagram
 | The app (all screens) | **HTML over the wire**: Django views render pages; HTMX swaps page fragments; normal form posts | No public JSON API in MVP. Session cookie + CSRF token. |
 | URLs | `/w/<workspace_id>/<area>/<record_id>` | The workspace is explicit in every request, so two tabs on two workspaces cannot mix (FR-273). |
 | Assistant | `POST` to start a run, then a **server-sent events** stream for tokens and step updates | Runs in the web service (async). Heavy steps (exports) are queued. |
+| Global search (FR-205, S-43) (Amended after mockups, AR5.) | `POST /w/<workspace_id>/search` with form fields `q` (the typed words), optional `type` (one group, for a type chip or "Show all") and `offset` (next 50 in "Show all"). Returns an HTML fragment. `GET /w/<workspace_id>/search/brand/<organisation_id>` returns the MVP brand results list. | Words travel only in the request body, never in a URL, so no access log can hold them (NFR-048). Responses are `Cache-Control: no-store`. Same session, CSRF and workspace checks as every screen. Details in §16A. |
 | Live updates (import progress, queue counts) | HTMX polling every few seconds | Simple and good enough at this scale. No websockets. |
 | Inbound webhooks | `/hooks/gmail` (Pub/Sub push, Google-signed JWT), `/hooks/meta` and `/hooks/whatsapp` (`X-Hub-Signature-256`), `/hooks/razorpay` (HMAC signature), `/hooks/ses` (SNS signature) | Verify the signature, store raw in `inbound_event` with a unique provider event ID, return 200, process in a job. Replays are ignored. |
 | Health | `/health/live`, `/health/ready` (database reachable, migrations current) | Used by the load balancer and the outside uptime check. |
@@ -1025,8 +1095,8 @@ adding a tested Action, never free-form database access.
 | Group | Action types |
 |---|---|
 | Delegable (ticks) | `view_deals`, `edit_deals`, `view_inbox` (follows `view_deals`, business categories only, E4), `view_money_totals`, `view_bank_tax`, `create_invoice_drafts`, `send_invoices` (also covers issuing numbers, marking paid, recording TDS, E4), `send_reminders`, `reply_to_brands`, `accept_deals` (with amount rule), `approve_contracts`, `change_rate_card`, `invite_others`, `download_reports` |
-| Owner only, never delegable | `change_payout_bank`, `change_pan_gstin`, `delete_data`, `disconnect_source`, `delete_account`, `transfer_ownership`, `remove_owner`, `full_export`, `change_automation_settings`, `change_permissions` |
-| Owner only, second check | `change_payout_bank`, `change_pan_gstin`, `full_export`, `delete_account`, `transfer_ownership` |
+| Owner only, never delegable | `change_payout_bank`, `change_pan_gstin`, `delete_data`, `disconnect_source`, `delete_account`, `transfer_ownership`, `remove_owner`, `full_export`, `change_automation_settings`, `change_permissions`, `grant_staff_access` (Amended after mockups, AR3) |
+| Owner only, second check | `change_payout_bank`, `change_pan_gstin`, `full_export`, `delete_account`, `transfer_ownership`, `grant_staff_access` (Amended after mockups, AR3) |
 
 In the MVP only the owner exists, but every Action already declares its action type and every
 check already runs. That is how the MVP tests the manager foundation (PRD §5.P).
@@ -1053,10 +1123,24 @@ bank/tax records without `view_bank_tax`. The activity log filters by each entry
 tag. Templates and assistant tools only use Selectors, so the assistant cannot reveal what the
 screen hides (FR-240 AC1). A snapshot test per role locks this in.
 
+**Search follows the same rules (Amended after mockups, AR5.)** Global search (FR-205) shows a
+result only if the person may open that record on its own screen now. The policy module gives the
+search Selector a **search scope** for the actor (which view permissions they hold, own-deals scope,
+whether they may see amounts, whether inbox is on), and the Selector applies it inside the database
+query. Because the filter is in the query, the "Show all (N)" counts never include hidden records.
+A person who may not see amounts gets no amount matching at all, and amounts are never part of the
+searchable words, so a hidden value cannot be guessed by searching for it. Details in §16A.4.
+
 ### 10.5 Staff access (NFR-030, NFR-034) **[Sign-off S9]**
 
 Staff have no standing access to creator data. The owner can grant a time-limited support grant
-in the app (`staff_access_grant`). While it is active, staff requests run under RLS for that
+in the app (`staff_access_grant`), from the "Support access" card on Settings: my data (S-26).
+Only the owner can grant it (not a manager, and it is never delegable), and only after the second
+check (S-29, §9 step-up token bound to that purpose; action type `grant_staff_access`, §10.2). Each grant covers one
+support case, lasts **24 hours** (`expires_at` = granted + 24 h, Q12 decided), and at most one is
+active per workspace (partial unique index). The owner can end it early ("End access" sets
+`ended_at`). On expiry or early end, staff requests are refused and logged at once, because every
+staff request re-checks the grant. (Amended after mockups, AR3; PRD NFR-030, M14.) While it is active, staff requests run under RLS for that
 workspace with `actor_kind=staff`, and every action appears in the owner's activity log. Database
 "break-glass" access (an engineer opening the production database directly) needs two people,
 uses a short-lived credential, and is logged and reported to the owner of the affected workspace.
@@ -1088,6 +1172,7 @@ uses a short-lived credential, and is logged and reported to the owner of the af
 | `bhq_worker` | Worker | As `bhq_web`, plus read the `vault` schema (tokens) |
 | `bhq_eraser` | Deletion job only | Delete a whole workspace, including the activity log |
 | `bhq_readonly_breakglass` | Two-person break-glass | Read-only, time-limited |
+| `bhq_crossws` (no login) | Owns the cross-workspace functions in §11.3; nobody connects as it | Bypass RLS, but only inside those functions. `bhq_worker` may only `EXECUTE` them. (Amended after mockups, AR4.) |
 
 ### 11.3 The few cross-workspace queries
 
@@ -1095,6 +1180,33 @@ Schedulers must find "due work in any workspace" (due reminders, digests, expiri
 deletions, invariant checks). These are `SECURITY DEFINER` database functions that return **only
 IDs** (workspace ID + item ID). The job for each item then runs inside that workspace's RLS
 context. Each function is listed in an ADR-004 appendix and has its own test.
+
+**One aggregate, for the price test (Amended after mockups, AR4; PRD FR-295, M13, Q12).** The
+staff-only report (S-30) shows "collected after reminders" (metric M3) as one total per price point.
+This is the only cross-workspace function that returns something other than IDs, and it is built
+so that no workspace ID or per-creator amount ever leaves the database:
+- The nightly job `metrics.price_test_rollup` runs in the worker as `bhq_worker` and calls one
+  `SECURITY DEFINER` function, `price_test_collected_rollup(month)`, owned by `bhq_crossws`. The
+  function sums, per price point (`subscription.price_point`), confirmed payments (not undone or
+  duplicate) received in that calendar month on invoices that had at least one reminder sent before
+  the payment. It aggregates inside SQL and writes the result itself; it returns only the number of
+  rows written. The worker never sees rows per workspace, so nothing per creator can reach its
+  memory, logs or Sentry.
+- It writes `platform.price_test_rollup` (`month`, `price_point`, `creators_count`,
+  `collected_paise`, `computed_at`; unique `month, price_point`). The table has no workspace or user
+  column, so it is outside RLS by design. `bhq_web` may only read it, for the S-30 page behind the
+  staff sign-in; no other role may write it.
+- **Minimum of 5 creators.** If fewer than 5 creators in a price point have a qualifying payment that
+  month, `collected_paise` is stored empty and S-30 shows "Too early (n of 5 creators so far)", the
+  same "Too early" pattern as FR-295 AC2. With 2–4 creators, one of them, or anyone who knows the
+  others, could work out a single creator's income.
+- **Closed months only, written once.** A month is computed on the first nightly run on or after the
+  7th of the next month (late confirmations settle) and is then frozen (insert, do nothing if it
+  exists). The job runs nightly so a missed night catches up. A frozen total cannot be compared night
+  by night to reveal one payment.
+- Tests: 4 qualifying creators give an empty total and 5 give a number; price points never mix; the
+  function's result and the table contain no workspace or user IDs; it is the only exception to
+  "IDs only" in the ADR-004 appendix.
 
 ### 11.4 Tests that keep it true
 
@@ -1104,6 +1216,10 @@ context. Each function is listed in an ADR-004 appendix and has its own test.
   them through the ORM and through raw SQL. Both must return nothing.
 - Switching tests (FR-273 AC1): search, notifications and assistant answers in workspace B
   contain nothing from A.
+- Global search (FR-205 AC8): one login in workspaces A and B searches in A for a brand that exists
+  only in B and gets no result and every count 0. The `search_entry` table is covered by the RLS
+  meta-test like any other, and search uses no cross-workspace function, so nothing is added to the
+  ADR-004 appendix. (Amended after mockups, AR5.)
 
 ---
 
@@ -1128,6 +1244,14 @@ context. Each function is listed in an ADR-004 appendix and has its own test.
   business emails, amounts) are still protected by RLS and disk encryption. This is a deliberate
   trade-off: searching encrypted text is not possible, and these fields are needed on list
   screens.
+- **Global search copies only plaintext (Amended after mockups, AR5.)** The search index
+  (`search_entry`, §16A) holds words taken only from the plaintext fields listed in §16A.1: names,
+  email addresses and handles, business subjects, invoice and credit-note numbers, PO numbers,
+  payment references, file names, and amounts. It never reads a column ending in `_enc` (message and
+  outbound bodies, drafts, PAN, GSTIN, bank numbers, sensitive undo values) or file content, so the
+  index adds nothing a database leak could not already show. A test fills every encrypted column
+  with a unique marker word and checks that searching for it finds nothing. File names stay
+  plaintext for this reason (§6.3).
 - The crypto helper is one small module with its own tests (wrong workspace fails, tampered
   ciphertext fails, key rotation works). It is reviewed by the Opus reviewer as a tier-A ticket.
 
@@ -1152,9 +1276,9 @@ heartbeat pages us (NFR-012).
 | `meta.process_event`, `whatsapp.process_event` | Webhook | realtime | Provider event ID unique | Retry; drop unverified senders after 24 h |
 | `files.after_scan` | GuardDuty result | realtime | Per file | Infected: quarantine and warn (NFR-031) |
 | `payments.match` | New payment | realtime | Per payment; lock on the brand's open invoices | Proposal instead of auto-match |
-| `reminders.tick` | Every 15 min | scheduled | Due query + unique (invoice, step) + unique (invoice, sent_on) | Next tick catches up; only if still valid |
+| `reminders.tick` | Every 15 min | scheduled | Due query + unique (invoice, step) + unique (invoice, sent_on) | Next tick catches up; only if still valid. Also releases `held` reminders when the window opens (AR2) |
 | `outbound.send` | Approval, or template reminder due | realtime | State machine + our Message-ID; checks Gmail Sent before any retry | Retry; after 3 failures mark failed and notify |
-| `approvals.expire` | Hourly | scheduled | Status check | Day-5 nudge, day-7 expiry (FR-237 AC2) |
+| `approvals.expire` | Hourly | scheduled | Status check | Day-5 nudge, day-7 expiry (FR-237 AC2). `held` messages never expire (AR2) |
 | `notifications.dispatch` | Event; every 5 min for held items | realtime | Unique dedupe key | Fall back to email |
 | `digest.tick` | Every 15 min | scheduled | Unique (workspace, date) | Next tick |
 | `tax.threshold_check` | Income recorded or undone | realtime | Unique (workspace, tax year, point) | Retry |
@@ -1165,6 +1289,9 @@ heartbeat pages us (NFR-012).
 | `retention.purge` | Daily | scheduled | Idempotent deletes | Alert |
 | `monitor.invariants` | Every 15 min | scheduled | Read-only | Pages us (§22) |
 | `ai.usage_rollup` | Nightly | scheduled | Per (workspace, day) | Retry |
+| `search.reindex_related` (Amended after mockups, AR5.) | A brand renamed, a message linked to a brand, a deal's owner changed | realtime | Unique per (workspace, record) while queued | Retry; the entries keep the old words until it succeeds, never show a removed record (§16A.5) |
+| `search.rebuild_workspace` (Amended after mockups, AR5.) | Search first released; word-splitter version changed | bulk | Per (workspace, version); resumable | Resume; search keeps working on the current entries |
+| `metrics.price_test_rollup` | Nightly | scheduled | Unique (month, price point); a closed month is written once | Next night catches up (§11.3, AR4) |
 
 **Sending "exactly once" (FR-123 AC3).** Gmail has no idempotency key, so the gate makes sends
 effectively-once. It marks the message `sending` before calling Gmail, and sets our own RFC 822
@@ -1173,8 +1300,17 @@ Message-ID (`rfc822msgid:`). If it finds it, it marks the message sent without s
 This must be confirmed against real Gmail behaviour in an iteration-1 spike (open question Q-T1).
 
 **Late but never twice (NFR-012).** A reminder that missed its slot goes out at the next tick
-only if it is still valid: unpaid, not disputed, not paused, inside sending hours, and none sent
-today for that invoice. Otherwise it is skipped and logged.
+only if it is still valid: unpaid, not disputed, not paused, and none sent today for that invoice.
+If any of these fails, it is **skipped** and logged. A reminder that is otherwise valid but falls
+outside the sending window (FR-123: Mon–Sat 10:00–18:00 IST by default, editable by the owner) is
+**held**, not skipped: the reminder is marked `held` and its outbound message gets status `held` with
+`send_after` set to the next window opening, shown in the queue (S-17) as "Scheduled for <time>".
+`send_after` is only for display and is recomputed if the owner edits the window. When the window
+next opens, `reminders.tick` releases held messages to `outbound.send`, and the gate runs every
+check again at that moment. If the invoice was paid, disputed or paused in between, or one was
+already sent today, the message is withdrawn and the reminder skipped, both logged (FR-123 AC5).
+While held, the owner can withdraw it, and it does not expire (FR-237's 7-day expiry does not apply).
+(Amended after mockups, AR2; PRD FR-123, M18.)
 
 ---
 
@@ -1296,6 +1432,178 @@ Bedrock batch pricing for the slow tail of imports (after the first 15 minutes o
 
 ---
 
+## 16A. Global search (FR-205) (Amended after mockups, AR5.)
+
+**In plain words.** One search box finds what this workspace already stores, by name, subject,
+number or amount. It runs inside PostgreSQL: no search engine, no AI, no extra service. Each
+searchable record has one row in a `search_entry` table holding its plaintext words and amounts.
+That row is updated in the same database transaction as the record, sits behind the same
+row-level security as everything else, and disappears when the record is deleted or stops being
+business content. The words people type are never kept. Decision recorded in ADR-020.
+
+### 16A.1 What is indexed, and what never is
+
+Only plaintext fields that the record already stores (PRD FR-205 table). Each owning module
+lists its fields in its own `search.py` file (for example `invoicing/search.py`); that list is the
+only thing that decides what is searchable.
+
+| Record (result group) | Words indexed | Amounts indexed (exact, paise) | Indexed only when |
+|---|---|---|---|
+| Message (Messages) | Sender name, email address (and its domain) or Instagram handle; subject; linked brand's name | — | Category is a business category **and** sender and subject are stored. So never fan, personal, newsletter or spam (FR-044), never a free message over the cap (FR-294 AC2), never one whose raw data was deleted |
+| Organisation: brand, agency, parent (Brands and contacts) | Name; email domains | — | Always |
+| Contact (Brands and contacts) | Name; email; organisation name | — | Always |
+| Lead (Leads and deals) | Brand and agency names; deliverable formats; stage | Budget minimum and maximum | Not merged into another lead |
+| Deal (Leads and deals) | Brand, agency and bill-to names; PO number; deliverable formats; status | Deal amount | Always |
+| Quote (Quotes) | Brand name; status | Total, and total plus GST | Always |
+| Invoice (Invoices and credit notes) | Number; brand name; bill-to name (frozen snapshot); status | Before GST (`subtotal_paise`) and total (`total_paise`) | Always, including drafts and cancelled |
+| Credit note (Invoices and credit notes) | Number; brand and bill-to names | Amount | Always |
+| Payment (Payments) | Payer name; reference; status | Amount | Not marked `duplicate` |
+| File (Files) | File name; name of the record it is attached to | — | Malware scan is clean (§16) |
+
+**Never indexed:** any column ending in `_enc` (message and outbound bodies, drafts, PAN, GSTIN,
+bank numbers, sensitive undo values); file content; a brand's GSTIN and bank details; bank-statement
+narrations; the activity log, assistant runs, approval-queue items and settings (they have their own
+screens); and nothing is ever fetched from Gmail or Instagram while someone types.
+
+### 16A.2 One shared index table
+
+`search_entry` (§6.7) has one row per searchable record, with ten foreign keys of which exactly one
+is set. Chosen over "search each table separately" because:
+- one query and one pair of indexes give the grouped results and the per-group counts in a single
+  database round trip;
+- one RLS policy and one test cover all of search;
+- the list of searchable fields lives in one place per module and the index never reaches into
+  encrypted columns;
+- it is derived data: it can be rebuilt from the records, and its migration can be rolled back by
+  dropping the table without losing anything (ADR-017).
+
+The `search` module owns the table. It does not read other modules' tables: each module's
+`search.py` turns one of its records into a **search document** (words, amounts, date, view
+permission, own-deals scope) or "not searchable", and each module's normal Selectors draw the result
+rows.
+
+### 16A.3 How matching works
+
+**One word splitter, in Python.** `app/search/tokenize.py` (pure Python, no Django) is used both
+for records and for what people type, so the two always split the same way:
+1. Unicode normalisation (NFKC) and lower case; zero-width joiners removed; Devanagari digits
+   become 0–9.
+2. Split into words on anything that is not a letter, a combining mark or a digit. Devanagari vowel
+   signs are combining marks, so "दिवाली" stays one word.
+3. Also split inside emails, domains, handles and numbers at `@ . / - _` and between letters and
+   digits, while keeping the whole token too: `priya@nykaa.com` gives `priya@nykaa.com`, `priya`,
+   `nykaa.com`, `nykaa`, `com`; `BHQ/26-27/014` gives `bhq`, `26`, `27`, `014`, and `14` (number
+   parts are also kept without leading zeros).
+
+**Stored as a word list, not parsed by PostgreSQL.** The words go into the database with
+`array_to_tsvector` (title words weighted higher). This behaves like PostgreSQL's `simple`
+configuration (no stemming, no stop words, no language), but skips PostgreSQL's own word splitter,
+whose handling of Devanagari vowel signs depends on the server's locale. There is no Hindi language
+setting to rely on, and none is needed.
+
+**Typed words.** Search starts at 2 characters (checked in the browser and again on the server).
+Each typed word becomes a word-start match (`'mama':*`); all words must match the same record, in
+any field and any order. The query is built as a `tsquery` value from the cleaned words and sent as
+a bound parameter, never pasted into SQL text.
+- Word start: "mama" finds "Mamaearth", "nyk" finds "Nykaa".
+- Invoice numbers in part: "014", "14" and "26-27/014" find `BHQ/26-27/014`. A fragment from the
+  middle of a part (for example "4/01") does not; that would need a trigram index, which the MVP does
+  not add (typo tolerance is out of scope).
+- Scripts: Devanagari matches Devanagari and Roman matches Roman; "diwali" does not find "दिवाली"
+  (FR-205 AC7), and the no-results state says so.
+- Order within a group: rank over the weighted words, then most recent first.
+
+**Amounts.** `app/search/amounts.py` (pure Python, table-driven tests and Hypothesis) reads each
+typed word as a possible amount: optional `₹`, `Rs` or `INR`; digits with Indian or Western commas;
+an optional decimal part; an optional `k` (× 1,000) or `L`, `lakh`, `lac` (× 1,00,000). The result
+must be a whole number of paise or it is not an amount. "80000", "80,000" and "₹80k" become
+8,000,000 paise; "1.2L" becomes 12,000,000 paise; "94,400" becomes 9,440,000 paise. It is matched
+**exactly** against `amounts_paise`; there are no ranges in the MVP (FR-205), so a lead's budget
+range matches its minimum or maximum only. A typed word matches a record if it matches one of its
+words **or** it reads as an amount equal to one of its amounts. Amounts are kept apart from the words
+on purpose (§16A.4).
+
+### 16A.4 Isolation and who sees what
+
+- `search_entry` has `workspace_id NOT NULL` with RLS enabled and forced, the same policy as every
+  business table (§11.1). Search runs as `bhq_web` inside the workspace's `SET LOCAL` context, with
+  the workspace taken from the URL. It uses no `SECURITY DEFINER` function, so it can never cross
+  workspaces (NFR-023, FR-205 AC8).
+- The result rows are drawn by each module's own Selectors under the same RLS, so an entry that
+  somehow pointed at another workspace's record would show nothing.
+- **Role filtering (v1; the code path and its tests exist from the MVP, PRD §5.P).**
+  `workspaces.policy.search_scope(actor)` returns which view permissions the person holds, their
+  own-deals scope, whether they may see amounts, and whether inbox is on for them (PRD §7.2 row
+  "Global search"). The search Selector turns this into conditions on `view_action_type` and
+  `scope_membership_id` inside the query. In the MVP only the owner exists and the scope is
+  "everything".
+- **No amount matching without amount visibility.** For a person who may not see amounts the
+  amount condition is not added to the query at all, and because amounts are never in the words,
+  typing "80000" cannot match through text either (FR-205 AC9). Context lines (amount, date,
+  status) come from the redacting Selectors (§10.4), not from the index.
+- **Counts do not leak.** "Show all (N)" counts come from the same filtered query, so they never
+  include records the person may not open. There is no "some results hidden" hint.
+- **Belt and braces.** Each rendered row is re-checked with `authorize(view)`. A disagreement drops
+  the row and raises an error metric, because it means the query filter and the policy have drifted;
+  the per-role test in §21 is there to stop that happening.
+
+### 16A.5 Keeping entries current (within 1 minute)
+
+| Event | What happens to the entry | When |
+|---|---|---|
+| Record created, edited, undone, merged (FR-238) | The Action runner (ADR-007) asks the module's `search.py` for the new document and inserts, updates or deletes the entry before commit. A merged-away lead is removed and the surviving lead updated. | Same transaction |
+| Message re-sorted as personal, fan, newsletter or spam | Sender and subject are cleared (FR-044), so the document is "not searchable" and the entry is deleted | Same transaction |
+| Any record deleted, by any path (bulk jobs, `bhq_eraser` included) | The foreign key deletes the entry (`ON DELETE CASCADE`) | Same statement |
+| Source disconnected with "delete raw data" or "delete everything" (FR-211) | The disconnect Action deletes that connection's message entries in its own transaction, before the bulk deletion job starts, so DM and email results vanish at once (FR-205 AC5) | Same transaction |
+| A related name changes (brand renamed, message linked to a brand, deal's owner changed) | `search.reindex_related` rewrites the affected entries | Seconds (realtime queue) |
+| Account deletion requested (FR-212) | The workspace still exists for its owner during the 30-day wait and can be cancelled (§18.3), so search keeps showing what the screens show; on day 30 `bhq_eraser` deletes the entries with everything else | Day 30 |
+
+Every **removal** is synchronous; only renames and new links use the queue. Search is first filled,
+and refilled after a change to the word splitter (`index_version`), by `search.rebuild_workspace`
+on the bulk queue. An invariant monitor (§22) pages if any entry exists for a message that is not a
+stored business message or for a merged lead.
+
+### 16A.6 Typed words are never kept (NFR-048, FR-205 AC12)
+
+| Where words could leak | How they are kept out |
+|---|---|
+| URLs and access logs (load balancer, WAF) | Search is `POST`; words are only in the body, and those logs record URLs, not bodies. No `hx-push-url`. "Show all" and type chips also `POST`. |
+| The browser | `hx-history="false"` on the search area (otherwise HTMX copies pages into `localStorage`). The words for "Back" are held in `sessionStorage` for that tab only. `Cache-Control: no-store`; the service worker never caches search. "Search in Gmail" is built in the browser as a Gmail link with the words after `#` and opened in a new tab with `noopener noreferrer`; it never passes through our servers. |
+| Technical logs | Request bodies are never logged; the structlog redaction filter drops `q`; the view is marked `sensitive_post_parameters("q")`. |
+| Sentry | `before_send` drops request data and breadcrumbs for the search endpoint; `send_default_pii=False` as everywhere. No analytics script sees the box. |
+| Database logs and monitoring | The search query uses **server-side parameter binding** (a psycopg `Cursor`, not Django's default client-side binding), so the SQL text holds `$1…`, never the words. The RDS parameter group sets `log_parameter_max_length = 0` and `log_parameter_max_length_on_error = 0`, so slow-query logs, error logs, Performance Insights and `pg_stat_statements` never show them. |
+| The database | No "recent searches" table. The index holds record words, never typed words. |
+| Metrics | Only counts (NFR-048): searches, searches with no results, time taken. No words, no workspace dimension. |
+
+**Staff searches (Q24, accepted).** During an active support grant (§10.5), a search by staff
+first writes an activity-log entry in the same transaction: actor "BackstageHQ support" with the
+staff user, the time, and the words ("BackstageHQ support searched '…'"), visible to the owner. If
+that entry cannot be written, the search fails. For staff the box searches when Enter is pressed,
+not while typing, so the log shows what they looked for rather than every partial word. Technical
+logs stay word-free for staff too.
+
+### 16A.7 Speed and cost (NFR-047)
+
+- **Indexes:** a GIN index on (`workspace_id`, `search_vector`) and one on (`workspace_id`,
+  `amounts_paise`), using the `btree_gin` extension (supported on RDS), plus the foreign-key indexes.
+- **One query:** returns the top 5 per group and the count per group (window functions). The
+  modules' Selectors then draw at most 35 rows in at most 7 batched reads. The search transaction has
+  a 1.5-second statement timeout; a timeout or any error shows the error state, never "No matches"
+  (FR-205 AC13).
+- **Browser:** 300 ms pause before searching; `hx-sync="this:replace"` cancels an older request so a
+  slow old answer never replaces a newer one; the results fragment is small (about 15 KB).
+- **Budget:** 300 ms pause + under 200 ms on the server (95th percentile at the NFR-047 size: 10,000
+  business messages and 5,000 other records) + network gives about 0.7 s on desktop broadband and
+  about 1.5 s on 4G, inside 1 s and 2 s.
+- **Growth:** comfortable at beta and v1 scale (a few million entries in total). If the 95th
+  percentile passes 300 ms, the next step is to split the table by workspace (hash partitions) with
+  no change to the screens.
+- **Cost:** no AI, no new service, nothing per search. About 1 KB per entry with indexes: 15–25 MB for
+  a workspace at the NFR-047 size, a few MB for a typical one, about 5 GB at 1,000 creators (under
+  US$1 a month of storage). One small write per business change. No effect on metric M14 (§24).
+
+---
+
 ## 17. Billing and entitlements
 
 - Razorpay Subscriptions with two plans (monthly, yearly) per price point. The creator's test arm
@@ -1332,6 +1640,9 @@ Bedrock batch pricing for the slow tail of imports (after the first 15 minutes o
 | Database backups | 14 days (point-in-time) | Automatic |
 | S3 old file versions | 30 days | Lifecycle rule |
 | BackstageHQ billing records of the payer | Legal retention period for our own accounts | After that period |
+| Search entries (`search_entry`) (Amended after mockups, AR5.) | Only while the record they point to exists and is searchable; a derived copy of plaintext fields, never typed search words | With the record (same transaction or cascade), on re-sort to personal, on "delete raw data" disconnect, or with the workspace (§16A.5) |
+| Typed search words (Amended after mockups, AR5.) | **Never stored**, except searches by BackstageHQ staff during a support grant, which go into the creator's activity log (§16A.6) | — (staff entries: as the activity log) |
+| Price-test totals (`platform.price_test_rollup`) | Totals per price point and month only, no workspace or person; groups under 5 creators hold no amount (§11.3) | Purge job when the price test ends, at most 24 months. Not changed by a workspace deletion, since no row belongs to one creator. (Amended after mockups, AR4.) |
 
 ### 18.2 Export (FR-210)
 Owner only, after a second check. A job builds the ZIP from the same Selectors the screens use, so
@@ -1434,6 +1745,7 @@ one automated test named after it (e.g. `test_fr123_ac2_one_reminder_per_day`).
 | AI quality | Eval sets with PRD thresholds | Eval harness |
 | End to end | The MVP exit demo (connect, import, invoice, reminder, payment with Undo) on a phone viewport | Playwright + axe |
 | Performance | Approval queue and Money screen with 500 items under 2 s (NFR-040); assistant first token under 3 s (NFR-039) | pytest timing on seeded data; Locust in hardening |
+| Global search (FR-205) (Amended after mockups, AR5.) | **Pure:** word splitter (Devanagari words stay whole, emails, handles, invoice numbers, leading zeros) and amount reader ("80000", "80,000", "₹80k", "1.2L", "94,400"; rejects fractions of a paisa) as table-driven tests plus Hypothesis. **Integration:** FR-205 AC1–AC8 and AC10–AC13 on real Postgres; entry added, changed and removed in the same transaction for every Action that touches a searchable record; cascade on delete; disconnect removes DM results at once (AC5). **Never indexed:** a marker word written into every `_enc` column, message body and file, and into a personal and an over-cap message, is never found (AC4, AC6). **Isolation:** two workspaces, results and counts 0 across them (AC8). **Roles (v1, AC9):** for each role preset and record type, search results equal the records that role's list Selectors return, counts included, and no amount match without amount visibility. **Words not kept (AC12):** a search with a marker word, then app logs, captured Sentry events, metrics, the CI Postgres log (run with statement logging on) and `pg_stat_statements` contain no trace of it; a staff search does appear in the activity log. **Speed (NFR-047):** nightly on seeded data (one workspace at the NFR-047 size among 50 others), server time p95 under 300 ms; Playwright on a throttled 4G phone profile under 2 s. | pytest, Hypothesis, Playwright |
 | Security | Dependency audit and SAST in CI; OWASP ZAP baseline on staging; external review before beta (NFR-029); backup-restore drill | — |
 
 ---
@@ -1443,12 +1755,12 @@ one automated test named after it (e.g. `test_fr123_ac2_one_reminder_per_day`).
 | Signal | How | Watches |
 |---|---|---|
 | Errors | Sentry (web and worker), `send_default_pii=False` and a scrubber for tokens, PAN, bank numbers and bodies | Exceptions, slow requests, releases |
-| Logs | structlog JSON to CloudWatch, with `request_id`, `job_id`, workspace ID, actor kind. A redaction filter, plus a CI test that tokens never reach logs (NFR-025 AC). | Debugging |
-| Metrics | CloudWatch metrics from the app: job lag per queue, job failures, Gmail sync lag (max per mailbox), webhooks failed, gate refusals, reminders sent and skipped, auto-matches and undos (M11), AI cost per hour, AI errors | Dashboards and alarms |
+| Logs | structlog JSON to CloudWatch, with `request_id`, `job_id`, workspace ID, actor kind. A redaction filter, plus a CI test that tokens never reach logs (NFR-025 AC). The filter also drops typed search words, and a CI test checks they never reach logs, Sentry or database logs (NFR-048, §16A.6). (Amended after mockups, AR5.) | Debugging |
+| Metrics | CloudWatch metrics from the app: job lag per queue, job failures, Gmail sync lag (max per mailbox), webhooks failed, gate refusals, reminders sent and skipped, auto-matches and undos (M11), AI cost per hour, AI errors; search count, share with no results and time taken, with no words and no workspace dimension (NFR-048; Amended after mockups, AR5) | Dashboards and alarms |
 | Uptime | Outside monitor (e.g. Better Stack) hitting `/health/ready` from outside AWS every minute (NFR-042 "measured outside our own hosting") | 99.5% per month |
 | Heartbeat | Each scheduler tick pings an outside dead-man's switch (e.g. Healthchecks.io). Silence for 20 minutes pages us. | NFR-012 |
-| **Invariant monitors** | SQL checks every 15 min that page on any hit: a sent message without a matching human approval or template opt-in (**M10**); a reminder after a payment match, or two for one invoice on one day (**M5**); a gap in invoice numbers (FR-112); a payment counted twice (FR-145); a broken audit hash chain | The "zero, ever" promises |
-| Product metrics | Internal report (S-30, FR-295): trials, conversions and retention by price point; AI + hosting cost per creator; time to first value (M1) from event timestamps | Price test, M12–M14 |
+| **Invariant monitors** | SQL checks every 15 min that page on any hit: a sent message without a matching human approval or template opt-in (**M10**); a reminder after a payment match, or two for one invoice on one day (**M5**); a gap in invoice numbers (FR-112); a payment counted twice (FR-145); a broken audit hash chain; a search entry for a message that is not a stored business message, or for a merged lead (FR-205; Amended after mockups, AR5) | The "zero, ever" promises |
+| Product metrics | Internal report (S-30, FR-295): trials, conversions and retention by price point; AI + hosting cost per creator; time to first value (M1) from event timestamps; "collected after reminders" (M3) as one total per price point per closed month, from `platform.price_test_rollup`, shown only when at least 5 creators contribute (§11.3). (Amended after mockups, AR4.) | Price test, M3, M12–M14 |
 
 Alerts go to email and phone (an on-call app). Paging alerts: invariant hit, heartbeat silence,
 uptime down, job lag over 30 minutes, error spike, deletion job overdue.
@@ -1506,6 +1818,11 @@ with a NAT gateway saves about $35–45 a month. The database stays private. Thi
 
 The Razorpay fee is not in the PRD's cost table. Small, but it belongs in M14.
 
+**Global search adds nothing here (Amended after mockups, AR5.)** It runs no AI and no extra
+service. Its index is about 1 KB per searchable record, a few MB for a typical creator (inside the
+"database growth" line above), and each search is one small query. Metric M14 is unchanged
+(§16A.7).
+
 ### 24.3 What it means
 
 | Paying creators | Fixed cost per creator (lean beta) |
@@ -1541,6 +1858,7 @@ security review, CA review, domain and DLT registration.
 | Insider access | No standing staff access; owner grants; two-person break-glass; all logged |
 | Forged webhooks | Signature checks, unique event IDs, timestamp windows |
 | Supply chain | Locked hashes (uv), pip-audit, Dependabot, pinned base images |
+| Search shows the wrong thing or keeps typed words (PRD R17) (Amended after mockups, AR5.) | Only plaintext business fields are indexed, never `_enc` columns; same forced RLS; role filter inside the query so counts match; `POST` only and word-free logs, Sentry and database logs; tests for FR-205 AC4, AC8, AC9, AC12 (§16A) |
 | Web attacks (XSS, CSRF, injection) | Django auto-escaping and CSRF, ORM only (raw SQL reviewed), strict Content-Security-Policy with nonces, WAF managed rules |
 
 ---
@@ -1581,6 +1899,19 @@ separate commit.
 
 No conflict was found that forces the design away from an approved requirement.
 
+**Edits applied after the mockups (approved by the owner; from `docs/02-prd/PRD.md` section 13, rows
+E10 and E12, and section 14A, AR1–AR5).** Each change is tagged "(Amended after mockups, …)" where it sits.
+
+| # | Where | Applied edit | Why |
+|---|---|---|---|
+| E10 | Use cases NFR-008 (section 7) | "none in quiet hours" became "none outside the brand sending window". | The PRD separates the brand sending window (FR-123) from the creator's quiet hours (FR-202); NFR-008 means the first. |
+| E12 | Use cases: new UC-125 (area M), sections 5.0 counts and table, count by area, 5.1 M, status line | New Should use case "Find anything in my workspace". Counts become 81 use cases: 43 Must, 28 Should, 11 Could (UC-056 counted in both Must and Should, so the columns add to 82). | The owner put global search in the MVP on 2026-11-10 (PRD FR-205, M30); no approved use case covered it. |
+| AR1 | Section 0 (Stage, Inputs), Q-P2 | Stage 4 as in the playbook; pointer to the approved mockups (`docs/04-design/`, commit 0382fad); Q-P2 closed, noting the mockups changed the PRD only through M1–M29 (commit 3f754e9). | The header was out of date. |
+| AR2 | Section 13 "Late but never twice"; §6.4 `reminder` and §6.5 `outbound_message` statuses; §7.2; job table; ADR-009 | A reminder valid except for the sending window is **held** to the next opening, re-checked then, withdrawable, never expires. "Skipped" stays for paid, disputed, paused or already sent today. | PRD FR-123, M18. The old wording could drop an approved reminder. |
+| AR3 | Section 10.5; §10.2 action types; §6.2 `staff_access_grant` | Owner only, second check, one case, 24 hours, can be ended early; action type `grant_staff_access`. | PRD NFR-030, M14 (Q12 decided). |
+| AR4 | Sections 11.2, 11.3, 13, 18.1, 22; ADR-004 appendix | One nightly job writes "collected after reminders" per price point per closed month into `platform.price_test_rollup`, through one aggregate `SECURITY DEFINER` function; no workspace IDs or per-creator amounts leave the database; no amount shown under 5 creators. | PRD FR-295, M13 (Q12 answered yes). |
+| AR5 | New section 16A; sections 0, 1, 3, 5, 6.3 (`message.from_name`, `message.organisation_id`, `contact.name`, `file`), new 6.7 (`search_entry`), 8, 10.4, 11.4, 12, 13, 18.1, 21, 22, 24, 25, 29; ADR-003, ADR-004, ADR-005; new ADR-020 | Global search inside PostgreSQL: one RLS-protected `search_entry` table of plaintext business fields only (never `_enc` columns, FR-044 or over-cap messages); one Python word splitter so Devanagari and Roman each match in their own script; word-start and partial invoice numbers; Indian amounts read in Python and matched exactly in paise; entries changed or removed in the same transaction (renames within seconds); v1 role filter inside the query, so counts never include hidden records and no amount matching without amount visibility; `POST` only and word-free logs, Sentry and database logs, staff searches in the activity log; 1 s / 2 s budget; no AI, negligible cost. | PRD FR-205, NFR-047, NFR-048, M30; owner accepted Q21–Q25 on 2026-11-10. |
+
 ---
 
 ## 28. Open questions and verification results
@@ -1609,7 +1940,7 @@ No conflict was found that forces the design away from an approved requirement.
 | Q-L1 | Legal retention of a creator's issued invoices after account deletion (S10) | Owner with CA or lawyer |
 | Q-L2 | DPDP Rule 7 timing and when it takes effect | Owner with counsel |
 | Q-P1 | Who builds the labelled AI test sets (100+ emails, 50+ hidden-instruction samples, Hinglish drafts) from synthetic or consented data? Needed before the first AI feature ships. | Owner |
-| Q-P2 | Mockups do not exist yet. The playbook puts mockups before architecture. This design depends only on the PRD screen list (§6) and flows, not on visual design. If mockups change the PRD, the affected sections here will be revisited. | Owner |
+| Q-P2 | **Closed.** Mockups were approved in `docs/04-design/` (commit 0382fad). They changed the PRD only through M1–M29 (commit 3f754e9); the sections of this document they touch were revised as AR1–AR4 (section 27). (Amended after mockups, AR1.) | — |
 | Q-P3 | Optional security suggestion, not in the PRD: when payout bank details change, show the change on new invoices only after a short cool-off (e.g. 24 hours), as banks do. Add to the PRD or drop. | Owner |
 
 ---
@@ -1639,6 +1970,7 @@ All ADRs are in `docs/03-architecture/adr/`, status **Proposed**.
 | 017 | Reversible migrations with expand/contract |
 | 018 | Observability and invariant monitors |
 | 019 | Environments and CI/CD |
+| 020 | Global search inside PostgreSQL (Amended after mockups, AR5.) |
 
 ---
 

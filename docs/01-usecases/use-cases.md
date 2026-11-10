@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved** (Stage 1). Amended after the PRD with edits E1–E9 (`docs/02-prd/PRD.md`, section 13). Amended after the architecture with edit P1 (NFR-002; `docs/03-architecture/architecture.md`, section 27). Owner decisions D1–D40 are in section 11; the five items in 11.3 wait on PRD open questions. |
+| Status | **Approved** (Stage 1). Amended after the PRD with edits E1–E9 (`docs/02-prd/PRD.md`, section 13). Amended after the architecture with edit P1 (NFR-002; `docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits E10 (NFR-008) and E12 (new UC-125, global search, after the owner's decision of 2026-11-10) (`docs/02-prd/PRD.md`, section 13). Owner decisions D1–D40 are in section 11; the five items in 11.3 wait on PRD open questions. |
 | Stage | 1 of the playbook (`docs/PLAYBOOK.md`) |
 | Input | Owner's research summary and owner's decisions (Nov 2026) |
 | Next | Owner approves. Then Stage 2 (PRD), which settles the items listed in section 11.3. |
@@ -271,6 +271,11 @@ not counted here.
 UC-135 (choose a plan and pay), is added. The count becomes **80 use cases: 43 Must, 27 Should,
 11 Could**, with UC-056 counted in both Must and Should (the columns add to 81).
 
+**Amended after mockups (E12):** the owner decided on 2026-11-10 to put global search in the MVP,
+and no use case covered it, so a new Should, UC-125 (find anything in my workspace), is added in
+area M. The count becomes **81 use cases: 43 Must, 28 Should, 11 Could**, with UC-056 still counted
+in both Must and Should (the columns add to 82). (Amended after mockups, E12.)
+
 | ID | Use case | Main actor | Priority | Tags | Data / decision |
 |---|---|---|---|---|---|
 | **A. Setup and sharing** | | | | | |
@@ -345,6 +350,7 @@ UC-135 (choose a plan and pay), is added. The count becomes **80 use cases: 43 M
 | UC-122 | Brand history and payment behaviour | Creator, S1 | Should | AUTO | — |
 | UC-123 | Media kit refresh and seasonal pitch ideas | Creator, S1 | Could | AI | D-08 |
 | UC-124 | Choose whether my anonymised data joins benchmarks | Creator | Should (new) | MANUAL | D13 |
+| UC-125 | Find anything in my workspace (new, E12) | Creator; S1–S4 within their permissions (v1) | Should (new) | AUTO | Owner decision 2026-11-10 |
 | **N. Trust and data** | | | | | |
 | UC-130 | Export all my data | Creator only | Must | AUTO | D4, D25 |
 | UC-131 | Disconnect a source and delete its data | Creator | Must | AUTO | — |
@@ -386,14 +392,15 @@ UC-135 (choose a plan and pay), is added. The count becomes **80 use cases: 43 M
 | J. Scheduling | 0 | 2 | 0 |
 | K. Other income | 0 | 2 | 1 |
 | L. Team | 0 | 0 | 1 |
-| M. Insights | 1 | 3 | 1 |
+| M. Insights | 1 | 4 (UC-125, E12) | 1 |
 | N. Trust and data | 6 (UC-135, E2) | 0 | 0 |
 | O. AI assistant | 7 | 0 | 1 |
 | P. Manager (v1) | 6 | 1 | 0 |
-| **Total** | **43** | **27** | **11** |
+| **Total** | **43** | **28** | **11** |
 
 *(Amended after PRD, E1 and E2: 80 distinct use cases. UC-056 counts in both Must and Should, so
-the columns add to 81. UC-135 is new.)*
+the columns add to 81. UC-135 is new.)* *(Amended after mockups, E12: UC-125 is new, so there are
+81 distinct use cases and the columns add to 82.)*
 
 **Which use cases AI or automation handles**
 
@@ -401,7 +408,7 @@ the columns add to 81. UC-135 is new.)*
 |---|---|
 | **AI** (judgement or drafting; the creator always sees the source and can correct it) | UC-003, 004, 006, 010, 011, 012, 013, 014, 015, 017, 018, 020, 021, 030 (pre-fill), 031, 033, 034, 042, 053 (tone), 060 (fuzzy matching), 072 (reading the AIS file), 075, 076, 080, 081, 100, 120 (summary), 121, 123, 146 |
 | **AGENT** (assistant acting on request) | UC-140, 141, 145, 147, and any other use case when the creator asks the assistant to do it |
-| **AUTO** (rules and schedules; predictable) | UC-002, 013 (clash check), 015, 016, 020 (price maths), 022, 032, 040 (stage moves), 041, 050–058, 060, 061, 070–074, 077, 090, 091, 101, 102, 110, 111, 120, 121 (figures), 122, 130–133, 135, 142, 143, 144, 146, 152, 153 (send gate), 155 |
+| **AUTO** (rules and schedules; predictable) | UC-002, 013 (clash check), 015, 016, 020 (price maths), 022, 032, 040 (stage moves), 041, 050–058, 060, 061, 070–074, 077, 090, 091, 101, 102, 110, 111, 120, 121 (figures), 122, 125 (keyword search, no AI; E12), 130–133, 135, 142, 143, 144, 146, 152, 153 (send gate), 155 |
 | **MANUAL only** | UC-001, 005, 124, 134, 150, 151, 154 (settings and access); UC-078 is done by a human CA partner |
 
 ### 5.0b Free vs paid (D4, proposed split for the PRD)
@@ -1184,6 +1191,23 @@ under this rule.
   their data is included. Given a creator withdraws, then their data is excluded from the next
   calculation and the withdrawal is logged.
 
+##### UC-125 Find anything in my workspace — Should · AUTO · (Amended after mockups, E12.)
+- **Actor:** Creator. From v1, managers and helpers (S1–S4), each seeing only what they may (UC-145,
+  UC-151).
+- **Goal:** Find a brand, message, deal or invoice in seconds without remembering which screen it
+  is on.
+- **Trigger:** The creator types into the search box, on any screen.
+- **Main flow:** The creator types a brand, sender, subject, invoice number or amount and finds the
+  matching messages, brands, leads, deals, quotes, invoices, payments and files the workspace already
+  stores, grouped by type. One tap opens the record. Plain keyword search: no AI. Owner decision of
+  2026-11-10: in the MVP, as a Should.
+- **Edge cases:** Never personal content that is not kept (fan, personal, newsletter and spam
+  messages, NFR-002). Never another workspace (NFR-023). Managers and helpers see only what they may
+  (v1). Nothing found: say what is not searched.
+- **Done when:** Given a workspace with a brand, its business emails, a deal and an invoice, when the
+  creator types part of the brand's name, then each is found and opens in one tap; and given a
+  personal email, when they search its sender, then nothing is found.
+
 ---
 
 #### N. Trust and data
@@ -1648,7 +1672,7 @@ approval is late.
 | NFR-005 | **Indian data law** | DPDP Act 2023 and its 2025 Rules | Must | Given a deletion request, when processed, then data is erased within the published period. |
 | NFR-006 | **Where data lives** | A trust question | Should | **No India-residency promise in v1 (D11).** Data is held with a secure cloud provider. The regions used are listed on our privacy page. Transfers follow DPDP rules on cross-border transfer. |
 | NFR-007 | **Works well on the phone (web app)** | P1 and P2 run their business from the phone | Must | Given a mid-range Android phone on 4G, when the home screen opens in the browser, then it is usable within 3 seconds. Every Must use case can be completed on a phone. A native app comes later (D2). |
-| NFR-008 | **Reminders that never misfire** | A wrong or double reminder embarrasses them with a brand | Must | Given any invoice, when reminders run, then at most one goes out per day, none after a payment match, and none in quiet hours. |
+| NFR-008 | **Reminders that never misfire** | A wrong or double reminder embarrasses them with a brand | Must | Given any invoice, when reminders run, then at most one goes out per day, none after a payment match, and none outside the brand sending window. The sending window (when reminders may reach a brand) is separate from the creator's own quiet hours (when BackstageHQ does not notify the creator). (Amended after mockups, E10; PRD FR-123, FR-202.) |
 | NFR-009 | **Money numbers are exact** | One wrong rupee breaks trust | Must | Given any AI-extracted amount, when shown, then it carries its source. Apart from confident payment matches (D6, undoable), no extracted amount enters invoices, tax or reports without confirmation. |
 | NFR-010 | **Fast to first value** | Competitors lose users to manual entry | Must | Given a creator connects Gmail, when 15 minutes have passed, then they see their past deals and total owed. |
 | NFR-011 | **Easy export, no lock-in** | They want their CA to have everything | Must | UC-130, on every plan including free (D4). |
@@ -1810,8 +1834,8 @@ needs an owner answer to a PRD open question (`docs/02-prd/PRD.md`, section 15),
 
 **Purpose (D16):** the architecture plans for the full manager direction now, while v1 builds
 only the simple set. v2 and later items get short entries here and full use-case cards when they
-are scheduled. They are **not** counted in the 80 use cases (79 at first approval; UC-135 added
-after the PRD, E2).
+are scheduled. They are **not** counted in the 81 use cases (79 at first approval; UC-135 added
+after the PRD, E2; UC-125 added after the mockups, E12).
 
 ### 12.1 v1 — simple (in the first release)
 

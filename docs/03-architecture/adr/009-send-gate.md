@@ -16,9 +16,12 @@ before sending must be blocked. Reminders must go out once only, even after a cr
 - At send time the gate locks the row and checks, in order: status; fingerprint unchanged; approver is a
   human; `authorize()` still allows the approver **now**; or, for template reminders, the owner's
   opt-in is on and the body equals the approved template with only the allowed fields filled;
-  reminder rules (not paid or disputed or paused, none sent today, inside sending hours); plan
+  reminder rules (not paid or disputed or paused, none sent today, inside the sending window); plan
   entitlement; for assistant or automation drafts, recipients are confirmed contacts.
-- Any failure: blocked, logged, returned to the owner's queue.
+- Any failure: blocked, logged, returned to the owner's queue. One exception: a reminder that passes
+  every check except the sending window is **held** (status `held`, shown as "Scheduled for <time>")
+  and re-checked in full when the window next opens. It can be withdrawn while held and does not
+  expire. (Amended after mockups, AR2; PRD FR-123, M18.)
 - Effectively-once sending: mark `sending`, set our own `Message-ID`, and before any retry search Gmail
   for it (`rfc822msgid:`). Found means sent.
 - An invariant monitor pages on any sent message without a matching approval or opt-in.

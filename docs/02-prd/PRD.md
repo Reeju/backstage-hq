@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Status | **Approved** (Stage 2, commit d0aef41). Amended after the architecture with edits P1–P4 (`docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits M1–M29 (`docs/04-design/index.html`, section "PRD gaps"; list in section 14A), approved by the owner on 2026-11-09, with Q1, Q3, Q4, Q5, Q10, Q12 and Q17–Q20 answered as recommended. Items still awaiting the CA are marked as such (Q18, Q20). |
+| Status | **Approved** (Stage 2, commit d0aef41). Amended after the architecture with edits P1–P4 (`docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits M1–M29 (`docs/04-design/index.html`, section "PRD gaps"; list in section 14A), approved by the owner on 2026-11-09, with Q1, Q3, Q4, Q5, Q10, Q12 and Q17–Q20 answered as recommended. Items still awaiting the CA are marked as such (Q18, Q20). Edit **M30** (global search, FR-205, section 14A) was added on 2026-11-10: the owner approved the scope decision (search is in the MVP) on 2026-11-10; the owner accepted the recommendations for Q21–Q25 on 2026-11-10. |
 | Stage | 2 of the playbook (`docs/PLAYBOOK.md`). Gate: owner approves MVP scope, permission matrix and acceptance criteria. |
 | Input | Approved `docs/01-usecases/use-cases.md` (79 use cases, decisions D1–D40). |
 | Next | Stage 5, build iterations. Stage 4 architecture (approved, commit 1abed76) and Stage 3 mockups (approved, commit 0382fad) are both done; the architecture was made first. Stage numbers here follow `docs/PLAYBOOK.md` (3 = mockups, 4 = architecture). The architecture document and its commit call it "Stage 3"; that label is the one to correct (architecture edit AR1, section 14A). (Amended after mockups, M29.) |
@@ -18,7 +18,7 @@
 - Sections 6–7: the screens, and who may do what (permission matrix).
 - Sections 8–9: the "non-feature" promises (security, privacy, speed, uptime) and outside services.
 - Sections 10–12: price test, running cost, risks and platform facts still to verify.
-- Section 14A: the edits made after the mockups (M1–M29), one line each.
+- Section 14A: the edits made after the mockups (M1–M30), one line each.
 - Section 15: **decisions only you can make**, each with my recommendation.
 
 **Words used in this PRD**
@@ -167,8 +167,10 @@ Legend: **MVP** = in the closed beta. **v1** = added for public launch. **Later*
 | O. AI assistant | UC-140 ask, UC-141 do tasks, UC-142 send gate, UC-143 approval queue, UC-144 run log and undo, UC-146 hidden instructions | UC-145 assistant within helper/manager permissions | UC-147 assistant over WhatsApp |
 | P. Manager | — (data model ready) | UC-150 invite/revoke, UC-151 permissions, UC-152 never-delegable, UC-153 act within permissions, UC-154 switcher, UC-111 commission, UC-155 manager pays | Manager v2 (M2-01–M2-15), later (ML-01–ML-04) |
 | New (edit E2) | Plans and billing (FR-290–FR-295) | Payer separate from owner (with UC-155) | — |
+| New (edit E12) | Global search (FR-205): plain keyword search over what the workspace already stores (M30) | Results limited to what each manager or helper may see (with UC-145, UC-151) | Searching inside message and file text; matching Hindi to Roman spellings; typo tolerance; AI search |
 
-**Counts.** MVP: 32 of 41 Musts, plus credit notes. v1: the other 9 Musts (UC-072, 077, 111, 145,
+**Counts.** MVP: 32 of 41 Musts, plus credit notes, plus global search (FR-205, a Should, edit E12;
+Amended after mockups, M30). v1: the other 9 Musts (UC-072, 077, 111, 145,
 150–154) and 14 Shoulds (UC-005, 018, 040, 041, 042, 052, the rest of 056, 073, 075, 076, 090,
 121, 122, 155). Later: the other 13 Shoulds and all 11 Coulds.
 
@@ -188,6 +190,7 @@ v1 connection (D5). UC-155 is in v1 because D17 promises it with managers.
 | Upload files and attach them to records (no AI reading) | Capture with AI reading: WhatsApp forward-to number, email forward, upload (proposed placement, Q8) |
 | Daily digest as a plain list | Daily digest with AI summary |
 | Year-end pack (v1) | AIS/26AS match (v1) |
+| Global search over everything stored in the workspace (no AI) (Amended after mockups, M30) | Same search, plus "Ask the assistant" from the search box (counts as an assistant request only when sent) |
 
 **What a free creator sees in the Inbox (Amended after mockups, M10).** New messages that look
 like business get a **scam label only**. They are not sorted into categories, not linked to deals,
@@ -1001,6 +1004,150 @@ Past deals, rates, contacts, average days to pay, disputes, notes.
 - AC1: Given 3 past deals paid in 30, 60 and 90 days, when the brand is opened, then it shows
   "average days to pay: 60".
 
+**FR-205 Global search** · Should · MVP · UC-125 (E12), NFR-023, FR-044 · Free (Amended after mockups, M30.)
+One search box finds what this workspace already stores, by name, subject, brand, invoice number or
+amount. On desktop it sits in the top bar of every screen and the "/" key jumps to it. On a phone, a
+magnifier button in the header of every screen opens search full-screen (screen S-43). It is plain
+keyword search: **no AI runs**, so it costs nothing per search, uses no assistant allowance and keeps
+working when the AI provider is down (NFR-045). It is not the same as the workspace-name search in
+the v1 switcher (FR-273, S-34); global search only ever looks inside the open workspace.
+
+**Why Should, not Must.** The owner wants it in the MVP and it is planned there. It is not part of
+the money loop the beta must prove (section 4.1), so if the beta date is at risk it slips before any
+Must (Q21).
+
+**What is searched.** Only records BackstageHQ already holds for this workspace.
+
+| Result type | Found by | Opens |
+|---|---|---|
+| Business messages (emails, Instagram DMs and forwards kept as business) | Sender name, email address or Instagram handle; subject; the brand it is linked to (FR-041) | Message detail (S-07) |
+| Brands, agencies and contacts | Name; email domain (for example `nykaa.com`); contact name and email | MVP: a results list of everything for that brand (messages, leads, deals, invoices, payments) on S-43. v1: the brand profile (S-40) |
+| Leads and deals | Brand or agency; PO number; deliverable format (for example "Reel"); stage or status; budget or amount | Lead / deal detail (S-09) |
+| Quotes | Brand; total | Quote builder (S-10) |
+| Invoices and credit notes | Number, whole or in part; brand and bill-to name; amount before and after GST; status | Invoice view (S-13) |
+| Payments | Payer name; reference; amount | Payments (S-15) |
+| Files | File name; the record it is attached to | The record, with the file open; a file attached to nothing opens on S-28 |
+
+**What is never searched (and why).**
+- **Fan, personal, newsletter and spam messages, and messages over the free cap.** We keep no
+  sender, subject or body for them (FR-044, FR-294), so there is nothing to search. A message the
+  creator re-sorts as business becomes searchable once it is fetched again (FR-044 AC2).
+- **The text inside emails, DMs, drafts and files.** It is stored locked (encrypted per workspace,
+  architecture ADR-005) so that a leaked database shows nothing, and locked text cannot be searched.
+  Changing this would weaken that protection and is not in the MVP (Q23).
+- **PAN, GSTIN and bank account numbers.** Stored locked, and too sensitive to show in a results
+  list.
+- **Gmail and Instagram directly.** Search never fetches anything from Gmail or Instagram while the
+  person types. The manual fallback is a **"Search in Gmail"** link on the no-results state: it opens
+  the creator's own Gmail search in a new tab with the same words. BackstageHQ does not fetch, read or
+  keep what Gmail shows (Q23). Instagram has no such link.
+- **Activity log, assistant runs, approval-queue items and settings.** They have their own screens
+  and filters (S-17, S-19, S-20).
+- **Any other workspace**, ever (NFR-023, section 7.2 rule 5).
+
+**How matching works.**
+- Not case-sensitive. Matches the start of any word: "mama" finds "Mamaearth", "nyk" finds "Nykaa".
+  Search starts after 2 characters.
+- Several words must all match the same record, in any of its fields, in any order.
+- Invoice and credit-note numbers match in full or in part: "014" finds `BHQ/26-27/014`.
+- Amounts: a number typed with or without ₹, with Indian or Western commas, or as "k", "L" or
+  "lakh", matches exact rupee amounts: "80000", "80,000" and "₹80k" all find ₹80,000; "1.2L" finds
+  ₹1,20,000. Invoices match on the amount before GST and on the total. No ranges in the MVP.
+- Hindi in Devanagari matches Devanagari; Hinglish and English in Roman letters match Roman. The MVP
+  does **not** match across scripts ("diwali" does not find "दिवाली"); the no-results state says so.
+- Within a group: best match first, then most recent.
+
+**Results.**
+- Grouped in this order: Messages, Brands and contacts, Leads and deals, Quotes, Invoices and credit
+  notes, Payments, Files. Up to 5 per group, each with "Show all (N)". Type chips at the top narrow
+  to one group.
+- Each row: type icon, title (brand, sender or invoice number), one context line (amount, date,
+  status) and, for messages, its scam label ("Likely scam", "Check this"), so a risky message is
+  never opened unaware. Matched words are highlighted.
+- One tap or click opens the record's own screen. Back returns to the results with the words still
+  in the box (held on the device only, never saved).
+- Keyboard on desktop: "/" focuses the box unless the person is typing in a text field; arrow keys
+  move through results; Enter opens; Esc clears and closes. The number of results is announced to
+  screen readers (NFR-041).
+
+**States (S-43).** Before typing: a one-line hint ("Search by brand, sender, subject, invoice number
+or amount"); no recent searches are shown, because none are kept. Loading: skeleton rows. No
+results: "No matches for '…' in <workspace name>", a short note on what is not searched (personal
+messages, the text inside emails and files, Hindi and Roman spellings searched separately), and
+"Search in Gmail" when Gmail is connected. Error: "Search isn't working right now. Nothing was
+changed." with "Try again"; an error is never shown as "No matches".
+
+**Plans.** Free and paid get the same search; it costs no AI. A free creator finds their manual
+records, imported deals, invoices, payments and files, and only the messages the free Inbox shows
+(section 4.3). Paid adds an **"Ask the assistant"** row at the bottom of the results: it opens the
+assistant panel (S-18) with the typed words filled in. Nothing is sent to the AI, and nothing counts
+against the allowance (FR-234), until the person sends it there. After a downgrade (FR-293) search
+keeps working over all stored records.
+
+**Who sees what.** MVP: only the owner exists and sees every result in their workspace. From v1, a
+result appears only if the person may open that record on its own screen at that moment (section
+7.2), checked when they search, not earlier. Fields a person may not see cannot be searched by
+them: an Editor without amounts gets no matches by amount, so search can never be used to guess a
+hidden value. "Show all (N)" counts only results that person may see. Inbox results follow the
+inbox rules (manager: with "view deals", edit E4; helper: only if the owner turned inbox on;
+Editor and Accountant: none).
+
+**What is kept (privacy).** The words typed are **not stored**: not in the database, technical
+logs, error reports or analytics, and not in a page address that servers log (NFR-048). The MVP has
+no "recent searches". Only counts are kept to improve search: number of searches, share with no
+results, time taken. Searching is reading, not acting, so a person's own searches do not appear in
+the activity log. **Proposed (Q24):** searches made by BackstageHQ staff during a support session
+(NFR-030) appear in the creator's activity log as "Staff searched '…'", so the owner sees what was
+looked for (NFR-034).
+
+**Keeping results current.** A record that is changed, undone, merged or deleted shows its new state
+in search within 1 minute. Re-sorting a message as personal, disconnecting a source with "delete
+raw data" (FR-211) or deleting the account (FR-212) removes the matching search entries in the same
+way.
+
+- AC1: Given a workspace with the brand "Mamaearth", 2 business emails from `mamaearth.com`, a deal
+  and invoice `BHQ/26-27/014` for Mamaearth, when the owner types "mama", then results show
+  Messages (2), Brands and contacts (1), Leads and deals (1) and Invoices (1), and each opens its
+  own screen in one tap.
+- AC2: Given invoice `BHQ/26-27/014`, when the owner searches "014", then that invoice is in the
+  results.
+- AC3: Given an invoice for ₹80,000 plus 18% GST (₹94,400 in total) and a deal for ₹1,20,000, when
+  the owner searches "80000", "80,000", "₹80k" or "94,400", then the invoice is found each time; and
+  when they search "1.2L", then the deal is found.
+- AC4: Given an email sorted as personal from "Mom" with the subject "Dinner Sunday", when the owner
+  searches "Mom" or "Dinner", then nothing is found and no request is made to Gmail.
+- AC5: Given a business email found by its subject, when the owner re-sorts it as personal, then
+  within 1 minute it is no longer found; and given Instagram disconnected with "delete raw data",
+  when the owner searches a DM sender's handle, then no DM result appears.
+- AC6: Given a business email whose body contains "barter" but whose sender, subject and brand do
+  not, when the owner searches "barter", then the email is not found, and the no-results state says
+  the text inside emails is not searched and offers "Search in Gmail".
+- AC7: Given a business email with the subject "दिवाली कैंपेन ब्रीफ", when the owner searches
+  "दिवाली", then it is found; when they search "diwali", then it is not found and the no-results
+  state says Hindi and Roman spellings are searched separately.
+- AC8: Given one login that belongs to workspaces A and B (tested in the MVP, section 5.P
+  foundation), when they search in A for a brand that exists only in B, then nothing is found and
+  every count shows 0.
+- AC9 (v1): Given an Editor who cannot see amounts and a helper whose inbox access is off, when the
+  Editor searches "80000" and the helper searches a brand sender's name, then neither gets any
+  result by amount or any message result, and no count includes records they may not open.
+- AC10: Given the AI provider is down, or the assistant allowance is used up, when the owner
+  searches, then results appear normally and no assistant request is counted.
+- AC11: Given a paid creator types "who owes me money" in search, when they choose "Ask the
+  assistant", then the panel opens with that text filled in, and nothing is sent to the AI or
+  counted until they send it.
+- AC12: Given any search, when the database, technical logs, error reports, analytics and server
+  access logs are inspected, then the typed words are not found in any of them.
+- AC13: Given the search service fails, when the owner searches, then an error with "Try again" is
+  shown, never "No matches".
+- AC14: Given a desktop screen with focus outside any text field, when "/" is pressed, then the
+  search box is focused; given focus inside a text field, when "/" is pressed, then the character
+  is typed.
+- AC15: Given any phone screen, when the person taps the magnifier in the header, then search opens
+  full-screen with the keyboard up, and Back returns to the screen they were on.
+- AC16: Given a free creator with a manual invoice and messages over the monthly cap, when they
+  search the invoice number, then it is found; and no over-cap message is ever found.
+
 ### 5.N Trust and data
 
 **FR-210 Full export** · Must · MVP · UC-130, D4, D25 · Free
@@ -1393,7 +1540,8 @@ this needs a small architecture addition (section 14A, AR4).
 ## 6. Screen list
 
 Every MVP screen must work on a phone first (NFR-007); desktop is a wider layout of the same
-screens. Stage 3 mockups cover every MVP row.
+screens. Stage 3 mockups cover every MVP row, including S-43 (search), added on 2026-11-10
+(M30).
 
 | ID | Screen | What it is for | Who | Release | Main FRs |
 |---|---|---|---|---|---|
@@ -1439,6 +1587,7 @@ screens. Stage 3 mockups cover every MVP row.
 | S-40 | Brand profile | History, days to pay, contacts, notes | Owner; manager | v1 | FR-204 |
 | S-41 | Monthly review | The monthly report | Owner | v1 | FR-203 |
 | S-42 | Vendor pack | Stored documents, send, link expiry | Owner; manager if ticked | v1 | FR-118 |
+| S-43 | Search | Search box in the desktop top bar on every screen ("/" to focus) and a magnifier in the phone header on every screen; results grouped by type, "Show all" per type, brand results list, no-results and error states. Numbered after S-42 but in the MVP. **Mockup still to add** (M30) | All (results filtered by role, v1) | MVP | FR-205 |
 
 **Not screens, but designed in Stage 3:** daily digest email and push; payment-reminder templates
 (one per step); WhatsApp confirmation replies; invoice and credit-note PDF layout; quote PDF layout;
@@ -1491,6 +1640,7 @@ their own jobs or deals. **No** = never, and not offered. **2nd** = needs a seco
 | Remove the owner; transfer ownership | Transfer: Yes, 2nd | No | No | No | No | Never |
 | View activity log | All | Filtered to what they may see | Own entries | Filtered | Filtered | As the person |
 | Use the assistant | Yes | Yes | Yes | Yes (read-only) | Yes | — |
+| Global search (FR-205; M30) | Yes, everything stored in the workspace | Only records they may view; inbox results with "view deals"* | Own jobs; never by amount | Only what they may read; no messages | Only what they may view; messages only if inbox is on | Not used (the assistant has its own "find records", FR-233) |
 | Pay for the workspace | Yes | Yes (UC-155); grants nothing | No | No | No | No |
 
 \* Two gaps in the use cases, resolved here as proposals (edit E4): (a) UC-151 has no separate
@@ -1544,6 +1694,7 @@ NFR-025 onwards. All are Must for the MVP unless stated.
 | NFR-035 | **AI providers** must not train on our data and must keep it no longer than needed to answer | Given the provider contract, when reviewed before beta, then both terms are written in it. |
 | NFR-036 | **Raw message retention**: the text of business emails and DMs is kept while the source is connected, so sources can be shown; personal content never (Q13) | Given a disconnect with "delete raw data", when done, then raw text is gone and confirmed records remain. |
 | NFR-037 | **Personal data breach**: we can tell affected creators and the regulator within the time the DPDP Rules require (assumption A9) | Given a breach drill, when run, then notices are ready to send within 24 hours. |
+| NFR-048 | **Search words are not kept** (FR-205): the words typed into search are not stored in the database, technical logs, error reports, analytics or logged page addresses; only counts are kept (number of searches, share with no results, time taken). (Amended after mockups, M30.) | As FR-205 AC12. |
 
 ### 8.4 Performance
 
@@ -1555,6 +1706,7 @@ NFR-025 onwards. All are Must for the MVP unless stated.
 | NFR-039 | Assistant | First words of an answer within 3 seconds; a simple question fully answered within 10 seconds |
 | NFR-040 | Approval queue and Money screens | Open within 2 seconds with up to 500 items |
 | NFR-041 | Accessibility basics | Readable text sizes, tap targets at least 44 px, works with phone screen readers for MVP screens (WCAG 2.1 AA as the guide) |
+| NFR-047 | Global search (FR-205) (Amended after mockups, M30.) | Results within **1 second** of the person pausing their typing on desktop broadband, and within **2 seconds** on a mid-range Android on 4G (as NFR-040), for a workspace with up to 10,000 business messages and 5,000 other records (several years for a P2 creator) |
 
 ### 8.5 Availability and reliability
 
@@ -1633,6 +1785,12 @@ the assistant. Prices use the per-token rates in `CLAUDE.md` as a stand-in, at �
 The payment-gateway fee line was missing from the first draft. It grows with each paying creator,
 so it counts in M14. (Amended after architecture, P3.)
 
+Global search (FR-205) adds **no AI cost**: it is plain keyword search inside the existing database
+(architecture ADR-003 already chose PostgreSQL full-text search and no separate search service). Its
+extra storage and database work per creator should be negligible, inside the hosting line above,
+so it does not change metric M14. The architect confirms this in AR5. "Ask the assistant" from
+search is an ordinary assistant request within the allowance (FR-234). (Amended after mockups, M30.)
+
 Fixed yearly costs not in these figures: the Gmail security assessment (D12), Meta and WhatsApp
 fees, the CA review (D36), the external security review (NFR-029).
 
@@ -1671,13 +1829,14 @@ Likelihood and impact: H = high, M = medium, L = low.
 | R7 | Running cost exceeds price | H | H | Measure per creator (FR-295); assistant allowance (FR-234); free-tier cap (FR-294); price above ₹199 (Q1) | Owner |
 | R8 | Data breach: Gmail access and PAN/bank data are high-value targets | L | H | Encryption, token separation, staff access rules, external review before beta (NFR-025–NFR-031) | Architect |
 | R9 | Manager misuse or fall-out (v1) | M | M | Permissions checked at send time; instant revoke; drafted note to brands; never-delegable list | Builders |
-| R10 | Scope too big for the team; MVP slips | H | M | MVP limited to 32 Musts; managers and tax pack in v1; Shoulds trimmed | Owner |
+| R10 | Scope too big for the team; MVP slips | H | M | MVP limited to 32 Musts; managers and tax pack in v1; Shoulds trimmed; global search (M30) is a Should, so it slips first | Owner |
 | R11 | v1 misses ITR season (year-end pack and AIS match needed by May–July 2027) | M | M | v1 date target in Q15; if late, ship FR-153–FR-155 first | Owner |
 | R12 | First outreach looks like the scams we warn about (D14, D38) | M | M | Intros and communities first; verified domain; never ask for Gmail in the first message | Owner |
 | R13 | Bank alert emails differ by bank and some banks send none | H | M | "Is this a payment?" fallback (FR-140 AC2); statement upload; mark paid | Builders |
 | R14 | iPhone users miss reminders because web push needs the home-screen step | M | M | Guided step and email fallback (FR-202) | Builders |
 | R15 | Free users never upgrade (P1 has little ability to pay) | M | M | Free tier shows what automation found ("₹X owed, 3 scams flagged"); trial (FR-291) | Owner |
 | R16 | Code built by AI agents has a security or money bug a non-programmer owner can't spot | M | H | Tests from every AC; Opus reviewer per ticket; external review and restore drill before users (playbook) | Reviewer |
+| R17 | Search shows something it should not (another workspace, a personal message, a field a v1 helper may not see), or search words leak into logs (Added after mockups, M30.) | L | H | Only stored business fields are searchable; workspace isolation in the database (NFR-023); per-result permission check; tests FR-205 AC4, AC8, AC9, AC12; NFR-048 | Architect, reviewer |
 
 ---
 
@@ -1733,8 +1892,9 @@ The use-case document is **not changed** by this PRD. If you approve these, they
 | E7 | NFR-012 | Replace "the PRD will set the final target" with the targets in section 8.5. | As asked by the use cases. |
 | E8 | Section 11.3 | Mark each item as settled once you answer Q1, Q4, Q7, Q8 and Q14. | Keeps the decision record complete. |
 | E9 | UC-001 edge cases | Add: "Lost phone or email: account recovery with a second check, never through support alone." | Sign-in recovery is not covered and is a common attack path. |
-| E10 | NFR-008 (use cases section 7) | "none in quiet hours" becomes "none outside the brand sending window". (Proposed after mockups, M9.) | The PRD separates the brand sending window (FR-123) from the creator's quiet hours (FR-202); NFR-008 means the first. |
+| E10 | NFR-008 (use cases section 7) | "none in quiet hours" becomes "none outside the brand sending window". (Proposed after mockups, M9. **Applied** 2026-11-10.) | The PRD separates the brand sending window (FR-123) from the creator's quiet hours (FR-202); NFR-008 means the first. |
 | E11 | D31 | **Not needed: Q4 answered emails and DMs.** (Was: change "scam flags on new emails and DMs" to "on new emails"; free creators get no Instagram DM watching. Proposed after mockups, M10.) | The S-06 mockup shows "DMs are not watched" on free, which disagrees with D31 as approved. Not needed because D31 stays as approved (Q4). |
+| E12 | New UC (UC-125, area M) | "Find anything in my workspace": the creator types a brand, sender, subject, invoice number or amount and finds the matching messages, brands, leads, deals, quotes, invoices, payments and files the workspace already stores; never personal content that is not kept (FR-044) and never another workspace (NFR-023); managers and helpers see only what they may (v1). **Should.** Counts become 81 use cases: 43 Must, 28 Should, 11 Could. (Proposed after mockups, M30. **Applied** 2026-11-10 as UC-125.) | No approved use case covers search, yet the owner decided on 2026-11-10 to add it to the MVP. Becomes FR-205. |
 
 ---
 
@@ -1798,14 +1958,18 @@ Every MVP and v1 use case maps to at least one FR. Later use cases get FRs when 
 | UC-155 | FR-279 | v1 |
 | UC-111 | FR-275, FR-276 | v1 |
 | New (E2) | FR-290–FR-295 | MVP |
+| UC-125 (E12) | FR-205, NFR-047, NFR-048, screen S-43 (M30) | MVP |
 
-## 14A. Amendments after mockups (M1–M29)
+## 14A. Amendments after mockups (M1–M30)
 
 The Stage 3 mockups (`docs/04-design/index.html`, section "PRD gaps") marked 29 places where the
 PRD was silent or open. Each is closed below. Text marked "Decided" was settled by the owner on 2026-11-09;
 items marked as awaiting the CA stay open until the CA signs off. Gap numbers G1–G29 are the designer's; Mn matches Gn.
-Edit numbers M1–M29 are not the success metrics M1–M17 in section 3; where a metric is meant, it
-says "metric".
+Edit numbers M1–M30 are not the success metrics M1–M17 in section 3; where a metric is meant, it
+says "metric". M30 is not one of the designer's gaps: it follows the owner's decision of 2026-11-10
+to add global search to the MVP, after the restyled mockups showed a search box in the top bar
+(inspired by `docs/04-design/reference/owner-inbox-mockup.png`). The scope decision is approved; the
+details are a draft for the owner's review (Q21–Q25).
 
 | Edit | Gap | Requirements touched | Summary |
 |---|---|---|---|
@@ -1838,15 +2002,35 @@ says "metric".
 | M27 | G27 | FR-049, S-11 | Draft starts in the incoming message's language; picker rewrites it. |
 | M28 | G28 | FR-122 (and FR-201, FR-013 wording) | X-01 copy adopted as the default templates; reminders make no legal or interest claims; owner reads it once before launch (Q19). |
 | M29 | G29 | Section 0 | "Next" row corrected to playbook stage numbers. |
+| M30 | — (owner decision 2026-11-10) | New FR-205, new S-43, NFR-047, NFR-048, sections 0, 4.2, 4.3, 7.2, 10.1, 11 (R10, R17), 13 (E12), 14, 15 (Q21–Q25) | Global search in the MVP: plain keyword search, no AI, Free; only what the workspace already stores (names, subjects, numbers, amounts), never personal content (FR-044), message or file text, or Gmail live; one workspace only, filtered by role from v1; search words not kept. Draft awaiting owner review. |
 
-**Where the PRD now differs from the approved mockups.** The mockups are not edited; these small
-follow-ups go to the design when the owner approves this amendment: (a) M16: Home shows a second
+**Mockup follow-ups for M30 (applied 2026-11-10, `mockups/s43-search.html`).** (a) New S-43: the results view on desktop (from
+the top-bar box) and full-screen on the phone, with the states Before typing, Loading, Results, No
+results (with "Search in Gmail") and Error, plus the MVP brand results list; (b) a magnifier button
+in the phone header on every screen, which the mockups do not have today; (c) remove the "visual
+placeholder" notes in `docs/04-design/design-system.md` (Shell section) and the placeholder toast
+in `docs/04-design/assets/app.js`.
+
+**Build effort and scope for M30 (recommendation, owner decides).** Search adds real but moderate
+work, roughly one build iteration of its own: one search service across seven record types, keeping
+the search entries current on every change and deletion, Indian amount parsing, the top-bar box and
+phone view with five states, and isolation, privacy and permission tests. It is helped by two
+choices already made: PostgreSQL full-text search with no extra system (ADR-003), and names,
+subjects and amounts already stored unlocked for lists (ADR-005). It adds no AI cost (section
+10.1, metric M14). I do **not** recommend cutting a Must to make room. Instead: keep FR-205 a
+Should so it slips first if the beta date is at risk (Q21), and hold the scope to what is written
+here (no message or file text, no typo tolerance, no Hindi-to-Roman matching, no recent searches,
+no filters beyond type chips). If more room is needed, file search and the "Search in Gmail" link
+can move to v1 with little loss.
+
+**Where the PRD differed from the approved mockups.** **Applied to the mockups on 2026-11-10** (Home
+also no longer shows a waiting count in its Empty state). The follow-ups were: (a) M16: Home shows a second
 "to confirm" count, which the S-05 mockup does not; (b) M10: the S-06 free-plan line "DMs are not
 watched" changes because D31 is kept as approved (Q4); (c) M17: the "Report" confirmation should carry
 the platform and cybercrime reporting links; (d) M14: the support-access button should ask for the
 second check.
 
-**Proposed edits to the architecture (not applied; for your approval).**
+**Edits to the architecture (AR1–AR4 owner approved; applied 2026-11-10, see architecture section 27, "Edits applied after the mockups". AR5 approved with M30 and applied 2026-11-10: architecture section 16A and ADR-020).**
 
 | # | Where in `docs/03-architecture/architecture.md` | Proposed edit | Why |
 |---|---|---|---|
@@ -1854,6 +2038,7 @@ second check.
 | AR2 | Section 13, "Late but never twice" | A reminder that is otherwise valid but falls outside sending hours is **held** to the next window opening, not skipped. "Skipped" stays for paid, disputed, paused or already sent today. | M18. The current wording could drop an approved reminder. |
 | AR3 | Section 10.5 | Granting staff access needs the owner's second check; each grant lasts 24 hours unless Q12 says otherwise. | M14. |
 | AR4 | Sections 11.3 and 22 (product metrics) | Needed because Q12 was answered yes: one nightly job that writes per-price-point totals of "collected after reminders" for S-30, with no workspace IDs or amounts per creator leaving the job. | M13. Today cross-workspace queries return only IDs. |
+| AR5 | Sections 6 (data model), 10 (authorization), 11 (tenant isolation), 12 (encryption), 22 (observability), 24 (cost) and ADR-003, ADR-004, ADR-005; a new subsection on search | Describe how global search (FR-205) works inside PostgreSQL, without designing it in the PRD. The architect must settle: (1) what is indexed: only the plaintext fields listed in FR-205, never encrypted fields (bodies, drafts, files, PAN, GSTIN, bank) and never FR-044 or over-cap rows; (2) one shared search index or a search per table, and how either stays under row-level security so no query can cross workspaces (NFR-023); (3) matching for Devanagari and Roman text, word starts and partial invoice numbers (PostgreSQL has no built-in Hindi language setting); (4) how amounts typed as "80k", "1.2L" or "₹80,000" become exact paise matches; (5) how search entries are updated or removed within 1 minute on edit, undo, merge, re-sort to personal, disconnect with delete and account deletion; (6) how v1 role filtering hides records and fields (amounts) a person may not see, including in counts; (7) keeping the typed words out of logs, Sentry, analytics and logged URLs (NFR-048), and staff searches into the activity log if Q24 is accepted; (8) meeting NFR-047 at the stated data size, and confirming storage and cost stay negligible (metric M14). | M30. The architecture keeps names, subjects and amounts unencrypted "for lists and search" (section 12) but never describes search itself. **Proposed, not applied.** |
 
 ## 15. Open questions for the owner
 
@@ -1881,3 +2066,8 @@ These are business decisions. I have not assumed any answer; each has my recomme
 | Q18 | (Added after mockups, M22.) When an account is deleted, do we delete the creator's issued invoices too? Links architecture S10 and Q-L1. | **Delete them** (owner accepted), after warning the creator to keep their own copies and offering the final export with every PDF. Keeping them would mean holding a former customer's data for years. Alternative: keep issued invoices, read-only, for the legal period. **Needs a CA or lawyer check** either way. |
 | Q19 | (Added after mockups, M28.) Do you approve the default wording of reminder templates, the daily digest and WhatsApp confirmations in `x01-messages.html`? | **Yes, adopted as the default templates; the owner reads it once before launch**, keeping reminders free of legal or interest claims (for example late-payment interest under MSME rules), because an automatic message goes to a brand in the creator's name. Alternatives: add an optional, lawyer-approved MSME-interest line later for Udyam-registered creators; or ship no defaults and make each creator write their own. |
 | Q20 | (Added after mockups, M2, M20.) What must the pre-MVP CA review (Q15) sign off? | **Three items besides the GST and TDS rules:** the SAC code (998361), invoice and credit-note wording and field order in `x02-documents.html`, and the list of states with the lower GST threshold (A12). No real invoice is issued before this sign-off. Owner accepted; the CA still has to confirm. |
+| Q21 | (Added after mockups, M30.) Is global search a **Must** or a **Should** in the MVP? | **Decided 2026-11-10 (owner accepted):** **Should, planned for the MVP.** It is not part of the money loop the beta proves, so it slips first if the date is at risk. Alternative: Must, which makes it a beta blocker on a par with invoicing and reminders. |
+| Q22 | (Added after mockups, M30.) Is search free for everyone or paid only? | **Decided 2026-11-10 (owner accepted):** **Free.** It runs no AI and costs nothing per search, and free creators already keep manual deals, invoices and payments. Paid adds only the "Ask the assistant" step. Alternative: paid only, which removes a daily reason for free creators to come back and saves almost nothing. |
+| Q23 | (Added after mockups, M30.) In the MVP, does search look only at sender, subject, brand, numbers and amounts, **not the text inside emails, DMs and files**, with a "Search in Gmail" link as the fallback? | **Decided 2026-11-10 (owner accepted):** **Yes.** That text is stored locked (ADR-005) so a leaked database shows nothing; searching it needs an architecture change and weakens that protection. Revisit in v1 if beta creators keep missing results. Alternative: search message text in the MVP, at the cost of an architecture change, more build time and a weaker privacy promise. |
+| Q24 | (Added after mockups, M30.) Do we keep search words? | **Decided 2026-11-10 (owner accepted):** **No:** not stored, not logged, no "recent searches"; only counts. **One exception:** searches made by BackstageHQ staff during a support session (NFR-030) are shown in the creator's activity log with the words, so the owner sees what staff looked for. Alternative: log staff searches without the words. |
+| Q25 | (Added after mockups, M30.) Where does search live on the phone? | **Decided 2026-11-10 (owner accepted):** **A magnifier button in the phone header on every screen**, opening search full-screen. Alternative: put it under "More" in the bottom bar, which keeps the header clean but adds a tap and hides it. |

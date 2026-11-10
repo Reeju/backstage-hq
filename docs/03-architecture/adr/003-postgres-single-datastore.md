@@ -12,6 +12,10 @@ PostgreSQL 17 on RDS holds all records, the job queue (ADR-006), the activity lo
 counters (Django database cache) and full-text search. No Redis, no separate queue, no search engine
 in the MVP. pgvector is available later if drafting needs similarity search.
 
+**Global search (Amended after mockups, AR5.)** Global search (PRD FR-205) uses PostgreSQL full-text
+search on one `search_entry` table, with the `btree_gin` extension for its indexes; no search engine
+is added. Design in architecture §16A and ADR-020.
+
 ## Options considered
 | Option | For | Against |
 |---|---|---|
@@ -23,3 +27,5 @@ in the MVP. pgvector is available later if drafting needs similarity search.
 - Simpler operations and one restore drill covers everything.
 - At a few thousand creators we may add a cache or move the queue. The `jobs` wrapper keeps that change
   inside one module.
+- If search slows as data grows, the first step is to split `search_entry` by workspace inside
+  PostgreSQL, not to add a search engine (ADR-020). (Amended after mockups, AR5.)

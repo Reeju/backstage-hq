@@ -20,7 +20,21 @@ be enough to leak data.
 
 **Appendix, allowed cross-workspace functions (initial):** `due_reminders()`, `due_digests()`,
 `expiring_approvals()`, `due_deletions()`, `token_refresh_due()`, invariant monitor checks. Adding one
-needs a reviewer-approved change to this list.
+needs a reviewer-approved change to this list. `due_reminders()` also returns reminders `held` for the
+sending window (architecture §13, AR2).
+
+**Aggregate exception (Amended after mockups, AR4):** `price_test_collected_rollup(month)` is the one
+function that does not return IDs. It sums "collected after reminders" per price point inside the
+database, writes `platform.price_test_rollup` (no workspace or user column) itself, and stores no
+amount for a group of fewer than 5 creators. It returns only a row count. All these functions are
+owned by the no-login role `bhq_crossws`; the worker may only execute them (architecture §11.2–11.3).
+
+**Global search (Amended after mockups, AR5.)** The search index `search_entry` is an ordinary
+business table: `workspace_id NOT NULL`, RLS enabled and forced, covered by the meta-test. Search runs
+as `bhq_web` in the workspace's RLS context and uses no cross-workspace function, so nothing is added
+to the appendix above. v1 role filtering (records a person may not open, and amounts for a person who
+may not see them) is applied inside the search query, so result counts never include hidden records
+(architecture §16A.4, ADR-020).
 
 ## Options considered
 | Option | For | Against |

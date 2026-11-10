@@ -31,6 +31,12 @@ staff or logs). PAN, bank and income data and Gmail access are high-value target
 ## Consequences
 - Brand names, business subjects and amounts stay plaintext for lists and search, protected by RLS and
   disk encryption. This is a deliberate trade-off.
+- **Global search (Amended after mockups, AR5.)** The search index copies only plaintext fields
+  (names, email addresses and handles, business subjects, document and PO numbers, payment references,
+  file names, amounts). It never reads an encrypted column or file content, so message, DM, draft and
+  file text cannot be searched in the MVP (PRD FR-205, Q23); the fallback is a "Search in Gmail" link.
+  File names stay plaintext so they can be listed and searched. A test writes a marker word into every
+  encrypted column and checks search never finds it (architecture §12, §16A.1).
 - Losing the KMS keys would lose the data, so keys are never scheduled for deletion without a two-person
   change.
 - Backups are not "crypto-shredded" on deletion. Erasure relies on deleting rows and letting 14-day
