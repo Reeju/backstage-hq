@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| Status | **Approved** (Stage 2, commit d0aef41). Amended after the architecture with edits P1–P4 (`docs/03-architecture/architecture.md`, section 27). |
+| Status | **Approved** (Stage 2, commit d0aef41). Amended after the architecture with edits P1–P4 (`docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits M1–M29 (`docs/04-design/index.html`, section "PRD gaps"; list in section 14A), approved by the owner on 2026-11-09, with Q1, Q3, Q4, Q5, Q10, Q12 and Q17–Q20 answered as recommended. Items still awaiting the CA are marked as such (Q18, Q20). |
 | Stage | 2 of the playbook (`docs/PLAYBOOK.md`). Gate: owner approves MVP scope, permission matrix and acceptance criteria. |
 | Input | Approved `docs/01-usecases/use-cases.md` (79 use cases, decisions D1–D40). |
-| Next | Stage 3 mockups for every MVP screen in section 6, then Stage 4 architecture. |
+| Next | Stage 5, build iterations. Stage 4 architecture (approved, commit 1abed76) and Stage 3 mockups (approved, commit 0382fad) are both done; the architecture was made first. Stage numbers here follow `docs/PLAYBOOK.md` (3 = mockups, 4 = architecture). The architecture document and its commit call it "Stage 3"; that label is the one to correct (architecture edit AR1, section 14A). (Amended after mockups, M29.) |
 | Rule | This PRD does not change the use-case document. Where it needs a change, the change is listed in section 13 as a proposed edit. |
 
 **How to read this document**
@@ -18,6 +18,7 @@
 - Sections 6–7: the screens, and who may do what (permission matrix).
 - Sections 8–9: the "non-feature" promises (security, privacy, speed, uptime) and outside services.
 - Sections 10–12: price test, running cost, risks and platform facts still to verify.
+- Section 14A: the edits made after the mockups (M1–M29), one line each.
 - Section 15: **decisions only you can make**, each with my recommendation.
 
 **Words used in this PRD**
@@ -103,7 +104,7 @@ the MVP with the first 20 customers.
 | M2 | Import accuracy | On creators who check it: share of real past deals proposed with correct brand and amount | ≥ 80% (UC-003) | G1 |
 | M3 | Collected after reminders | ₹ paid on invoices that had at least one BackstageHQ reminder | Reported monthly per creator; trend up | G2 |
 | M4 | Days to get paid | Median days from invoice sent to paid, vs the creator's own imported history | 15% faster after 3 months | G2 |
-| M5 | Reminder misfires | Double reminders, reminders after a payment match, reminders in quiet hours | **Zero** (NFR-008) | G2, G5 |
+| M5 | Reminder misfires | Double reminders, reminders after a payment match, reminders outside the brand sending window (FR-123) (Amended after mockups, M9.) | **Zero** (NFR-008) | G2, G5 |
 | M6 | Sorting accuracy | Labelled test set of 100+ creator emails, re-run on each model change | ≥ 90% pitches, ≥ 95% invoice/payment (UC-010) | G3 |
 | M7 | Scam flags | Test set of known scams and real small brands | ≥ 90% of scams flagged; ≤ 5% of real brands flagged "Likely scam" | G3 |
 | M8 | Draft usefulness | Share of AI drafts sent with no edit or a small edit (under 20% of words changed) | ≥ 60% | G3 |
@@ -188,6 +189,15 @@ v1 connection (D5). UC-155 is in v1 because D17 promises it with managers.
 | Daily digest as a plain list | Daily digest with AI summary |
 | Year-end pack (v1) | AIS/26AS match (v1) |
 
+**What a free creator sees in the Inbox (Amended after mockups, M10).** New messages that look
+like business get a **scam label only**. They are not sorted into categories, not linked to deals,
+not turned into leads and get no drafts; a banner explains that sorting is paid, with "Upgrade".
+Fan, personal and newsletter messages are not stored (FR-044). **Decided (Q4):**
+the cap is **500 messages checked a month, emails and Instagram DMs counted together**, and free
+creators may connect Instagram for scam flags only, as D31 and the row above say (FR-012 used to
+say "Paid"; the S-06 mockup shows "DMs are not watched" on free and would follow your answer).
+Above the cap, see FR-294.
+
 When a paid workspace drops to free (trial ends, payment stops, D30 grace ends), **no data is
 lost**. Automation stops, automatic reminders stop, and the creator is told by email and in-app
 (FR-293).
@@ -226,6 +236,16 @@ Google sign-in plus a phone code).
 - AC2: Given a known device, when the creator signs in within 30 days of their last sign-in on it,
   then no second factor is asked.
 
+**Always a second method (Amended after mockups, M1).** So that a second factor of a different
+kind always exists, a creator who signed up with a phone code also adds and verifies an email
+address (or links Google) during profile setup (S-02); a creator who signed up with Google verifies
+a phone number. This step cannot be skipped. The second check (S-29) can then use either the phone
+or the email code. This matches the architecture (section 9).
+- AC3: Given a creator who signed up with a phone code, when profile setup finishes, then a
+  verified email address or a linked Google account is on the account.
+- AC4: Given that creator signs in on a new device with a phone code, when the second factor is
+  asked, then the choices are an email code or Google, never a second phone code.
+
 **FR-003 Business profile with only what the first invoice needs** · Must · MVP · UC-001, D15 · Free
 Legal name, PAN (format-checked), state, bank account for invoices, GSTIN if registered, optional
 trading name, creator handles. Business type offered: Individual or Sole proprietor only. Anything
@@ -235,6 +255,19 @@ not needed yet can be skipped and is asked for when first needed.
 - AC2: Given a PAN in the wrong format, when saved, then it is refused with a plain message.
 - AC3: Given a state with the lower GST threshold, when saved, then the threshold used in FR-150
   is the lower one.
+
+**Setup steps and first entry (Amended after mockups, M2).** Setup has two steps: (1) Profile
+(S-02): legal name, PAN, state, business type, bank account for invoices, GSTIN if registered,
+optional trading name and handles, plus the second sign-in method from FR-002; (2) Connect sources
+(S-03). Entering bank details, PAN or GSTIN **for the first time** (the field has never been saved
+in this workspace) needs no second check, because the person has just signed in and nothing is
+being replaced; the entry is logged. Every later change, including clearing a field, follows
+FR-004. The list of states with the lower GST threshold lives in the versioned tax rule set
+(FR-151), not in screen code. **Decided (Q20), CA to confirm:** the list is
+signed off in the pre-MVP CA review; working assumption in A12.
+- AC4: Given a new creator entering bank details during setup, when they save, then no second
+  check is asked and the entry is logged; when they later change the bank account, then a second
+  check is asked (FR-004 AC1).
 
 **FR-004 Sensitive details need the owner and a second check** · Must · MVP · UC-001, UC-142, UC-152, D25 · Free
 Payout bank details, PAN and GSTIN can be changed only by the owner, in settings, after a second
@@ -264,10 +297,33 @@ creators who won't connect Gmail, and for a forwarding-only beta if Gmail approv
 - AC2: Given an email to the forwarding address from an unverified sender, when it arrives, then
   nothing is created and it is discarded after 7 days.
 
-**FR-012 Instagram professional account connection** · Must · MVP · UC-017, D5, D34 · Paid
+**Verifying the creator's own addresses and numbers (Amended after mockups, M21).** On Connect
+sources (S-03) and Settings: connections (S-25) the creator keeps a list of the email addresses
+they forward from and the phone numbers they forward WhatsApp messages from (FR-013). Each is
+verified with a one-time code sent to it and shows "Verified" or "Pending". Only verified entries
+are processed. Removing one stops processing from it at once. The sign-in phone and email (FR-002)
+count as verified.
+- AC3: Given an address added but not yet verified, when the creator forwards from it, then nothing
+  is created and the list shows it as "Pending".
+
+**Forwarding-only mode (Amended after mockups, M26).** If the beta runs forwarding-only because
+Gmail approval is late (D33, Q14), Connect sources (S-03) shows Gmail as "coming soon", puts the
+forwarding address first with steps to set up auto-forwarding from Gmail, and offers spreadsheet
+import (FR-022) in place of the email import. The confirmation email that Gmail or Outlook sends to
+the forwarding address when auto-forwarding is set up is recognised, and its code or link is shown
+to the creator in the app instead of being discarded as an unverified sender.
+- AC4: Given the creator sets up Gmail auto-forwarding to their address, when Gmail's confirmation
+  email arrives, then its confirmation code is shown to the creator in BackstageHQ and nothing else
+  from that sender is processed.
+- AC5: Given forwarding-only mode, when the creator opens Connect sources, then Gmail shows "coming
+  soon", the forwarding address and auto-forward steps are shown first, and spreadsheet import is
+  offered.
+
+**FR-012 Instagram professional account connection** · Must · MVP · UC-017, D5, D34 · Paid (lead capture) / Free (scam flags only, Q4; Amended after mockups, M10)
 Connect through Meta's login. If the account is personal, show how to switch to a free Creator or
 Business account. If Meta approval is not yet granted, the button says "coming soon" and the
-screenshot fallback (FR-052) is offered.
+screenshot fallback (FR-052) is offered. The "coming soon" text and the switch steps use the copy
+in the S-03 mockup as a working draft. (Amended after mockups, M26.)
 - AC1: Given a personal Instagram account, when the creator tries to connect, then the app explains
   the switch and offers the fallback, and nothing is stored.
 - AC2: Given Meta approval is not live, when the creator opens Connections, then Instagram shows
@@ -283,6 +339,8 @@ from verified numbers are read; the number replies only with a short confirmatio
   kept beyond 24 hours.
 - AC3: Given a creator who belongs to two workspaces (v1), when they forward, then the reply asks
   which workspace, and nothing is filed until they choose.
+- AC4: Given a phone number the creator removed from their verified list (FR-011), when it forwards
+  to the WhatsApp number, then nothing is created. (Amended after mockups, M21.)
 
 **FR-014 Upload anything** · Must · MVP · UC-006 · Free (attach) / Paid (AI reading)
 Upload photos, screenshots, PDFs and CSV files from the phone or desktop. The AI decides what it is
@@ -291,6 +349,15 @@ Upload photos, screenshots, PDFs and CSV files from the phone or desktop. The AI
   payer appears with a source link, and nothing is saved until the creator confirms.
 - AC2: Given a forwarded chat containing other people's personal messages, when read, then only the
   business part is kept.
+
+**Where each kind goes in the MVP (Amended after mockups, M19).** Enquiries become proposed leads
+(FR-052); payment proofs become proposed payments (AC1); bank statements go to the statement flow in
+Payments (FR-141); contracts and receipts are saved as files attached to a deal or to the
+workspace. No expense record is created until v1 (FR-159).
+- AC3: Given a receipt photo uploaded in the MVP, when processed, then it is saved as an attached
+  file and no expense record is created.
+- AC4: Given a bank statement PDF uploaded through capture (S-28), when recognised, then the creator
+  is taken to the statement flow in Payments (FR-141).
 
 **FR-015 Connections screen and disconnect** · Must · MVP · UC-131 · Free
 One screen listing Gmail, Instagram, WhatsApp number and (v1) Google Calendar, with status, last
@@ -313,6 +380,9 @@ each with sources. Show partial results first for large inboxes.
   confirms it.
 - AC3: Given a large inbox, when 15 minutes have passed since connecting, then at least the first
   results and a provisional "total owed" are visible (NFR-010).
+- AC4: Given the creator sets the look-back period to 6 months on Connect sources (S-03) before the
+  import starts, when it runs, then no email older than 6 months is read. (Amended after mockups,
+  M3.)
 
 **FR-021 Import review** · Must · MVP · UC-003, UC-030 · Free
 A list of "We found N deals with M brands", each showing brand, amount, dates, status
@@ -326,7 +396,8 @@ same deal found in email and DM is shown once.
   total (FR-124) includes them, each marked "imported".
 
 **FR-022 Spreadsheet import** · Should · MVP · UC-003 · Free
-Upload a CSV or Excel export of an old sheet, map its columns, preview, then confirm.
+Upload a CSV or Excel export of an old sheet, map its columns, preview, then confirm. Screen: a
+"Spreadsheet" tab on Import review (S-04). (Amended after mockups, M3.)
 - AC1: Given a sheet with 30 rows and columns mapped to brand, amount, date and status, when
   confirmed, then 30 deals are created and totals match the sheet.
 
@@ -344,6 +415,13 @@ past deals; the creator edits.
   exclusivity, then the quote shows ₹56,000 with each part listed.
 - AC2: Given no past deals, when the creator opens the rate card, then an empty card with format
   rows is shown and no figure is invented.
+
+**Formats by platform (Amended after mockups, M25).** The rate card is a grid. Instagram: Reel,
+Story, Static post. YouTube: Integration, Dedicated video. A format that does not exist on a
+platform shows "n/a". Other formats and platforms (for example YouTube Shorts, carousels) are not
+in the MVP.
+- AC3: Given the rate card, when opened, then it shows these five formats under their platforms and
+  no other price cells.
 
 **FR-026 Default terms** · Must · MVP · UC-004 · Free
 Default payment terms (days), advance %, kill fee %, number of revisions. Used by quotes and
@@ -410,6 +488,17 @@ AI. Label "Likely scam" or "Check this" with reasons. Buttons: Mark safe, Report
 - AC3: Given the creator taps "Mark safe", when that sender writes again, then it is not flagged
   for the same reason.
 
+**What "Report" does (Amended after mockups, M17).** It marks the message as a reported scam for
+this creator only: the label becomes "Reported as scam", and later messages from that sender or
+domain are labelled "Likely scam" with the reason "you reported this sender". It is logged and can
+be undone. Nothing is sent to anyone, and nothing is shared with BackstageHQ staff or other creators
+(NFR-030, FR-216). The confirmation shows how to report it to the platform (Gmail's "Report
+phishing", Instagram's report option) and to India's cybercrime portal (cybercrime.gov.in,
+helpline 1930).
+- AC4: Given the creator taps "Report" on a message from sender X, when X writes again, then the new
+  message is labelled "Likely scam" with the reason "you reported this sender", and no message or
+  data has left BackstageHQ.
+
 **FR-046 Turn an enquiry into a lead** · Must · MVP · UC-012 · Paid (Free: manual lead)
 Extract brand, agency, contact, deliverables, budget, dates, usage and exclusivity asks. Create a
 lead in "New". Show what is missing. Each value links to its source sentence.
@@ -422,6 +511,9 @@ lead in "New". Show what is missing. Each value links to its source sentence.
 - AC1: Given the same brand pitches by DM and email within 14 days with matching deliverables, when
   processed, then one lead is shown with both sources and a "merged" note, and the creator can split
   it.
+- AC2: Given a merged lead, when the creator taps "Split" on the lead card (S-08) or the lead detail
+  (S-09), then two leads exist, each with its own sources, and the split is logged and can be
+  undone. (Amended after mockups, M8.)
 
 **FR-048 Lead list with simple stages** · Must · MVP · UC-012, UC-015, UC-016 · Free
 A list (not a board) with stages New, Talking, Quoted, Won, Lost. Stages move automatically when a
@@ -430,6 +522,12 @@ quote is sent, a brand replies or a deal is created. The full pipeline board (UC
   without manual action.
 - AC2: Given a lead moved by mistake, when the creator taps Undo, then it returns to its previous
   stage.
+
+**Moving a lead by hand (Amended after mockups, M8).** The creator can move a lead to any stage from
+a stage control on the lead detail (S-09); the move is logged and can be undone (AC2). "Lost" has
+no reason field in the MVP.
+- AC3: Given a lead in "Talking", when the creator picks "Lost" from the stage control, then the
+  lead moves to "Lost" and no further follow-up nudges (FR-050) are created for it.
 
 **FR-049 Drafted replies in the creator's voice** · Must · MVP · UC-014, D6, D10 · Paid
 For a lead or deal needing a reply (ask for brief, send quote, decline, negotiate), the AI drafts
@@ -440,6 +538,13 @@ edits or taps Send; it goes from their own Gmail (or Instagram, FR-053) and is l
 - AC2: Given the creator taps Send, when it is sent, then it appears in the creator's Gmail Sent
   folder in the same thread.
 - AC3: Given a draft, when generated, then it never includes another brand's name, rate or terms.
+
+**Draft language (Amended after mockups, M27).** A draft starts in the language of the message it
+answers (English, Hindi or Hinglish), or in the creator's usual language for a new message. A
+picker on the draft (S-11) rewrites it in one of the other two. Hindi is written in Devanagari,
+Hinglish in Roman letters.
+- AC4: Given a Hinglish brand message, when the draft opens, then it is in Hinglish; when the
+  creator picks English, then the draft is rewritten in English and nothing is sent.
 
 **FR-050 Follow-up nudges for quiet leads** · Must · MVP · UC-015 · Paid
 After a quote with no reply for N days (default 5), the creator gets one nudge with a drafted
@@ -520,6 +625,11 @@ the kill-fee invoice is v1 (FR-117).
 - AC1: Given a cancelled deal with an unpaid invoice, when cancelled, then the creator is prompted
   to issue a credit note and reminders for that invoice stop.
 
+**Cancel reasons (Amended after mockups, M8).** Cancelling is done from a sheet on the deal (S-09).
+Reasons offered: Brand paused the campaign; Brand cancelled; I turned it down; Other (with a note).
+- AC2: Given the creator cancels a deal, when they confirm, then a reason from the list is required,
+  and it is saved on the deal and in the log.
+
 ### 5.E Campaign delivery (v1)
 
 **FR-100 Deliverable stages** · Should · v1 · UC-040 · Free
@@ -558,6 +668,14 @@ one-time CA review, D36.)
 - AC2: Given a creator without GSTIN, when the invoice is created, then it is titled as a non-GST
   invoice and shows no GST.
 
+**SAC code and wording (Amended after mockups, M20).** The SAC code, invoice titles, wording and
+field order follow the layouts in `docs/04-design/mockups/x02-documents.html` as a working draft.
+**Decided (Q20), CA to confirm:** SAC 998361 for a creator's advertising and
+promotion services, and all invoice and credit-note wording, signed off in the pre-MVP CA review
+(D36), together with the lower-threshold state list; no real invoice is sent before that sign-off.
+- AC3: Given the CA changes the SAC code or wording, when the change is released, then it is a new
+  rule-set version, and invoices already issued are not changed.
+
 **FR-112 Sequential numbering per tax year** · Must · MVP · UC-050 · Free
 A number is issued only when the invoice is confirmed. Numbers run in sequence per tax year, with
 no gaps and no reuse. The creator may set a prefix once.
@@ -572,10 +690,26 @@ made with a credit note (FR-114) and a new invoice.
 - AC1: Given a sent invoice, when anyone tries to edit the amount, then the edit is refused and the
   app offers "Issue credit note".
 
+**Sent-invoice view (Amended after mockups, M7).** A sent invoice opens on S-13 in a locked view
+with "Mark paid", "Issue credit note" and "Mark as disputed" (FR-125), the payment-reminders card
+(FR-120) and a timeline.
+
 **FR-114 Credit notes** · Must (proposed, edit E1) · MVP · UC-056, UC-050 · Free
 A credit note linked to the original invoice, with its own sequence, reduces what is owed.
 - AC1: Given a ₹60,000 invoice, when a ₹10,000 credit note is issued, then outstanding becomes
   ₹50,000 and both documents appear in exports and (v1) the year-end pack.
+
+**Credit-note form (Amended after mockups, M7).** Opened from the sent invoice (S-13): credit
+amount, reason (Scope reduced; Deal cancelled; Error in invoice; Other, with a note), and a preview
+of the new outstanding amount and the credit-note number before confirming. Numbers run in their own
+sequence per tax year with no gaps, as FR-112. Issuing is a money confirmation that needs a tap
+(FR-235). The credit note can be sent to the finance contact on tap, like an invoice (FR-115), or
+downloaded.
+- AC2: Given a ₹60,000 invoice with a ₹10,000 credit note already issued, when a ₹55,000 credit
+  note is entered, then it is refused, because credit notes cannot add up to more than the invoice
+  (₹50,000 left to credit).
+- AC3: Given a confirmed credit note, when the creator taps Send, then it goes from the creator's
+  Gmail through the send gate (FR-236) with its PDF attached, and is logged.
 
 **FR-115 Send the invoice to the finance contact** · Must · MVP · UC-051, D6 · Free
 On tap, sent from the creator's Gmail to the finance contact, CC the marketing contact, with the
@@ -607,6 +741,16 @@ invoice, snooze ("in process"), or pause.
 - AC1: Given an invoice due 1 Dec with reminders on, when 28 Nov arrives, then the "3 days before"
   reminder is created (drafted or sent, by mode).
 
+**Per-invoice controls (Amended after mockups, M5).** On a sent invoice (S-13), a "Payment
+reminders" card lists each step with its date and status (done, waiting for a tap, scheduled, off)
+and a switch per step. "Snooze: in process" stops reminders for 7 days; "Pause all" stops them until
+resumed. Steps whose date passed during a snooze or pause are skipped, never sent in a burst. Each
+change is logged and can be undone.
+- AC2: Given the "+30" step is switched off, when its date arrives, then nothing is created for it.
+- AC3: Given an invoice due 1 Dec is snoozed on 5 Dec, when 8 Dec (the "+7" step) arrives, then no
+  reminder is created; when the snooze ends on 12 Dec, then no catch-up reminder is sent, and the
+  "+15" step on 16 Dec is created as normal.
+
 **FR-121 Approve-each mode** · Must · MVP · UC-053, UC-134 · Paid
 Each reminder is drafted by AI, firmer at each step, and waits in the approval queue.
 - AC1: Given approve-each mode, when a step is due, then a draft appears in the queue and nothing
@@ -620,22 +764,54 @@ number, amount, due date, brand name and contact name are filled in; the AI writ
 - AC2: Given a template is edited, when saved, then automatic mode pauses until the owner approves
   the new template.
 
+**Default wording (Amended after mockups, M28).** BackstageHQ offers one default template per step,
+plus the wording of the daily digest (FR-201) and the WhatsApp confirmations (FR-013), using the
+copy in `docs/04-design/mockups/x01-messages.html` as a working draft. **Decided (Q19):** the X-01 copy is adopted as the default reminder templates, polite and factual, with no legal or interest
+claims, and the owner reads it once before launch; the owner may edit them (AC2) and approves each before automatic mode starts.
+- AC3: Given the default reminder templates, when reviewed, then none mentions interest, legal
+  action or a law.
+
 **FR-123 Reminder safety rules** · Must · MVP · UC-053, NFR-008 · Paid
 At most one reminder per invoice per day; none after a payment match; none outside the brand
-sending window (proposed: Monday–Saturday, 10:00–18:00 IST, Q10); each send is recorded once even
-if the system retries.
+sending window; each send is recorded once even if the system retries.
+
+**Sending window (Amended after mockups, M9).** **Decided (Q10):** Monday to
+Saturday, 10:00–18:00 IST, editable by the owner in Settings: automation (S-22). The window applies
+to payment reminders only, in both modes; replies, quotes and invoices the creator taps Send on go
+at once.
+
+**Approved outside the window (Amended after mockups, M18).** A payment reminder approved outside
+the window is held and goes out when the window next opens, after the usual checks at that moment
+(not paid, not disputed, not paused, none sent today for that invoice). Until then it shows as
+"Scheduled for <time>" in the approval queue (S-17), can be withdrawn, and does not expire.
 - AC1: Given a payment matched on 5 Dec, when later steps fall due, then nothing is sent after 5 Dec.
 - AC2: Given two steps fall on the same day, when the day runs, then only one reminder is sent.
 - AC3: Given the sending service restarts mid-send, when it retries, then the brand receives the
   reminder once.
+- AC4: Given the owner changes the window to 09:00–20:00, when a reminder is approved at 19:00 on a
+  weekday, then it is sent at once. (Amended after mockups, M9.)
+- AC5: Given a reminder approved on Saturday at 20:00, when the window opens on Monday at 10:00,
+  then it is sent once, unless the invoice was paid, disputed or paused in between, in which case it
+  is withdrawn and logged. (Amended after mockups, M18.)
 
 **FR-124 Who owes me what** · Must · MVP · UC-055 · Free
 Total outstanding, by brand and by age (0–30, 31–60, 61–90, 90+ days), next expected payments,
 partial and short payments, and disputed invoices shown separately.
 - AC1: Given unpaid ₹50k (20 days), ₹30k (70 days) and ₹20k (95 days), when Money is opened, then
   the total is ₹1,00,000, split into the 0–30, 61–90 and 90+ buckets.
-- AC2: Given an invoice marked disputed, when Money is opened, then it is shown in a "Disputed" line
-  and its reminders are paused.
+- AC2: Given an invoice marked disputed (FR-125), when Money is opened, then it is shown in a
+  "Disputed" line and its reminders are paused.
+
+**FR-125 Mark an invoice disputed** · Must · MVP · UC-055 · Free *(new; Amended after mockups, M6)*
+On a sent invoice (S-13), "Mark as disputed" with an optional note. Its reminders pause at once and
+it moves to the "Disputed" line on Money (FR-124). "Resolve dispute" returns it to normal; reminders
+resume at the next step still due, with no catch-up for steps that passed. Both actions are logged
+and can be undone.
+- AC1: Given a sent invoice, when the creator marks it disputed with the note "Reel 2 was late",
+  then its reminders pause, it shows in the Disputed line on Money with the note, and a log entry
+  exists.
+- AC2: Given a disputed invoice, when the creator taps "Resolve dispute", then reminders resume from
+  the next step still due, and none is sent for steps that passed during the dispute.
 
 ### 5.G Payments
 
@@ -777,6 +953,26 @@ flags), deadlines. One tap to each.
 - AC1: Given 4 items in the approval queue, when Home opens, then "4 waiting for you" is shown and
   opens the queue in one tap.
 
+**Recent card (Amended after mockups, M11).** Home also has a "Recent" card with the last 7 days of
+things the system did by itself or that need attention: automatic payment matches (with Undo,
+FR-144, FR-146), automatic reminders sent, and broken connections (with Reconnect, FR-010 AC2).
+Push and email notices for these open the same item. There is no separate notification-centre
+screen in the MVP.
+- AC2: Given an automatic match 2 days ago, when Home opens, then the Recent card shows it with an
+  Undo button that works as FR-146.
+
+**Items to confirm (Amended after mockups, M16).** "Waiting for you" counts the items to send
+(AC1). When there are items to confirm (FR-237), a second line shows their number, so a proposed
+payment match is not missed.
+- AC3: Given 4 items to send and 2 proposed payment matches, when Home opens, then it shows "4
+  waiting for you" and "2 to confirm", each opening its list in one tap.
+
+**"Deadlines" in the MVP (Amended after mockups, M24).** The deliverable and go-live dates on the
+deal record (FR-080) and invoice due dates, for the next 7 days. No stages and no separate date
+reminders; those arrive in v1 (FR-100, FR-101). The daily digest still lists them (FR-201).
+- AC4: Given a deal with a go-live in 3 days, when Home opens, then the date is listed under
+  deadlines with the deal name, and no separate reminder is sent for it.
+
 **FR-201 Daily digest** · Must · MVP · UC-120, D2, D35 · Free (plain list) / Paid (AI summary)
 At a time the creator chooses (default 08:30): deliverables due, go-lives, money due, payments
 received (including auto-matches), new pitches with scam flags, queue items. By web push or email.
@@ -786,9 +982,9 @@ Not by WhatsApp in v1.
 - AC2: Given nothing to report, when the digest time comes, then no digest is sent.
 
 **FR-202 Notification settings** · Must · MVP · UC-120, UC-041, NFR-008 · Free
-Channels (web push, email), digest time, quiet hours for notifications to the creator (proposed
-default 22:00–08:00, Q10). On iPhone the app explains how to add it to the home screen, which web
-push needs.
+Channels (web push, email), digest time, quiet hours for notifications to the creator. On iPhone
+the app explains how to add it to the home screen, which web push needs. **Decided (Q10):** default quiet hours 22:00–08:00, editable by each person in Settings:
+notifications (S-24). (Amended after mockups, M9.)
 - AC1: Given quiet hours 22:00–08:00, when a non-urgent event happens at 23:00, then the push is held
   until 08:00.
 - AC2: Given an iPhone user who has not added the app to the home screen, when they turn on push,
@@ -832,6 +1028,21 @@ revoke all connections; remove helpers; cancel billing; send a confirmation.
   and a confirmation email was sent.
 - AC2: Given an active paid plan, when deletion is requested, then the plan is cancelled with no
   further charge.
+
+**While deletion is pending (Amended after mockups, M22).** During the waiting period all
+automation and outbound sending stop (architecture section 18.3, sign-off S11). Settings: my data
+(S-26) shows the deletion date and a "Cancel deletion" button. Cancelling keeps the account and its
+data as they were; automation stays off until the owner switches it back on, and the paid plan does
+not restart by itself.
+**Issued invoices on deletion — Decided (Q18), to be confirmed by a CA or lawyer before launch:** they are
+deleted with the account, as the architecture proposes (sign-off S10). Before the owner confirms
+deletion, the app says the law may require them to keep copies of issued invoices and credit notes
+for a set period, and offers the final export with every invoice and credit-note PDF. (The FR-211
+warning covers disconnecting a source, not deleting the account.)
+- AC3: Given a pending deletion, when the owner taps "Cancel deletion" before the date, then the
+  account stays, nothing is deleted, the cancellation is logged, and automation stays off until the
+  owner switches it on.
+- AC4: Given a pending deletion, when a reminder step falls due, then nothing is sent to the brand.
 
 **FR-213 Shared activity log** · Must · MVP · UC-133, D21 · Free
 One log per workspace, in plain words: who (owner, "Rohan (manager)", "Assistant for Riya",
@@ -884,6 +1095,12 @@ language used.
 - AC1: Given any screen, when the creator opens the panel, then it opens without leaving the screen
   and knows which record is open ("this deal").
 
+**App language (Amended after mockups, M23).** The app's own screens, buttons and notices are in
+English in the MVP and v1, as already decided (D10, NFR-015). Only AI output (answers and drafts)
+follows the language the person uses or picks (FR-049).
+- AC2: Given a creator types a question in Hinglish, when the assistant answers, then the answer is
+  in Hinglish and the screen labels stay in English.
+
 **FR-231 Answer questions from the creator's own records** · Must · MVP · UC-140 · Paid
 Looks up only this workspace. Every number links to its records. Says when data is incomplete.
 Tax questions get a "not advice" label and a CA pointer. General questions are labelled as general.
@@ -913,10 +1130,20 @@ export request (owner still does the second check). Anything else: "I can't do t
 - AC2: Given "remind all 20 overdue", when run, then 20 separate previewable items are queued.
 
 **FR-234 Fair-use limit for the assistant** · Must · MVP · NFR-018 · Paid
-A monthly assistant allowance per plan, shown in plain words, with a warning at 80%. Amount set
-with the price (Q5).
+A monthly assistant allowance per plan, shown in plain words, with a warning at 80%. Amount in
+"Amount and display" below (Q5).
 - AC1: Given a creator at 80% of the allowance, when they send a request, then the answer includes a
   one-line note of the remaining allowance.
+
+**Amount and display (Amended after mockups, M12).** **Decided (Q5):** 300
+assistant requests a month at both test prices, the same allowance, resetting on the 1st of each month. Only
+requests typed into the assistant panel count; drafts and sorting started from other screens do
+not. The panel shows the remaining count in its footer and a banner at 80%; the count also appears
+on Plan and billing (S-27). At 100% the assistant takes no new requests until the reset date and
+says so, with the date and a link to the plan; every other feature keeps working.
+- AC2: Given a creator who has used the whole allowance, when they send a request, then the
+  assistant replies with the reset date and changes nothing, and drafting, invoicing and reminders
+  still work.
 
 **FR-235 Assistant permission rules (fixed in v1)** · Must · MVP · UC-142, D29 · Paid
 Exactly as UC-142: read and answer alone; drafts alone; internal record updates alone with undo;
@@ -953,6 +1180,14 @@ after 7 days with a nudge on day 5.
   nudged on day 5.
 - AC3: Given 5 selected items, when "Approve all" is tapped, then each item is sent and logged
   separately.
+
+**Two sections (Amended after mockups, M16).** The queue (S-17) has "To send" (everything above)
+and "To confirm": money confirmations and other confirmation cards from the assistant (FR-235) and
+proposed payment matches (FR-143), each linking to where it is confirmed (for payments, S-15).
+"To confirm" items send nothing outside BackstageHQ and do not expire; the 7-day expiry applies to
+"To send" only.
+- AC4: Given a proposed payment match, when the queue opens, then it is listed under "To confirm"
+  with a link to Payments, and it is still there after 7 days.
 
 **FR-238 Assistant run log and "Undo this run"** · Must · MVP · UC-144 · Paid
 Records the request text, plan, each step, records changed (before and after) and queued items.
@@ -1099,7 +1334,8 @@ never a broken screen.
   are shown and no AI cost is incurred.
 
 **FR-291 Trial of the paid plan** · Should · MVP · D32 · —
-Length to be decided (Q3). No card needed to start, if you agree.
+**Decided (Q3):** 14 days, no card, starting when the creator first sees the import result. (Amended after
+mockups, M4.)
 - AC1: Given a trial ends without payment, when the next day starts, then the workspace is on free,
   automatic reminders stop, and the creator was told 3 days before and on the day.
 
@@ -1108,6 +1344,12 @@ Monthly or yearly, Indian payment methods (UPI, cards), and a GST invoice from B
 payer. Two price points for the beta test (Q1), assigned per creator.
 - AC1: Given a successful payment, when it is confirmed, then paid features start within 1 minute
   and a BackstageHQ invoice is emailed to the payer.
+
+**How the price is shown (Amended after mockups, M4).** **Decided (Q1, Q17):**
+"₹499 + GST a month" (₹589 in total) or "₹4,990 + GST a year" (the S-27 placeholder), with the total including GST
+shown before the creator pays. Each beta creator sees only the price point assigned to them.
+- AC2: Given a creator assigned a price point, when they open Plan and billing (S-27), then they
+  see only that price point, and the total including GST is shown before they confirm payment.
 
 **FR-293 Downgrade or failed payment keeps all data** · Must · MVP · D4, D30 · —
 - AC1: Given a failed renewal, when the 7-day retry period ends, then the workspace moves to free,
@@ -1119,6 +1361,15 @@ rather than a false "safe".
 - AC1: Given a free creator over the cap, when a new message arrives, then it is labelled "not
   checked this month" and never "safe".
 
+**Free Inbox and over-cap messages (Amended after mockups, M10).** What a free creator sees is set
+out in section 4.3; the cap is decided (Q4). A message over the cap is not read,
+so only its date, the provider's message ID and the "not checked" label are stored (as FR-044), and
+it shows a link to open it in Gmail or Instagram.
+- AC2: Given a free creator over the cap, when a message arrives, then only its date, provider
+  message ID and "not checked" label are stored, with no sender, subject or body.
+- AC3: Given a free creator under the cap, when a brand pitch arrives, then it shows a scam label,
+  and no category, lead or draft is created.
+
 **FR-295 Price-test reporting** · Must · MVP · D32 · —
 Internal report for the owner: trial starts, conversions and retention by price point, variable
 cost per creator, and fixed platform cost shown separately (M12–M14). (Amended after architecture,
@@ -1126,6 +1377,18 @@ P2.)
 - AC1: Given 20 beta creators across two price points, when the owner opens the report, then
   conversions and variable cost per creator are shown per price point, and fixed platform cost is
   shown as a separate monthly total.
+
+**Access and early numbers (Amended after mockups, M13).** The report (S-30) is a staff-only page
+behind the separate staff sign-in (authenticator app or passkey, architecture section 9). It is not
+part of any creator workspace and shows totals per price point only, never one creator's deals or
+messages. A figure that needs time to pass shows "Too early" and how many creators qualify so far,
+instead of a number. **Decided (Q12):** the report also shows "collected
+after reminders" (metric M3) as one total per price point across all creators, never per creator, as the S-30 mockup does;
+this needs a small architecture addition (section 14A, AR4).
+- AC2: Given no creator has paid for 3 months yet, when the report opens, then 3-month retention
+  shows "Too early (0 of N creators at 3 months)" and no percentage.
+- AC3: Given a signed-in creator who is not staff, when they open the report's address, then access
+  is refused and logged.
 
 ## 6. Screen list
 
@@ -1136,34 +1399,34 @@ screens. Stage 3 mockups cover every MVP row.
 |---|---|---|---|---|---|
 | S-01 | Sign up / sign in | Phone code or Google; second factor on new device | Everyone | MVP | FR-001, FR-002 |
 | S-02 | Profile setup | Name, PAN, state, bank, GSTIN, handles; skip what isn't needed | Owner | MVP | FR-003, FR-023 |
-| S-03 | Connect sources | Gmail, Instagram, WhatsApp number, forwarding address, with "what we read" | Owner | MVP | FR-010–FR-013, FR-217 |
-| S-04 | Import review | "We found N deals"; confirm, edit, reject in bulk; total owed | Owner | MVP | FR-020–FR-022 |
-| S-05 | Home (Today) | Owed, due today, waiting for a tap, new pitches, deadlines | All (filtered by role) | MVP | FR-200 |
-| S-06 | Inbox | Sorted emails and DMs by category, scam labels | Owner; manager v1 | MVP | FR-040–FR-045, FR-051 |
+| S-03 | Connect sources | Gmail, Instagram, WhatsApp number, forwarding address, with "what we read"; import look-back period; verified addresses and numbers; forwarding-only mode (M3, M21, M26) | Owner | MVP | FR-010–FR-013, FR-020, FR-217 |
+| S-04 | Import review | "We found N deals"; confirm, edit, reject in bulk; total owed; "Spreadsheet" tab (M3) | Owner | MVP | FR-020–FR-022 |
+| S-05 | Home (Today) | Owed, due today, waiting for a tap and to confirm, new pitches, deadlines (dates only), "Recent" card with Undo (M11, M16, M24) | All (filtered by role) | MVP | FR-200 |
+| S-06 | Inbox | Sorted emails and DMs by category, scam labels; free-plan view with scam labels only (M10) | Owner; manager v1 | MVP | FR-040–FR-045, FR-051, FR-294 |
 | S-07 | Message detail | Message, category reason, scam reasons, extracted fields with sources, "make lead" | Owner; manager v1 | MVP | FR-045, FR-046 |
 | S-08 | Leads list | Leads by stage, follow-up nudges | Owner; manager v1 | MVP | FR-048, FR-050 |
 | S-09 | Lead / deal detail | All deal fields, milestones, linked messages, invoices, timeline | Owner; manager v1; helpers filtered | MVP | FR-080–FR-083 |
 | S-10 | Quote builder | Lines from rate card plus add-ons, total, budget gap, send | Owner; manager v1 | MVP | FR-070–FR-072 |
 | S-11 | Draft review | Drafted reply or email, edit, send on tap | Owner; manager v1 | MVP | FR-049, FR-115 |
 | S-12 | Invoices list | Drafts, sent, paid, overdue, credit notes | Owner; manager and helpers v1 | MVP | FR-110–FR-114 |
-| S-13 | Invoice editor and preview | Pre-filled invoice, GST lines, PDF preview, send | Owner; manager v1 | MVP | FR-110–FR-116 |
+| S-13 | Invoice editor, preview and sent view | Pre-filled invoice, GST lines, PDF preview, send; locked sent view with mark paid, mark disputed, payment-reminders card and credit-note form (M5, M6, M7) | Owner; manager v1 | MVP | FR-110–FR-116, FR-120, FR-125 |
 | S-14 | Money (who owes me) | Total owed, age buckets, by brand, next expected, disputed | Owner; manager if ticked | MVP | FR-124 |
 | S-15 | Payments | Detected payments, proposed matches, statement upload, mark paid, TDS questions | Owner | MVP | FR-140–FR-147 |
 | S-16 | Tax | GST threshold meter, TDS by brand; (v1) AIS match, year-end pack | Owner; Accountant v1 | MVP | FR-150–FR-152 |
-| S-17 | Approval queue | Everything waiting to go out, with preview, sender, requester | Owner; authorised manager v1 | MVP | FR-237 |
+| S-17 | Approval queue | "To send": everything waiting to go out, with preview, sender, requester, and reminders held for the sending window; "To confirm": confirmation cards and proposed matches (M16, M18) | Owner; authorised manager v1 | MVP | FR-237, FR-123 |
 | S-18 | Assistant panel | Chat on every screen; plan, results, "Undo this run" | All with access | MVP | FR-230–FR-235 |
 | S-19 | Assistant run detail | Request, plan, steps, before/after, queued items | Owner; the person who ran it | MVP | FR-238 |
 | S-20 | Activity log | Who did what and when; filters; undo | Owner; others filtered (v1) | MVP | FR-213, FR-214 |
-| S-21 | Settings: profile and sensitive details | Bank, PAN, GSTIN with second check | Owner only | MVP | FR-003, FR-004 |
+| S-21 | Settings: profile and sensitive details | Bank, PAN, GSTIN with second check; devices and sessions (M15) | Owner only | MVP | FR-003, FR-004, NFR-027 |
 | S-22 | Settings: automation | The UC-134 choices; reminder templates | Owner only | MVP | FR-122, FR-215 |
 | S-23 | Settings: rate card and terms | Formats, add-ons, default terms | Owner; manager if ticked | MVP | FR-025, FR-026 |
 | S-24 | Settings: notifications | Digest time, channels, quiet hours, iPhone home-screen help | Everyone (own settings) | MVP | FR-201, FR-202 |
 | S-25 | Settings: connections | Status, last check, reconnect, disconnect and delete | Owner only | MVP | FR-015, FR-211 |
-| S-26 | Settings: my data | Full export, delete account, data-use statement | Owner only | MVP | FR-210, FR-212, FR-216 |
+| S-26 | Settings: my data | Full export, delete account and cancel a pending deletion, data-use statement, support access (M14, M22) | Owner only | MVP | FR-210, FR-212, FR-216, NFR-030 |
 | S-27 | Plan and billing | Plan, trial, price, payment, BackstageHQ invoices, payer | Owner; payer v1 | MVP | FR-290–FR-293 |
 | S-28 | Capture / upload | Upload a file or photo; see what the AI made of it | Owner | MVP | FR-014, FR-052 |
 | S-29 | Second-check dialog | One-time code for sensitive actions (shared component) | Owner | MVP | FR-004, FR-210 |
-| S-30 | Price-test report (internal) | Conversions, retention and cost per price point | BackstageHQ owner only | MVP | FR-295 |
+| S-30 | Price-test report (internal) | Conversions, retention and cost per price point; staff-only page behind the staff sign-in (M13) | BackstageHQ owner only | MVP | FR-295 |
 | S-31 | People and access | Managers and helpers, invite, revoke, end dates | Owner | v1 | FR-030, FR-260, FR-262 |
 | S-32 | Permission editor | Checkboxes, warnings, ₹X limit, scope, commission | Owner | v1 | FR-265, FR-266, FR-275 |
 | S-33 | Invite acceptance and "My access" | Manager or helper accepts; sees what they can do | Manager, helpers | v1 | FR-261, FR-267 |
@@ -1256,10 +1519,10 @@ NFR-025 onwards. All are Must for the MVP unless stated.
 | NFR-004 | Second factor on new devices; encryption in storage and in transit | As FR-002. Given any stored record, when storage is inspected, then it is encrypted. |
 | NFR-025 | **Connection tokens** (Gmail, Instagram, Calendar) are stored encrypted and separately from other data, and are never visible to staff or in logs | Given application logs, when searched for a token, then none is found. |
 | NFR-026 | **Least access from outside services**: ask Google and Meta only for the permissions each feature needs | Given the Gmail consent screen, when shown, then it lists only reading and sending, nothing broader. |
-| NFR-027 | **Sessions**: signed-in sessions end after 30 days of inactivity; the owner can see and end all sessions | Given the owner taps "Sign out everywhere", when done, then every other session ends within 1 minute. |
+| NFR-027 | **Sessions**: signed-in sessions end after 30 days of inactivity; the owner can see and end all sessions. Screen: a "Devices and sessions" card on S-21 listing each signed-in device or browser with its last activity, with "Sign out" per session and "Sign out everywhere". (Amended after mockups, M15.) | Given the owner taps "Sign out everywhere", when done, then every other session ends within 1 minute. Given the owner signs out one session, when that device next makes a request, then it is signed out and the other sessions continue. |
 | NFR-028 | **Abuse limits** on sign-in, codes, uploads, forwarding address and the WhatsApp number | Given 100 forwards in a minute from one number, when received, then extra ones are refused and our team is alerted. |
 | NFR-029 | **External security review and backup-restore drill before real users** (playbook rule) | Given the MVP, when it is ready for beta, then a written external review has no open high-severity findings. |
-| NFR-030 | **Staff access**: BackstageHQ staff can't see a creator's data except with the owner's in-app, time-limited permission for a support case (Q12) | Given a support request, when staff open the workspace without permission, then access is refused and logged. |
+| NFR-030 | **Staff access**: BackstageHQ staff can't see a creator's data except with the owner's in-app, time-limited permission for a support case (Q12). Screen: a "Support access" card on Settings: my data (S-26). Only the owner can grant it, after a second check (S-29), for one case at a time, and can end it early. **Decided (Q12):** each grant lasts 24 hours and needs a second check. (Amended after mockups, M14.) | Given a support request, when staff open the workspace without permission, then access is refused and logged. Given the owner granted access, when 24 hours pass or the owner taps "End access", then staff requests are refused and logged. |
 | NFR-031 | **Uploaded files are checked** for malware before anyone can open them | Given an uploaded file with known malware, when uploaded, then it is quarantined and the creator is warned. |
 
 ### 8.2 Audit
@@ -1437,7 +1700,7 @@ architecture, P4.)
 | A9 | The DPDP Rules 2025 set a time limit for telling the regulator and affected people about a breach, and a consent standard for processing | NFR-037 timing |
 | A10 | Indian payment gateways support UPI and card subscriptions for a small company | Manual billing for the beta |
 | A11 | AI providers offer contracts with no training on customer data and short retention | Choice of provider; NFR-035 |
-| A12 | GST: ₹20L threshold for services in most states, ₹10L in special-category states; IGST vs CGST+SGST by place of supply; TDS on creator fees mostly at 10% (now under section 393 of the 2025 Act), with 1% and 2% cases | Rule set; CA review (D36) |
+| A12 | GST: ₹20L threshold for services in most states, ₹10L in special-category states; IGST vs CGST+SGST by place of supply; TDS on creator fees mostly at 10% (now under section 393 of the 2025 Act), with 1% and 2% cases. Working list of states with the ₹10L threshold for services, to confirm with the CA: Manipur, Mizoram, Nagaland, Tripura. (Amended after mockups, M2.) | Rule set; CA review (D36) |
 | A13 | Advance-tax and TDS-certificate dates under the 2025 Act are unchanged from the old ones | Later features (UC-073, UC-074) |
 
 ### 12.1 Verification results (2026-11)
@@ -1470,6 +1733,8 @@ The use-case document is **not changed** by this PRD. If you approve these, they
 | E7 | NFR-012 | Replace "the PRD will set the final target" with the targets in section 8.5. | As asked by the use cases. |
 | E8 | Section 11.3 | Mark each item as settled once you answer Q1, Q4, Q7, Q8 and Q14. | Keeps the decision record complete. |
 | E9 | UC-001 edge cases | Add: "Lost phone or email: account recovery with a second check, never through support alone." | Sign-in recovery is not covered and is a common attack path. |
+| E10 | NFR-008 (use cases section 7) | "none in quiet hours" becomes "none outside the brand sending window". (Proposed after mockups, M9.) | The PRD separates the brand sending window (FR-123) from the creator's quiet hours (FR-202); NFR-008 means the first. |
+| E11 | D31 | **Not needed: Q4 answered emails and DMs.** (Was: change "scam flags on new emails and DMs" to "on new emails"; free creators get no Instagram DM watching. Proposed after mockups, M10.) | The S-06 mockup shows "DMs are not watched" on free, which disagrees with D31 as approved. Not needed because D31 stays as approved (Q4). |
 
 ---
 
@@ -1499,7 +1764,7 @@ Every MVP and v1 use case maps to at least one FR. Later use cases get FRs when 
 | UC-051 | FR-115, FR-116 | MVP |
 | UC-052 | FR-118 | v1 |
 | UC-053 | FR-120, FR-121, FR-122, FR-123 | MVP |
-| UC-055 | FR-124 | MVP |
+| UC-055 | FR-124, FR-125 (M6) | MVP |
 | UC-056 | FR-114 (MVP), FR-117 (v1) | MVP / v1 |
 | UC-060 | FR-140–FR-146 | MVP |
 | UC-061 | FR-147 | MVP |
@@ -1534,6 +1799,62 @@ Every MVP and v1 use case maps to at least one FR. Later use cases get FRs when 
 | UC-111 | FR-275, FR-276 | v1 |
 | New (E2) | FR-290–FR-295 | MVP |
 
+## 14A. Amendments after mockups (M1–M29)
+
+The Stage 3 mockups (`docs/04-design/index.html`, section "PRD gaps") marked 29 places where the
+PRD was silent or open. Each is closed below. Text marked "Decided" was settled by the owner on 2026-11-09;
+items marked as awaiting the CA stay open until the CA signs off. Gap numbers G1–G29 are the designer's; Mn matches Gn.
+Edit numbers M1–M29 are not the success metrics M1–M17 in section 3; where a metric is meant, it
+says "metric".
+
+| Edit | Gap | Requirements touched | Summary |
+|---|---|---|---|
+| M1 | G1 | FR-002 | Phone sign-ups must add a verified email (or Google), Google sign-ups a phone, so a second factor of a different kind always exists. |
+| M2 | G2 | FR-003, A12 | Two setup steps (profile, then connect); no second check on the first entry of bank/PAN/GSTIN; lower-threshold states held in the rule set, list for CA sign-off (Q20). |
+| M3 | G3 | FR-020, FR-022, S-03, S-04 | Spreadsheet import is a tab on S-04; look-back period chosen on S-03. |
+| M4 | G4 | FR-291, FR-292 | 14-day trial, no card; price shown "+ GST" with the total before paying (Q1, Q3, Q17). |
+| M5 | G5 | FR-120, S-13 | Reminders card on the sent invoice: per-step switch, 7-day snooze, pause; no catch-up burst. |
+| M6 | G6 | FR-124, new FR-125, S-13 | New requirement: mark an invoice disputed (pauses reminders) and resolve it. |
+| M7 | G7 | FR-113, FR-114, S-13 | Sent-invoice view on S-13; credit-note form, limit, numbering and send on tap. |
+| M8 | G8 | FR-047, FR-048, FR-083 | Split control; manual stage moves; no lost reason in MVP; fixed cancel-reason list. |
+| M9 | G9 | FR-123, FR-202, metric M5 | Sending window (Mon–Sat 10:00–18:00 IST) and quiet hours (22:00–08:00) decided (Q10), editable by the owner; window applies to reminders only. |
+| M10 | G10 | Section 4.3, FR-012, FR-294, S-06 | Free Inbox shows scam labels only; over-cap messages store no content; DMs on free and the 500 shared cap decided (Q4). |
+| M11 | G11 | FR-200, S-05 | "Recent" card on Home with Undo and Reconnect; no separate notification centre. |
+| M12 | G12 | FR-234 | 300 panel requests a month, what counts, where shown, what happens at 100% (Q5). |
+| M13 | G13 | FR-295, S-30 | Report sits behind the staff sign-in; "Too early" instead of numbers; metric M3 total per price point (Q12). |
+| M14 | G14 | NFR-030, S-26 | "Support access" card; owner only, second check, 24 hours (Q12). |
+| M15 | G15 | NFR-027, S-21 | "Devices and sessions" card with per-session sign-out. |
+| M16 | G16 | FR-237, FR-200, S-17, S-05 | Queue has "To send" and "To confirm"; Home shows both counts (differs from the mockup, see note). |
+| M17 | G17 | FR-045 | "Report" marks the sender for this creator only, shares nothing, points to platform and cybercrime reporting. |
+| M18 | G18 | FR-123, S-17 | Reminder approved outside the window is held to the next opening, re-checked, withdrawable. |
+| M19 | G19 | FR-014 | MVP: receipts and contracts saved as files; statements go to Payments; no expense records. |
+| M20 | G20 | FR-111 | X-02 layouts are a working draft; SAC 998361 and wording for CA sign-off (Q20). |
+| M21 | G21 | FR-011, FR-013, S-03 | Add-and-verify list for forwarding emails and WhatsApp numbers. |
+| M22 | G22 | FR-212, S-26 | Cancel a pending deletion; automation off while pending; issued invoices deleted with a keep-your-copy warning (Q18). |
+| M23 | G23 | FR-230 | App interface is English in MVP and v1, as D10 and NFR-015 already decide. |
+| M24 | G24 | FR-200 | "Deadlines" on Home are deal and invoice dates for 7 days, no stages or reminders. |
+| M25 | G25 | FR-025 | Rate-card grid: Instagram Reel, Story, Static; YouTube Integration, Dedicated video. |
+| M26 | G26 | FR-011, FR-012, S-03 | Forwarding-only mode defined; Gmail forwarding-confirmation email shown to the creator; mockup copy is the working draft. |
+| M27 | G27 | FR-049, S-11 | Draft starts in the incoming message's language; picker rewrites it. |
+| M28 | G28 | FR-122 (and FR-201, FR-013 wording) | X-01 copy adopted as the default templates; reminders make no legal or interest claims; owner reads it once before launch (Q19). |
+| M29 | G29 | Section 0 | "Next" row corrected to playbook stage numbers. |
+
+**Where the PRD now differs from the approved mockups.** The mockups are not edited; these small
+follow-ups go to the design when the owner approves this amendment: (a) M16: Home shows a second
+"to confirm" count, which the S-05 mockup does not; (b) M10: the S-06 free-plan line "DMs are not
+watched" changes because D31 is kept as approved (Q4); (c) M17: the "Report" confirmation should carry
+the platform and cybercrime reporting links; (d) M14: the support-access button should ask for the
+second check.
+
+**Proposed edits to the architecture (not applied; for your approval).**
+
+| # | Where in `docs/03-architecture/architecture.md` | Proposed edit | Why |
+|---|---|---|---|
+| AR1 | Section 0 (Stage and Inputs rows), Q-P2 | Say "Stage 4" as in the playbook; replace "mockups/ is empty" with a pointer to the approved mockups (commit 0382fad); close Q-P2, noting that the mockups changed the PRD only through M1–M29. | The header is out of date. |
+| AR2 | Section 13, "Late but never twice" | A reminder that is otherwise valid but falls outside sending hours is **held** to the next window opening, not skipped. "Skipped" stays for paid, disputed, paused or already sent today. | M18. The current wording could drop an approved reminder. |
+| AR3 | Section 10.5 | Granting staff access needs the owner's second check; each grant lasts 24 hours unless Q12 says otherwise. | M14. |
+| AR4 | Sections 11.3 and 22 (product metrics) | Needed because Q12 was answered yes: one nightly job that writes per-price-point totals of "collected after reminders" for S-30, with no workspace IDs or amounts per creator leaving the job. | M13. Today cross-workspace queries return only IDs. |
+
 ## 15. Open questions for the owner
 
 These are business decisions. I have not assumed any answer; each has my recommendation.
@@ -1543,16 +1864,20 @@ These are business decisions. I have not assumed any answer; each has my recomme
 | Q1 | Which two prices do we test with the first 20 customers (D32)? | **₹499 and ₹999 a month**, yearly at two months free. ₹199 does not cover the assistant (section 10.1). |
 | Q2 | Do you accept the release split: managers (UC-150–154, UC-111, UC-145), AIS match (UC-072) and year-end pack (UC-077) in v1, not the MVP? | **Yes.** The MVP builds the foundation for managers (actor, on-behalf-of, multi-workspace login) so v1 adds screens, not a rebuild. |
 | Q3 | Free trial of the paid plan: yes or no, and how long? | **Yes, 14 days, no card**, starting after the import shows what is owed. |
-| Q4 | Fair-use cap on free-tier scam flags (D31)? | **500 messages checked a month**; review after the beta. |
-| Q5 | Assistant allowance on the paid plan? | **300 requests a month** at ₹499, **unlimited within fair use** at ₹999; review with measured cost. |
+| Q4 | Fair-use cap on free-tier scam flags (D31)? *Also (Amended after mockups, M10): do free creators get scam flags on Instagram DMs too, and does one cap cover emails and DMs?* | **500 messages checked a month**; review after the beta. **DMs included, one shared cap**, as D31 says; DMs add about 300 cheap checks a month, which the cap absorbs. Owner accepted. Alternative not taken: email only on free (would have needed use-case edit E11, now not needed). |
+| Q5 | Assistant allowance on the paid plan? *Also (Amended after mockups, M12): does the allowance count only requests typed into the assistant panel, and what happens at 100%?* | **300 requests a month at both test prices** (same allowance, as section 10.2 says both prices get the same features); review with measured cost. Count **panel requests only**; at 100% the assistant **pauses until the 1st**, everything else keeps working. Owner accepted. |
 | Q6 | Do you accept the success targets in section 3 (M1–M17)? | **Yes**, with M10 (zero send-gate breaches) and M5 (zero reminder misfires) as release blockers. |
 | Q7 | Native-app trigger thresholds (D39)? | **70% of weekly active creators mostly on phones, and 70% 3-month paid retention, for two months in a row.** |
 | Q8 | Free or paid: helper access (editor, CA, family), and AI capture from the WhatsApp number? | **Accountant access free** (CAs bring creators to us); Editor and Assistant helpers **paid**; WhatsApp capture **paid**. |
 | Q9 | How long between an account-deletion request and erasure? | **30 days** (time to change your mind), backups cleared within a further 60 days; published on the privacy page. |
 | Q10 | When may reminders go to brands, and what are default quiet hours for the creator? | Brand reminders **Mon–Sat 10:00–18:00 IST**; creator quiet hours **22:00–08:00**; both editable by the owner. |
 | Q11 | Permission gaps (edit E4): should manager inbox access follow "view deals", and should issuing numbers and marking paid follow "send invoices"? | **Yes to both.** Fewer checkboxes; personal messages never shown to managers. |
-| Q12 | May BackstageHQ staff see a creator's data for support? | **Only with the owner's in-app, time-limited permission per case, logged** (NFR-030). State it on the privacy page. |
+| Q12 | May BackstageHQ staff see a creator's data for support? *Also (Amended after mockups, M13, M14): how long does one grant last, and may the internal price-test report show "collected after reminders" as one total per price point?* | **Only with the owner's in-app, time-limited permission per case, logged** (NFR-030). State it on the privacy page. **24 hours per grant**, after a second check. **Yes to the per-price-point total** (owner accepted) only (no per-creator figure), because it is the north-star number for the beta; alternative: leave it off S-30 and read it from creators' own monthly reviews in v1. |
 | Q13 | How long do we keep the raw text of business emails and DMs? | **While the source is connected**, so every AI value keeps its source link; deleted on disconnect if chosen. |
 | Q14 | Gmail verification limit (D33): budget and time? | **₹3 lakh in year one and 12 weeks**; beyond that, forwarding-only beta. |
 | Q15 | Target dates and the CA review: when is the MVP beta, is v1 due by May 2027, and who does the one-time CA review (D36)? | **v1 by May 2027** for ITR season. **Two CA reviews:** GST threshold, invoice GST and TDS rules before the MVP; AIS match and year-end pack before v1. You choose the CA and budget. |
 | Q16 | Do you approve the proposed edits E1–E9 to the use-case document (section 13)? | **Yes**, applied as one separate commit before Stage 3. |
+| Q17 | (Added after mockups, M4.) Are our prices shown **plus GST** ("₹499 + GST", ₹589 in total) or **including GST** ("₹499")? | **Plus GST, with the total shown before paying.** At ₹499 including GST we keep about ₹423, which pushes variable cost from ~52–75% to ~61–89% of what we keep (M14). GST-registered creators can claim the GST back. Alternative: round prices including GST, simpler for unregistered creators, who cannot claim it back. |
+| Q18 | (Added after mockups, M22.) When an account is deleted, do we delete the creator's issued invoices too? Links architecture S10 and Q-L1. | **Delete them** (owner accepted), after warning the creator to keep their own copies and offering the final export with every PDF. Keeping them would mean holding a former customer's data for years. Alternative: keep issued invoices, read-only, for the legal period. **Needs a CA or lawyer check** either way. |
+| Q19 | (Added after mockups, M28.) Do you approve the default wording of reminder templates, the daily digest and WhatsApp confirmations in `x01-messages.html`? | **Yes, adopted as the default templates; the owner reads it once before launch**, keeping reminders free of legal or interest claims (for example late-payment interest under MSME rules), because an automatic message goes to a brand in the creator's name. Alternatives: add an optional, lawyer-approved MSME-interest line later for Udyam-registered creators; or ship no defaults and make each creator write their own. |
+| Q20 | (Added after mockups, M2, M20.) What must the pre-MVP CA review (Q15) sign off? | **Three items besides the GST and TDS rules:** the SAC code (998361), invoice and credit-note wording and field order in `x02-documents.html`, and the list of states with the lower GST threshold (A12). No real invoice is issued before this sign-off. Owner accepted; the CA still has to confirm. |
