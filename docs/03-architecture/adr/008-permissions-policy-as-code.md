@@ -16,7 +16,7 @@ including at send time (FR-236 AC3). The MVP has only the owner, but the foundat
 - The never-delegable list is fixed in code and cannot be granted.
 - The assistant acts as `Actor(kind=assistant, on_behalf_of=person)`. Its rights are the person's
   rights intersected with the FR-235 table. It can never approve or send.
-- The PRD §7.2 matrix is kept as a data file (`app/workspaces/matrix.yaml`) and every row is a test.
+- The PRD §7.2 matrix is kept as a data file (`app/bhq/workspaces/matrix.yaml`; amended for iteration 1, D1) and every row is a test.
 
 ## Options considered
 | Option | For | Against |

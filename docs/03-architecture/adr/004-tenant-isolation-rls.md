@@ -19,15 +19,23 @@ be enough to leak data.
   the follow-up job runs inside the workspace's RLS context.
 
 **Appendix, allowed cross-workspace functions (initial):** `due_reminders()`, `due_digests()`,
-`expiring_approvals()`, `due_deletions()`, `token_refresh_due()`, invariant monitor checks. Adding one
-needs a reviewer-approved change to this list. `due_reminders()` also returns reminders `held` for the
-sending window (architecture §13, AR2).
+`expiring_approvals()`, `due_deletions()`, `token_refresh_due()`, invariant monitor checks,
+`user_workspace_ids(user_id)` (Amended for iteration 1, D2). Adding one needs a reviewer-approved
+change to this list. `due_reminders()` also returns reminders `held` for the sending window
+(architecture §13, AR2).
+
+**User's workspaces (Amended for iteration 1, D2.)** `user_workspace_ids(user_id)` is a
+`SECURITY DEFINER` function owned by `bhq_crossws`. It returns only the workspace IDs where that user
+has an active membership. `bhq_web` and `bhq_worker` may execute it. Membership rows are behind RLS,
+so this is the one narrow, ID-only way to read them before a workspace context exists (architecture
+§11.3). It is needed after sign-in, and for security events that must be logged in the workspaces the
+user owns.
 
 **Aggregate exception (Amended after mockups, AR4):** `price_test_collected_rollup(month)` is the one
 function that does not return IDs. It sums "collected after reminders" per price point inside the
 database, writes `platform.price_test_rollup` (no workspace or user column) itself, and stores no
 amount for a group of fewer than 5 creators. It returns only a row count. All these functions are
-owned by the no-login role `bhq_crossws`; the worker may only execute them (architecture §11.2–11.3).
+owned by the no-login role `bhq_crossws`; the worker may only execute them (architecture §11.2–11.3). The one exception is `user_workspace_ids`, which the web role may also execute. (Amended for iteration 1, D2.)
 
 **Global search (Amended after mockups, AR5.)** The search index `search_entry` is an ordinary
 business table: `workspace_id NOT NULL`, RLS enabled and forced, covered by the meta-test. Search runs

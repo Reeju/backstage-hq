@@ -209,6 +209,14 @@ behind one module each, so switching either touches one folder.
 One Django project (a "modular monolith": one program, cleanly divided folders). Each folder owns
 its tables and exposes Actions and Selectors. Folders do not reach into each other's tables.
 
+**Package layout (Amended for iteration 1, D1.)** All modules live under one Python package,
+`app/bhq/`, so each module is `app/bhq/<module>/` and is imported as `bhq.<module>`. The package is
+needed because `collections`, `profile` and `platform` are names of Python standard-library modules,
+and `in` is a reserved word; none of them can be a top-level package. Two non-domain packages are
+added, with no tables of their own: `app/config/` (Django settings, URLs, health checks, logging) and
+`app/bhq/common/` (small shared helpers: IDs, redaction, context processors). Module names and
+boundaries are unchanged.
+
 | Module | Owns | Notes |
 |---|---|---|
 | `accounts` | users, sign-in methods, trusted devices, sessions, second checks | Global (not per workspace) |
@@ -222,7 +230,7 @@ its tables and exposes Actions and Selectors. Folders do not reach into each oth
 | `collections` | reminder plans, reminder steps, templates | |
 | `payments` | payments, allocations (matches), TDS records, statements | Idempotent records |
 | `tax` | threshold watch, tax figures with cross-check, (v1) AIS, year-end pack | Uses `rules` |
-| `rules` | pure-Python country rule packages: `rules/in/v2026_1/` | No Django imports (checked) |
+| `rules` | pure-Python country rule packages: `app/bhq/rules/india/v2026_1/` (Amended for iteration 1, D1.) | No Django imports (checked) |
 | `outbound` | outbound messages, approvals, gate decisions, **the send gate** | Only importer of provider send clients |
 | `assistant` | runs, steps, tool definitions (generated from Actions) | |
 | `audit` | activity log, undo engine, hash chain | Append-only |
@@ -235,11 +243,11 @@ its tables and exposes Actions and Selectors. Folders do not reach into each oth
 | `search` | the `search_entry` table, the word splitter and amount reader (pure Python), the search Selector and view (Amended after mockups, AR5.) | Owns no business data: each module supplies its own records' searchable words through a `search.py` file in its own folder (§16A) |
 
 **Checked boundaries (import-linter in CI).** `rules` imports nothing from Django. Only
-`outbound.gate` imports `connections.*.send_client`. Only `ai.gateway` imports the Bedrock SDK.
-Only `files.crypto` imports KMS. Views import Actions and Selectors, never models of another
-module. `search.tokenize` and `search.amounts` import nothing from Django, like `rules`, and no
+`bhq.outbound.gate` imports `bhq.connections.*.send_client`. Only `bhq.ai.gateway` imports the Bedrock
+SDK. Only `bhq.files.crypto` imports KMS. Views import Actions and Selectors, never models of another
+module. `bhq.search.tokenize` and `bhq.search.amounts` import nothing from Django, like `rules`, and no
 module's `search.py` may read a column ending in `_enc` (checked by a test, §16A). (Amended after
-mockups, AR5.)
+mockups, AR5.) (Amended for iteration 1, D1: the dotted names above are Python import paths.)
 
 ---
 
@@ -1097,6 +1105,11 @@ adding a tested Action, never free-form database access.
 | Delegable (ticks) | `view_deals`, `edit_deals`, `view_inbox` (follows `view_deals`, business categories only, E4), `view_money_totals`, `view_bank_tax`, `create_invoice_drafts`, `send_invoices` (also covers issuing numbers, marking paid, recording TDS, E4), `send_reminders`, `reply_to_brands`, `accept_deals` (with amount rule), `approve_contracts`, `change_rate_card`, `invite_others`, `download_reports` |
 | Owner only, never delegable | `change_payout_bank`, `change_pan_gstin`, `delete_data`, `disconnect_source`, `delete_account`, `transfer_ownership`, `remove_owner`, `full_export`, `change_automation_settings`, `change_permissions`, `grant_staff_access` (Amended after mockups, AR3) |
 | Owner only, second check | `change_payout_bank`, `change_pan_gstin`, `full_export`, `delete_account`, `transfer_ownership`, `grant_staff_access` (Amended after mockups, AR3) |
+| Owner only in the MVP, not in the delegable list | `edit_business_profile`: legal name, state, trading name, handles, opening total. v1 decides whether a manager may be ticked for it. (Amended for iteration 1, D3.) |
+
+**First entry of bank, PAN or GSTIN (Amended for iteration 1, D3; PRD M2).** `change_payout_bank` and
+`change_pan_gstin` on a field that has never been saved before return ALLOW (logged) instead of
+STEP_UP. Every later change to that field keeps the second check above.
 
 In the MVP only the owner exists, but every Action already declares its action type and every
 check already runs. That is how the MVP tests the manager foundation (PRD §5.P).
@@ -1172,7 +1185,7 @@ uses a short-lived credential, and is logged and reported to the owner of the af
 | `bhq_worker` | Worker | As `bhq_web`, plus read the `vault` schema (tokens) |
 | `bhq_eraser` | Deletion job only | Delete a whole workspace, including the activity log |
 | `bhq_readonly_breakglass` | Two-person break-glass | Read-only, time-limited |
-| `bhq_crossws` (no login) | Owns the cross-workspace functions in §11.3; nobody connects as it | Bypass RLS, but only inside those functions. `bhq_worker` may only `EXECUTE` them. (Amended after mockups, AR4.) |
+| `bhq_crossws` (no login) | Owns the cross-workspace functions in §11.3; nobody connects as it | Bypass RLS, but only inside those functions. `bhq_worker` may only `EXECUTE` them. (Amended after mockups, AR4.) The one exception is `user_workspace_ids`, which `bhq_web` may also execute. (Amended for iteration 1, D2.) |
 
 ### 11.3 The few cross-workspace queries
 
@@ -1180,6 +1193,13 @@ Schedulers must find "due work in any workspace" (due reminders, digests, expiri
 deletions, invariant checks). These are `SECURITY DEFINER` database functions that return **only
 IDs** (workspace ID + item ID). The job for each item then runs inside that workspace's RLS
 context. Each function is listed in an ADR-004 appendix and has its own test.
+
+**User's workspaces after sign-in (Amended for iteration 1, D2.)** `user_workspace_ids(user_id)` is a
+`SECURITY DEFINER` function owned by `bhq_crossws`. It returns only the workspace IDs where that user
+has an active membership, and `bhq_web` and `bhq_worker` may execute it. After sign-in the app needs
+this before any workspace context exists, and security events (lockouts, new-device sign-ins) are
+logged in the workspaces the user owns. Membership rows are behind RLS, so this one narrow, ID-only
+function is the only way to read them without a context.
 
 **One aggregate, for the price test (Amended after mockups, AR4; PRD FR-295, M13, Q12).** The
 staff-only report (S-30) shows "collected after reminders" (metric M3) as one total per price point.
@@ -1318,7 +1338,7 @@ While held, the owner can withdraw it, and it does not expire (FR-237's 7-day ex
 
 ### 14.1 One gateway
 
-`ai.gateway.call(workspace, purpose, prompt_version, inputs, schema)` is the only way to reach a
+`bhq.ai.gateway.call(workspace, purpose, prompt_version, inputs, schema)` (Amended for iteration 1, D1) is the only way to reach a
 model. It:
 - checks entitlements first (free tier, trial, paid). A free workspace never reaches the model
   for a paid feature (FR-290 AC1), and the scam-check cap applies (FR-294);
@@ -1367,7 +1387,7 @@ These are system rules, not prompt wording:
 
 ### 14.4 Evals (NFR-046)
 
-`app/ai/evals/` holds labelled sets: sorting (100+), scams, extraction, payment matching,
+`app/bhq/ai/evals/` (Amended for iteration 1, D1) holds labelled sets: sorting (100+), scams, extraction, payment matching,
 hidden instructions (50+), and Hinglish drafts (rated by people). CI runs them when a prompt or
 model setting changes, and nightly. A release is blocked if any metric is below its PRD target
 (M6, M7, FR-239). Sets are synthetic or come from creators who opted in, with names and numbers
@@ -1444,7 +1464,7 @@ business content. The words people type are never kept. Decision recorded in ADR
 ### 16A.1 What is indexed, and what never is
 
 Only plaintext fields that the record already stores (PRD FR-205 table). Each owning module
-lists its fields in its own `search.py` file (for example `invoicing/search.py`); that list is the
+lists its fields in its own `search.py` file (for example `app/bhq/invoicing/search.py`; Amended for iteration 1, D1); that list is the
 only thing that decides what is searchable.
 
 | Record (result group) | Words indexed | Amounts indexed (exact, paise) | Indexed only when |
@@ -1484,7 +1504,7 @@ rows.
 
 ### 16A.3 How matching works
 
-**One word splitter, in Python.** `app/search/tokenize.py` (pure Python, no Django) is used both
+**One word splitter, in Python.** `app/bhq/search/tokenize.py` (pure Python, no Django; Amended for iteration 1, D1) is used both
 for records and for what people type, so the two always split the same way:
 1. Unicode normalisation (NFKC) and lower case; zero-width joiners removed; Devanagari digits
    become 0–9.
@@ -1513,7 +1533,7 @@ a bound parameter, never pasted into SQL text.
   (FR-205 AC7), and the no-results state says so.
 - Order within a group: rank over the weighted words, then most recent first.
 
-**Amounts.** `app/search/amounts.py` (pure Python, table-driven tests and Hypothesis) reads each
+**Amounts.** `app/bhq/search/amounts.py` (pure Python, table-driven tests and Hypothesis; Amended for iteration 1, D1) reads each
 typed word as a possible amount: optional `₹`, `Rs` or `INR`; digits with Indian or Western commas;
 an optional decimal part; an optional `k` (× 1,000) or `L`, `lakh`, `lac` (× 1,00,000). The result
 must be a whole number of paise or it is not an amount. "80000", "80,000" and "₹80k" become
@@ -1532,7 +1552,7 @@ on purpose (§16A.4).
 - The result rows are drawn by each module's own Selectors under the same RLS, so an entry that
   somehow pointed at another workspace's record would show nothing.
 - **Role filtering (v1; the code path and its tests exist from the MVP, PRD §5.P).**
-  `workspaces.policy.search_scope(actor)` returns which view permissions the person holds, their
+  `bhq.workspaces.policy.search_scope(actor)` (Amended for iteration 1, D1) returns which view permissions the person holds, their
   own-deals scope, whether they may see amounts, and whether inbox is on for them (PRD §7.2 row
   "Global search"). The search Selector turns this into conditions on `view_action_type` and
   `scope_membership_id` inside the query. In the MVP only the owner exists and the scope is
@@ -1612,7 +1632,7 @@ logs stay word-free for staff too.
   are verified, stored once by event ID, and processed by a job. When the creator returns from
   checkout, the app also fetches the status directly, so paid features start within a minute even
   if the webhook is late (FR-292 AC1).
-- `billing.entitlements(workspace)` is the single answer to "may this workspace use feature X
+- `bhq.billing.entitlements(workspace)` (Amended for iteration 1, D1) is the single answer to "may this workspace use feature X
   now?". It is used by screens (upgrade prompts, FR-290), by the AI gateway, and by the send gate
   (automatic reminders are paid).
 - State machine: `trialing → active → past_due (7-day retry) → free`. For manager-paid
@@ -1700,7 +1720,7 @@ verification, the beta runs forwarding-only.
 | Dependencies | `uv lock --check`, pip-audit, Dependabot | Known high-severity vulnerability |
 | Secrets and code scan | gitleaks, semgrep (Django rules), `manage.py check --deploy` | Any finding above low |
 | AC traceability | Script that lists PRD acceptance criteria with no test named after them | Shown in the report; blocks the release of the iteration it belongs to |
-| AI evals | Eval suite (only when `app/ai/prompts/**` or model config changes, and nightly) | Any metric below its PRD target |
+| AI evals | Eval suite (only when `app/bhq/ai/prompts/**` (Amended for iteration 1, D1) or model config changes, and nightly) | Any metric below its PRD target |
 | End-to-end | Playwright, phone viewport, with axe accessibility checks | Nightly, and before every production deploy |
 
 ### 20.2 Delivery
@@ -1738,7 +1758,7 @@ one automated test named after it (e.g. `test_fr123_ac2_one_reminder_per_day`).
 | Rules (pure) | GST split, place of supply, TDS rates, threshold, tax-year boundaries, invoice numbering, confident-match rule, reminder ladder, quiet hours and sending window | pytest, table-driven; CA-reviewed cases as fixtures (D36) |
 | Money properties | Totals equal the sum of lines; allocations never exceed the invoice; credit notes never exceed it; numbering stays gapless under concurrent confirms | Hypothesis |
 | Integration (real Postgres) | Actions end to end with the activity log; RLS meta-test and cross-tenant tests; append-only log; concurrency (two confirms, double reminder race) | pytest, Postgres service |
-| Permissions | The PRD §7.2 matrix as a data file (`app/workspaces/matrix.yaml`), each row × role × expected result, plus never-delegable and assistant-overlay cases | pytest parametrised |
+| Permissions | The PRD §7.2 matrix as a data file (`app/bhq/workspaces/matrix.yaml`; Amended for iteration 1, D1), each row × role × expected result, plus never-delegable and assistant-overlay cases | pytest parametrised |
 | Send gate | Every outbound path; edit after approval; permission removed before send; crash between provider call and database commit; template reminders | pytest + fake providers + import-linter |
 | Providers | Fake Gmail, Meta, WhatsApp, Razorpay, Bedrock for CI; contract tests against sandboxes nightly in staging | pytest, recorded fixtures |
 | Time | Reminders, digests, expiry, quiet hours, trial ends, 30-day deletion | time-machine |
@@ -1911,6 +1931,14 @@ E10 and E12, and section 14A, AR1–AR5).** Each change is tagged "(Amended afte
 | AR3 | Section 10.5; §10.2 action types; §6.2 `staff_access_grant` | Owner only, second check, one case, 24 hours, can be ended early; action type `grant_staff_access`. | PRD NFR-030, M14 (Q12 decided). |
 | AR4 | Sections 11.2, 11.3, 13, 18.1, 22; ADR-004 appendix | One nightly job writes "collected after reminders" per price point per closed month into `platform.price_test_rollup`, through one aggregate `SECURITY DEFINER` function; no workspace IDs or per-creator amounts leave the database; no amount shown under 5 creators. | PRD FR-295, M13 (Q12 answered yes). |
 | AR5 | New section 16A; sections 0, 1, 3, 5, 6.3 (`message.from_name`, `message.organisation_id`, `contact.name`, `file`), new 6.7 (`search_entry`), 8, 10.4, 11.4, 12, 13, 18.1, 21, 22, 24, 25, 29; ADR-003, ADR-004, ADR-005; new ADR-020 | Global search inside PostgreSQL: one RLS-protected `search_entry` table of plaintext business fields only (never `_enc` columns, FR-044 or over-cap messages); one Python word splitter so Devanagari and Roman each match in their own script; word-start and partial invoice numbers; Indian amounts read in Python and matched exactly in paise; entries changed or removed in the same transaction (renames within seconds); v1 role filter inside the query, so counts never include hidden records and no amount matching without amount visibility; `POST` only and word-free logs, Sentry and database logs, staff searches in the activity log; 1 s / 2 s budget; no AI, negligible cost. | PRD FR-205, NFR-047, NFR-048, M30; owner accepted Q21–Q25 on 2026-11-10. |
+
+**Edits applied for iteration 1 (owner-approved 2026-11-10; from `docs/iterations/01-walking-skeleton/plan.md` section 9, rows D1–D3).** Each change is tagged "(Amended for iteration 1, …)" where it sits.
+
+| # | Where | Applied edit | Why |
+|---|---|---|---|
+| D1 | Section 5 (new package note, module table, checked boundaries); §14.1, §14.4; §16A.1, §16A.3, §16A.4; §17; §20.1; §21 | All modules live under `app/bhq/<module>/` (imported as `bhq.<module>`); `rules/in/v2026_1/` becomes `app/bhq/rules/india/v2026_1/`; two non-domain packages added: `app/config/` and `app/bhq/common/`. Module names and boundaries unchanged. | `collections`, `profile` and `platform` are Python standard-library names, and `in` is a reserved word. |
+| D2 | ADR-004 appendix; §11.3 | `user_workspace_ids(user_id)` added: a `SECURITY DEFINER` function owned by `bhq_crossws`, returning only the workspace IDs where the user has an active membership; `bhq_web` and `bhq_worker` may execute it. | After sign-in the app needs the workspace before any context exists; security events must be logged in the owner's workspaces. Membership rows sit behind RLS. |
+| D3 | §10.2 | `edit_business_profile` added (owner only in the MVP, not delegable; v1 decides whether a manager may be ticked). M2's first-entry rule recorded: `change_payout_bank` and `change_pan_gstin` on a field never saved before return ALLOW (logged), not STEP_UP. | S-21 is owner only, but no action type covered the non-sensitive profile fields; M2 needs a home in the policy. |
 
 ---
 

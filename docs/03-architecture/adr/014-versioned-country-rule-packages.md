@@ -9,8 +9,8 @@ AC2). The 2025 Income-tax Act changed sections (A12). D1 and NFR-022 want other 
 touching deal, invoice or payment logic. D15 wants companies and LLPs later.
 
 ## Decision
-- A pure-Python package `app/rules/` with one sub-package per country and version, e.g.
-  `rules/in/v2026_1/`. It contains no Django imports (enforced by import-linter).
+- A pure-Python package `app/bhq/rules/` with one sub-package per country and version, e.g.
+  `rules/india/v2026_1/` (amended for iteration 1, D1). It contains no Django imports (enforced by import-linter).
 - The rest of the app calls a small interface (`tax_year_of`, `gst_split`, `place_of_supply`,
   `tds_rates`, `gst_threshold`, `invoice_required_fields`) chosen by the workspace's country and the
   document date.

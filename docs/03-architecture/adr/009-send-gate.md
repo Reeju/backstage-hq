@@ -9,7 +9,7 @@ fixed-template reminder opt-in. The assistant can never approve. A manager whose
 before sending must be blocked. Reminders must go out once only, even after a crash (FR-123 AC3).
 
 ## Decision
-- `outbound.gate` in the worker is the **only** code that may import the Gmail, Instagram and WhatsApp
+- `bhq.outbound.gate` (amended for iteration 1, D1) in the worker is the **only** code that may import the Gmail, Instagram and WhatsApp
   send clients. import-linter enforces this in CI (FR-236 AC4).
 - Every outbound message is an `outbound_message` row. Approving stores an `approval` with a SHA-256
   fingerprint of recipients, sender account, subject, body and attachment hashes.
