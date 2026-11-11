@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved** 2026-11-10 (commit 1cbe513). **Revised for CR-001 on 2026-11-11**, pending the owner's review: sections 1–7 and 10–12 and tickets T-00, T-03, T-04, T-07, T-09, T-10, T-11, T-13 to T-17 changed; T-18 added. Nothing in `app/` exists yet. |
+| Status | **Approved** 2026-11-10 (commit 1cbe513). **Revised for CR-001 on 2026-11-11** and approved by the owner the same day (section 11, decisions 1 and 2): sections 1–7 and 10–12 and tickets T-00, T-03, T-04, T-07, T-09, T-10, T-11, T-13 to T-17 changed; T-18 added. Nothing in `app/` exists yet. |
 | Inputs | Approved docs as of commit 7505cd5: `docs/PLAYBOOK.md`, `docs/01-usecases/use-cases.md`, `docs/02-prd/PRD.md`, `docs/03-architecture/architecture.md` and ADR-001 to ADR-020, `docs/04-design/`. **Added for CR-001:** `docs/change-requests/001-global-market-and-infrastructure-value.md` (adopted; GQ1–GQ10), the PRD and use-case edits GL1–GL24, architecture changes C1–C13 with ADR-021 to ADR-023, and `docs/03-architecture/provider-comparison-2026-11.md`. |
 | Tickets | `T-00.md` to `T-18.md` in this folder (T-00 is a documentation fix, T-17 is spikes with no app code, T-18 is new for CR-001) |
 | Phase | **V0** of the validation phase (PRD 4.5): the owner alone, on staging, with dummy data and personal accounts. |

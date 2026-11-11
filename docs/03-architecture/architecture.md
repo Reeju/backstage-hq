@@ -2078,9 +2078,11 @@ security review, CA review, domain and DLT registration.
 
 ---
 
-## 26. Decisions needing owner sign-off
+## 26. Decisions signed off by the owner
 
-Each item has a recommendation, the main alternative, and what it means in plain words.
+All items were signed off with the architecture approval (commit 1abed76). Items tagged "Amended for
+CR-001" (S1, S2, S4, S6, S7) were approved again on 2026-11-11. Each item keeps its recommendation,
+the main alternative, and what it means in plain words, for the record.
 
 | # | Decision | Recommendation | Main alternative | Plain-language trade-off |
 |---|---|---|---|---|
@@ -2135,8 +2137,8 @@ E10 and E12, and section 14A, AR1–AR5).** Each change is tagged "(Amended afte
 | D2 | ADR-004 appendix; §11.3 | `user_workspace_ids(user_id)` added: a `SECURITY DEFINER` function owned by `bhq_crossws`, returning only the workspace IDs where the user has an active membership; `bhq_web` and `bhq_worker` may execute it. | After sign-in the app needs the workspace before any context exists; security events must be logged in the owner's workspaces. Membership rows sit behind RLS. |
 | D3 | §10.2 | `edit_business_profile` added (owner only in the MVP, not delegable; v1 decides whether a manager may be ticked). M2's first-entry rule recorded: `change_payout_bank` and `change_pan_gstin` on a field never saved before return ALLOW (logged), not STEP_UP. | S-21 is owner only, but no action type covered the non-sensitive profile fields; M2 needs a home in the policy. |
 
-**Edits applied for change request CR-001 (proposed 2026-11-11; owner adopted CR-001 and decisions
-GQ1–GQ10 on 2026-11-11; PRD and use-case wording GL1–GL24 applied separately).** Each change is tagged
+**Edits applied for change request CR-001 (raised 2026-11-11; owner adopted CR-001 and decisions
+GQ1–GQ10 on 2026-11-11 and approved changes C1–C13 the same day; PRD and use-case wording GL1–GL24 applied separately).** Each change is tagged
 "(Amended for CR-001, Cn.)" where it sits. Evidence: `docs/03-architecture/provider-comparison-2026-11.md`.
 
 | # | Where | Applied edit | Why |
