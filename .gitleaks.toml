@@ -3,9 +3,10 @@ title = "BackstageHQ gitleaks config"
 [extend]
 useDefault = true
 
-# Allow only the known placeholder values in app/.env.example, never the whole file or path.
-[allowlist]
-description = "Placeholder values"
-regexes = [
-  '''SECRET_KEY=change-me''',
-]
+[[rules]]
+id = "aws-secret-access-key"
+description = "AWS secret access key (40 chars) near an aws/secret keyword"
+regex = '''(?i)(?:aws|secret)[\w .-]{0,30}?['"]?\s*[=:]\s*['"]?([A-Za-z0-9/+]{40})['"]?(?:[^A-Za-z0-9/+]|$)'''
+secretGroup = 1
+entropy = 4.0
+keywords = ["aws", "secret"]

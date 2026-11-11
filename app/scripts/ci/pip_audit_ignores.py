@@ -3,10 +3,14 @@
 from __future__ import annotations
 
 import datetime as dt
+import re
 import sys
 import tomllib
 from pathlib import Path
 from typing import Any
+
+ID_PATTERN = re.compile(r"^[A-Za-z0-9._-]+$")
+MAX_DAYS = 90
 
 
 def build_flags(data: dict[str, Any], today: dt.date) -> list[str]:
@@ -19,12 +23,18 @@ def build_flags(data: dict[str, Any], today: dt.date) -> list[str]:
         if not vuln_id:
             problems.append("an entry has no id")
             continue
+        if not ID_PATTERN.match(vuln_id):
+            problems.append(f"{vuln_id!r}: id may only contain letters, digits, '.', '_' and '-'")
+            continue
         if not reason:
             problems.append(f"{vuln_id}: missing reason")
-        if not isinstance(expires, dt.date):
-            problems.append(f"{vuln_id}: missing or invalid expiry date")
+        # datetime is a subclass of date, so it must be rejected first.
+        if isinstance(expires, dt.datetime) or not isinstance(expires, dt.date):
+            problems.append(f"{vuln_id}: expires must be a plain date (YYYY-MM-DD)")
         elif expires < today:
             problems.append(f"{vuln_id}: expired on {expires}")
+        elif expires > today + dt.timedelta(days=MAX_DAYS):
+            problems.append(f"{vuln_id}: expiry {expires} is more than {MAX_DAYS} days away")
         flags += ["--ignore-vuln", vuln_id]
     if problems:
         raise ValueError("; ".join(problems))

@@ -89,7 +89,7 @@
     `app/scripts/ci/pip_audit_ignores.py`).
 - **Owner decision (2026-11-11), HSTS:** `SECURE_HSTS_INCLUDE_SUBDOMAINS = True` in production
   (staging inherits); preload **off** until the production domain is final; `security.W021`
-  silenced in staging settings only.
+  silenced in `production.py` (staging inherits; moved there in the follow-up below).
 - Accepted deviations from the ticket:
   - pip-audit runs with `--no-deps --disable-pip` (`uvx pip-audit -r /dev/stdin` crashed building
     its venv; `uv export` already pins every transitive dependency);
@@ -115,15 +115,30 @@
 - Carry-overs written into the tickets:
   - **T-04:** the `migrations` job migrates as `bhq_migrator`, and `tests` runs as the app role.
   - **T-14:** remove the nightly's exit-code-5 allowance once real e2e tests exist.
-- Open follow-ups from round 2 (Low, not yet done):
-  - `test_migrations_present.py` passes for a `migrations/` folder without `__init__.py`; use
-    `MigrationLoader(...).migrated_apps` instead. Fix before T-04 adds the first `bhq` app.
-  - `pip_audit_ignores.py`: validate ids against `^[A-Za-z0-9._-]+$`, since they go unquoted
-    into the shell; reject TOML datetimes in `expires`, which currently crash, though the job
-    still fails closed.
-  - `.gitleaks.toml`: the `SECRET_KEY=change-me` regex allowlist has no effect (gitleaks matches
-    the secret, not the line). It's harmless; either remove it or add `regexTarget = "line"`.
-    Consider a custom rule for AWS secret keys: gitleaks only catches them through
-    `generic-api-key`, next to a keyword.
-  - W021 is silenced in staging only; move the silence to `production.py` if T-15 or T-16 run
-    `check --deploy` against production settings.
+- Round-2 Low findings: fixed in the follow-up below.
+
+## T-02 follow-up: round-2 Low findings — 2026-11-11
+
+- Owner approved fixing them. Built by `builder` (Sonnet); reviewed by `reviewer` (Opus): **APPROVE**.
+  The reviewer's optional notes from that round were applied too (last three bullets).
+- `test_migrations_present.py` uses `MigrationLoader(...).migrated_apps`. Its second test points
+  a real app at a `migrations/` folder without `__init__.py` and checks Django's loader marks it
+  unmigrated.
+- `pip_audit_ignores.py` rejects:
+  - ids that don't match `^[A-Za-z0-9._-]+$`;
+  - datetime expiries;
+  - expiries more than 90 days out.
+
+  Each rule has a test.
+- `.gitleaks.toml`: the no-op `SECRET_KEY=change-me` allowlist is removed. A custom
+  `aws-secret-access-key` rule (40 characters of `[A-Za-z0-9/+]`, entropy 4.0 or more, near
+  aws/secret) is added. It also catches quoted JSON keys such as `"SecretAccessKey": "…"`.
+- CI pins gitleaks to `8.30.1` (`GITLEAKS_VERSION`), the version the rule was tested with. The
+  action's own default is 8.24.3.
+- The W021 silence moved from `staging.py` to `production.py`. `check --deploy --fail-level
+  WARNING` passes on both staging and production settings.
+- Checks:
+  - ruff, ruff format and mypy are clean;
+  - pytest: 21 passed against compose Postgres;
+  - actionlint is clean;
+  - gitleaks 8.30.1 flags a random key in both env and JSON form, and the repo scans clean.
