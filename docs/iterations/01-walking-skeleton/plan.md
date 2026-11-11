@@ -271,7 +271,7 @@ and the provider choice are in `docs/03-architecture/provider-comparison-2026-11
 
 (Revised for CR-001, 2026-11-11.)
 
-**Decisions**
+**Decisions** (1 and 2 approved by the owner on 2026-11-11, commits ecf9822 to 5dedb19; 3 and 4 still open)
 1. Approve the CR-001 architecture changes C1–C13, ADR-021 to ADR-023 and the provider comparison
    (V0 and V1 on DigitalOcean Bangalore with AWS Mumbai for keys and email; direct Claude API for AI,
    conditional on zero-data retention for real data). Needed before T-15.
