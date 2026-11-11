@@ -1,6 +1,6 @@
 # ADR-016: Subscription billing with Razorpay and one entitlements check
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 FR-290 to FR-295 and UC-135: free and paid plans, a trial, monthly or yearly payment by UPI and cards,

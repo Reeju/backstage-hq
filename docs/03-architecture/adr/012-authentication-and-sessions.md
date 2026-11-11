@@ -1,6 +1,6 @@
 # ADR-012: Authentication and sessions
 
-**Status:** Proposed · Sign-in methods amended for CR-001, C4 (2026-11-11); sessions unchanged. (S6 in `architecture.md` §26)
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Sign-in methods amended for CR-001, C4 (2026-11-11); sessions unchanged.
 
 ## Context
 FR-001 (phone code or Google), FR-002 (second factor of a different kind on a new device; none for 30

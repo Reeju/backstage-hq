@@ -1,6 +1,6 @@
 # ADR-019: Environments and CI/CD
 
-**Status:** Proposed · Amended for CR-001, C12
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Amended for CR-001, C12
 
 ## Context
 The playbook requires CI from iteration 1 (lint, type-check, tests, dependency audit), small tickets,

@@ -1,6 +1,6 @@
 # ADR-022: Low-cost hosting on DigitalOcean Bangalore with AWS for keys, email and files
 
-**Status:** Proposed (CR-001, changes C6, C7, C10; 2026-11-11). **Supersedes ADR-002** for the
+**Status:** Accepted (approved with CR-001, 2026-11-11; changes C6, C7, C10). **Supersedes ADR-002** for the
 validation phase (V0, V1) and as the recommended full setup up to about 1,000 creators. ADR-002's AWS
 design stays as the documented target if a migration trigger below fires.
 

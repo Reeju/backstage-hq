@@ -1,6 +1,6 @@
 # ADR-017: Reversible migrations with expand/contract
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 The brief requires migrations that can roll back. Any release must be revertible in minutes without

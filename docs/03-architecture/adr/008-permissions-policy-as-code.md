@@ -1,6 +1,6 @@
 # ADR-008: Permissions as action types and rules, evaluated as code at the moment of action
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 PRD §7 defines roles, checkboxes, rules (amount limit, own-deals scope, hide values, end date), a

@@ -1,6 +1,6 @@
 # ADR-007: One Action layer for every change (permission, audit, undo)
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 Screens, the assistant (FR-232, FR-233), jobs and later managers all change the same records. Every

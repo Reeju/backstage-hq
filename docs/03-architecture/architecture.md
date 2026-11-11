@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| Status | **Approved** (Stage 4, commit 1abed76). Amended after the mockups (AR1–AR5, commits 22a4736 and 51c6da6) and for iteration 1 (D1–D3, commit 704a504). The CR-001 changes C1–C13 (2026-11-11) are **proposed** and await the owner's review. (Amended for CR-001, C13.) |
+| Status | **Approved** (Stage 4, commit 1abed76). Amended after the mockups (AR1–AR5, commits 22a4736 and 51c6da6) and for iteration 1 (D1–D3, commit 704a504). The CR-001 changes C1–C13 (2026-11-11) are **approved** (owner, 2026-11-11). (Amended for CR-001, C13.) |
 | Stage | Stage 4 of `docs/PLAYBOOK.md` (3 = mockups, 4 = architecture). Older labels that say "Stage 3" (the `/architecture` command and the commit message of 1abed76) are wrong; history is left as it is. (Amended after mockups, AR1.) |
 | Inputs | Approved `docs/02-prd/PRD.md` (FR / NFR IDs below refer to it) and approved `docs/01-usecases/use-cases.md` (amended after the PRD, edits E1–E9; after this architecture, P1; after the mockups, E10 and E12). Approved mockups in `docs/04-design/` (commit 0382fad). The mockups changed the PRD only through edits M1–M29 (commit 3f754e9, PRD section 14A); the resulting changes to this document are AR1–AR4, listed in section 27. (Amended after mockups, AR1.) The owner's decision of 2026-11-10 to put global search in the MVP added PRD edit M30 (FR-205, NFR-047, NFR-048, screen S-43); the resulting change here is AR5 (section 16A). (Amended after mockups, AR5.) Change request CR-001 (`docs/change-requests/001-global-market-and-infrastructure-value.md`), adopted with decisions GQ1–GQ10 and PRD and use-case edits GL1–GL24 on 2026-11-11, and the dated provider comparison `docs/03-architecture/provider-comparison-2026-11.md`; the resulting changes here are C1–C13 (section 27). (Amended for CR-001, C13.) |
-| Decisions | One ADR per major decision in `docs/03-architecture/adr/` (index in section 29). All ADRs are **Proposed** (T-00 of iteration 1 marks the approved ones Accepted). For CR-001: ADR-021 to ADR-023 added, ADR-002 superseded by ADR-022, ADR-004, 005, 011, 012, 014, 018 and 019 amended. (Amended for CR-001, C13.) |
+| Decisions | One ADR per major decision in `docs/03-architecture/adr/` (index in section 29). All ADRs are **Accepted** (ADR-002 is superseded by ADR-022). For CR-001: ADR-021 to ADR-023 added, ADR-002 superseded by ADR-022, ADR-004, 005, 011, 012, 014, 018 and 019 amended. (Amended for CR-001, C13.) |
 | Rule | This document does not change the PRD or the use cases. Where they need a change, it is listed in section 27 as a proposed edit. |
 
 **How to read this document**
@@ -2193,7 +2193,7 @@ GQ1–GQ10 on 2026-11-11; PRD and use-case wording GL1–GL24 applied separately
 
 ## 29. ADR index
 
-All ADRs are in `docs/03-architecture/adr/`, status **Proposed**.
+All ADRs are in `docs/03-architecture/adr/`, status **Accepted** (ADR-002 is superseded by ADR-022).
 
 | # | Title |
 |---|---|

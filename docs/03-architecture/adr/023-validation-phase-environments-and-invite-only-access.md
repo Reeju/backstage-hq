@@ -1,6 +1,6 @@
 # ADR-023: Validation phase: environments, invite-only access and deferred flags
 
-**Status:** Proposed (CR-001, changes C2 and C5; 2026-11-11)
+**Status:** Accepted (approved with CR-001, 2026-11-11; changes C2 and C5)
 
 ## Context
 PRD section 4.5 (GL20) adds a validation phase before the MVP beta: **V0** (owner only, dummy data,

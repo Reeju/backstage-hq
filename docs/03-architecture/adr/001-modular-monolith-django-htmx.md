@@ -1,6 +1,6 @@
 # ADR-001: Modular monolith in Python/Django with server-rendered HTMX pages
 
-**Status:** Proposed · Needs owner sign-off (S3 in `architecture.md` §26)
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 BackstageHQ is a phone-first web app (NFR-007: usable in 3 s on a mid-range Android over 4G) built by

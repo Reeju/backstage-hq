@@ -1,6 +1,6 @@
 # ADR-020: Global search inside PostgreSQL
 
-**Status:** Proposed (Amended after mockups, AR5.)
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Amended after mockups, AR5
 
 ## Context
 The owner put global search in the MVP on 2026-11-10 (PRD FR-205, edit M30; Q21–Q25 accepted). It

@@ -1,6 +1,6 @@
 # ADR-011: AI gateway and Claude on Amazon Bedrock (India)
 
-**Status:** Proposed · Provider decision amended for CR-001, C8 (2026-11-11). The gateway decision is unchanged.
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Provider decision amended for CR-001, C8 (2026-11-11). The gateway decision is unchanged.
 
 ## Context
 AI sorts mail, flags scams, extracts fields from emails, screenshots and PDFs (including Hindi and

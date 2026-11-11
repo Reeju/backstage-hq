@@ -1,6 +1,6 @@
 # ADR-015: Ingestion through Gmail push, Meta webhooks, WhatsApp and the forwarding address
 
-**Status:** Proposed · Parts need owner sign-off (S7, S8 in `architecture.md` §26)
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 FR-010 (new email sorted within 5 minutes), FR-011 (forwarding address), FR-012/FR-051 (Instagram DMs),

@@ -1,6 +1,6 @@
 # ADR-013: Money, invoice numbering and idempotent payment records
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 NFR-009 (exact money), FR-112 (gapless numbers per tax year, issued only on confirmation), FR-113

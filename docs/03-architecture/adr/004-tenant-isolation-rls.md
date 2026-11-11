@@ -1,6 +1,6 @@
 # ADR-004: Tenant isolation with workspace ID on every row plus Postgres row-level security
 
-**Status:** Proposed · Amended for CR-001, C9
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Amended for CR-001, C9
 
 ## Context
 NFR-001 and NFR-023: one creator's data must never reach another creator, a manager's other

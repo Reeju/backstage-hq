@@ -1,6 +1,6 @@
 # ADR-014: Versioned country rule packages
 
-**Status:** Proposed · Amended for CR-001, C3
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Amended for CR-001, C3
 
 ## Context
 GST split and place of supply, TDS rates, thresholds and the tax year are rule-based, reviewed once by

@@ -1,6 +1,6 @@
 # ADR-018: Observability and invariant monitors
 
-**Status:** Proposed · Amended for CR-001, C11
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Amended for CR-001, C11
 
 ## Context
 NFR-012 (jobs on time, failures alerted), NFR-042 (uptime measured outside our hosting), NFR-025 (no

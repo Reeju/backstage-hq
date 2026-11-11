@@ -1,6 +1,6 @@
 # ADR-003: PostgreSQL as the only datastore
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 Money records need transactions and exact numbers. Jobs, the activity log and the records they

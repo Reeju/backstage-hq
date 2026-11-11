@@ -1,6 +1,6 @@
 # ADR-005: Encryption of sensitive fields, files and connection tokens
 
-**Status:** Proposed · Amended for CR-001, C7
+**Status:** Accepted (approved with the architecture, commit 1abed76) · Amended for CR-001, C7
 
 ## Context
 NFR-004 (encrypted in storage and transit) and NFR-025 (tokens encrypted, kept separately, never seen by

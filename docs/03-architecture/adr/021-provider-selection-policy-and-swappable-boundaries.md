@@ -1,6 +1,6 @@
 # ADR-021: Provider selection policy and swappable boundaries
 
-**Status:** Proposed (CR-001, change C1; 2026-11-11)
+**Status:** Accepted (approved with CR-001, 2026-11-11; change C1)
 
 ## Context
 CR-001 (adopted 2026-11-10/11) makes BackstageHQ "built in India for the world" and adds a low-cost

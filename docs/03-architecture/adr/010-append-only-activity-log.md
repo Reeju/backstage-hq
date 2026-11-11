@@ -1,6 +1,6 @@
 # ADR-010: Append-only activity log
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 FR-213, NFR-032 to NFR-034: one log per workspace, plain words, real actor and on whose behalf, nobody

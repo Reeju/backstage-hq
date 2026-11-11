@@ -1,6 +1,6 @@
 # ADR-006: Background jobs in PostgreSQL with state-driven schedules
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 Reminders, syncs, imports, AI tasks and sends run in the background. The PRD demands zero double

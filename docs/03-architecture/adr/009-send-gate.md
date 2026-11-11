@@ -1,6 +1,6 @@
 # ADR-009: The send gate
 
-**Status:** Proposed
+**Status:** Accepted (approved with the architecture, commit 1abed76)
 
 ## Context
 The most important promise (D6, D22, FR-236, M10 "zero, ever"): nothing reaches a brand without a
