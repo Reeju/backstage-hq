@@ -1,6 +1,6 @@
 # ADR-019: Environments and CI/CD
 
-**Status:** Proposed
+**Status:** Proposed · Amended for CR-001, C12
 
 ## Context
 The playbook requires CI from iteration 1 (lint, type-check, tests, dependency audit), small tickets,
@@ -20,6 +20,24 @@ the pipeline is a main safety net.
   automatic rollback. GitHub uses OIDC to AWS (no stored keys).
 - Infrastructure is Terraform in `infra/`.
 - Dependencies managed with uv (locked hashes).
+
+**Amended for CR-001, C12 (2026-11-11).** Environments follow ADR-023 (staging from V0; a separate
+low-cost production from V1). Delivery follows ADR-022:
+- CI is unchanged. Images are built once per commit for **linux/amd64** (App Platform runs amd64, so the
+  ARM build risk goes away), tagged with the commit SHA, and pushed to DigitalOcean Container Registry.
+- Deploy: the workflow renders the App Platform spec from `infra/do/app.<env>.yaml` with the image tag,
+  `GIT_SHA` and secrets from the GitHub environment (masked; never committed), then runs
+  `doctl apps update --spec ... --wait`. The `PRE_DEPLOY` job runs migrations first; if it fails, the
+  new version never receives traffic and the old one keeps serving. A smoke test follows.
+- Rollback: redeploy the previous image tag (migrations are expand/contract, ADR-017).
+- GitHub authenticates to DigitalOcean with a **scoped API token** kept only in the `staging` (later
+  `production`) GitHub environment, rotated every 90 days. DigitalOcean has no GitHub OIDC trust, so this
+  is the one stored deploy credential; AWS is not touched by deploys.
+- Infrastructure is Terraform in `infra/` with three providers (DigitalOcean, AWS, Cloudflare); state in
+  an encrypted, versioned S3 bucket with S3 native locking. PRs run static checks only (fmt, validate,
+  tflint, checkov); `plan` and `apply` run from the operator's machine and are recorded in the ticket log.
+- Production deploys need a manual approval in the GitHub environment and take an on-demand logical
+  backup before migrations.
 
 ## Options considered
 | Option | For | Against |

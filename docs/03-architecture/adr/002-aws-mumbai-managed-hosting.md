@@ -1,6 +1,12 @@
 # ADR-002: Managed hosting on AWS Mumbai with a lean beta posture
 
-**Status:** Proposed · Needs owner sign-off (S1 and S4 in `architecture.md` §26)
+**Status:** Superseded by ADR-022 (Amended for CR-001, C6.) · Was: Proposed · Needs owner sign-off (S1 and S4 in `architecture.md` §26)
+
+> **Superseded for CR-001 (2026-11-11).** The validation phase and the recommended full setup run on
+> DigitalOcean Bangalore with AWS Mumbai for KMS, SES and S3 (ADR-022). This AWS design is kept, unchanged,
+> as the documented hyperscaler target if one of ADR-022's migration triggers fires. Its locality argument
+> ("app, data and AI all in India") is no longer a requirement by itself (CR-001, ADR-021). Its cost
+> figures are compared with the alternatives in `docs/03-architecture/provider-comparison-2026-11.md`.
 
 ## Context
 We hold PAN, bank details, income and Gmail access for Indian creators. The PRD sets 99.5% uptime,

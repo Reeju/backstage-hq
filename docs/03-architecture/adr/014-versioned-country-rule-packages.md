@@ -1,6 +1,6 @@
 # ADR-014: Versioned country rule packages
 
-**Status:** Proposed
+**Status:** Proposed · Amended for CR-001, C3
 
 ## Context
 GST split and place of supply, TDS rates, thresholds and the tax year are rule-based, reviewed once by
@@ -17,6 +17,22 @@ touching deal, invoice or payment logic. D15 wants companies and LLPs later.
 - Every computed figure and every invoice stores `rule_set_version`.
 - Rule tests are table-driven. CA-reviewed cases are kept as fixtures.
 - Entity type (individual, sole proprietor; company and LLP later) is an input to the rules from day one.
+
+**Workspace country and lookup (Amended for CR-001, C3).**
+- Every workspace stores `country_code` (ISO 3166-1 alpha-2), `currency` (ISO 4217) and `timezone` (IANA),
+  set at creation from the chosen country's rule set and never defaulted in the schema (FR-005 AC1).
+- One entry point, `bhq.rules.registry.ruleset_for(country_code, on_date)`, returns the rule set in
+  force or raises `UnsupportedCountry`. Nothing imports `bhq.rules.india` directly except the registry
+  (import-linter). There is **no fallback to India**: an unknown country fails closed, so nothing is
+  calculated, shown or sent (FR-005 AC3, NFR-022).
+- Each rule set also declares its currency, time zone, money formatting (Indian digit grouping for
+  India), the profile identifiers it needs (PAN, GSTIN, IFSC, state for India) and their validators, so
+  screens show Indian fields only for Indian workspaces (FR-003 AC5).
+- `supported_countries()` lists the countries offered at sign-up (India only). A test-only fake country
+  with its own small rule set, registered only in test settings, proves no Indian field or rule leaks;
+  a second test-only country with no rule set proves the lookup fails closed.
+- Time-based rules (brand sending window, quiet hours, lock-out times shown to the creator) use the
+  workspace time zone (IST for India).
 
 ## Options considered
 | Option | For | Against |

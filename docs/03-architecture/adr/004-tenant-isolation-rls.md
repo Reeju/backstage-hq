@@ -1,6 +1,6 @@
 # ADR-004: Tenant isolation with workspace ID on every row plus Postgres row-level security
 
-**Status:** Proposed
+**Status:** Proposed · Amended for CR-001, C9
 
 ## Context
 NFR-001 and NFR-023: one creator's data must never reach another creator, a manager's other
@@ -14,6 +14,7 @@ be enough to leak data.
 - **Lock 2, database:** RLS enabled and forced on every business table, policy
   `workspace_id = current_setting('app.workspace_id', true)::uuid`, set with `SET LOCAL` per
   transaction. Not set means no rows. The app's database roles do not own tables and cannot bypass RLS.
+  No role of ours has `BYPASSRLS` at all (Amended for CR-001, C9; see below).
 - **Lock 3, keys:** encrypted fields are bound to workspace and row (ADR-005).
 - Cross-workspace scheduling uses a short list of `SECURITY DEFINER` functions that return IDs only;
   the follow-up job runs inside the workspace's RLS context.
@@ -44,6 +45,28 @@ to the appendix above. v1 role filtering (records a person may not open, and amo
 may not see them) is applied inside the search query, so result counts never include hidden records
 (architecture §16A.4, ADR-020).
 
+**No role bypasses RLS (Amended for CR-001, C9.)** Managed PostgreSQL services (DigitalOcean, Render,
+Cloud SQL, RDS) do not give superuser, and only a superuser (or a role that already has the attribute)
+can create a role with `BYPASSRLS`. So no role of ours has it, which also makes the design portable:
+- `bhq_crossws` (no login) reads across workspaces through **role-scoped read policies**: a `SELECT`
+  policy `crossws_read ... TO bhq_crossws USING (true)` on exactly the tables its functions read
+  (today `workspaces_membership`; the tables of the later functions are listed with each function in the
+  appendix above). Permissive policies combine with OR, so the policy opens rows to `bhq_crossws` only.
+- No app role (`bhq_web`, `bhq_worker`, `bhq_eraser`) is ever a member of `bhq_crossws` or `bhq_backup`,
+  because a policy `TO` a role also applies to its members. `bhq_migrator` gets membership in
+  `bhq_crossws` **without inheritance** (`WITH INHERIT FALSE, SET TRUE`, PostgreSQL 16+) only so a
+  migration can hand function ownership to it; a test proves `bhq_migrator` still sees no rows without a
+  workspace context.
+- `bhq_backup` (login, read-only, from V1): a `backup_read` `SELECT` policy `TO bhq_backup USING (true)`
+  on every table, used only by the hourly backup job with `pg_dump --enable-row-security` (ADR-022). It
+  has no write grants. Restores run as `bhq_migrator` into a fresh database with RLS temporarily not
+  forced, then forced again before the meta-test runs; the runbook lives with the restore drill.
+- Role bootstrap (`db_bootstrap_roles`) must work as a provider admin that has `CREATEROLE` but not
+  superuser; CI runs it that way to prove it.
+- The meta-test checks that every table with `workspace_id` has `workspace_isolation`, and that any other
+  policy is one of the allowed role-scoped read policies (`crossws_read` only on tables in the appendix,
+  `backup_read`), and that no role of ours has `rolbypassrls`.
+
 ## Options considered
 | Option | For | Against |
 |---|---|---|
@@ -51,6 +74,7 @@ may not see them) is applied inside the search query, so result counts never inc
 | Schema per workspace | Strong separation | Thousands of schemas; slow migrations; manager switcher harder |
 | Database per workspace | Strongest | Far too costly for solo creators |
 | App filtering only | Simple | One bug leaks data |
+| A `BYPASSRLS` role for cross-workspace functions (the original plan) | Simple to write | Cannot be created on managed PostgreSQL without superuser; replaced by role-scoped read policies (C9) |
 
 ## Consequences
 - A meta-test fails if any table with `workspace_id` lacks forced RLS and a policy; cross-tenant tests

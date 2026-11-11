@@ -4,15 +4,16 @@
 
 | | |
 |---|---|
-| Status | **Proposed. Draft for owner approval.** Not committed. |
+| Status | **Approved** (Stage 4, commit 1abed76). Amended after the mockups (AR1–AR5, commits 22a4736 and 51c6da6) and for iteration 1 (D1–D3, commit 704a504). The CR-001 changes C1–C13 (2026-11-11) are **proposed** and await the owner's review. (Amended for CR-001, C13.) |
 | Stage | Stage 4 of `docs/PLAYBOOK.md` (3 = mockups, 4 = architecture). Older labels that say "Stage 3" (the `/architecture` command and the commit message of 1abed76) are wrong; history is left as it is. (Amended after mockups, AR1.) |
-| Inputs | Approved `docs/02-prd/PRD.md` (FR / NFR IDs below refer to it) and approved `docs/01-usecases/use-cases.md` (amended after the PRD, edits E1–E9; after this architecture, P1; after the mockups, E10 and E12). Approved mockups in `docs/04-design/` (commit 0382fad). The mockups changed the PRD only through edits M1–M29 (commit 3f754e9, PRD section 14A); the resulting changes to this document are AR1–AR4, listed in section 27. (Amended after mockups, AR1.) The owner's decision of 2026-11-10 to put global search in the MVP added PRD edit M30 (FR-205, NFR-047, NFR-048, screen S-43); the resulting change here is AR5 (section 16A). (Amended after mockups, AR5.) |
-| Decisions | One ADR per major decision in `docs/03-architecture/adr/` (index in section 29). All ADRs are **Proposed**. |
+| Inputs | Approved `docs/02-prd/PRD.md` (FR / NFR IDs below refer to it) and approved `docs/01-usecases/use-cases.md` (amended after the PRD, edits E1–E9; after this architecture, P1; after the mockups, E10 and E12). Approved mockups in `docs/04-design/` (commit 0382fad). The mockups changed the PRD only through edits M1–M29 (commit 3f754e9, PRD section 14A); the resulting changes to this document are AR1–AR4, listed in section 27. (Amended after mockups, AR1.) The owner's decision of 2026-11-10 to put global search in the MVP added PRD edit M30 (FR-205, NFR-047, NFR-048, screen S-43); the resulting change here is AR5 (section 16A). (Amended after mockups, AR5.) Change request CR-001 (`docs/change-requests/001-global-market-and-infrastructure-value.md`), adopted with decisions GQ1–GQ10 and PRD and use-case edits GL1–GL24 on 2026-11-11, and the dated provider comparison `docs/03-architecture/provider-comparison-2026-11.md`; the resulting changes here are C1–C13 (section 27). (Amended for CR-001, C13.) |
+| Decisions | One ADR per major decision in `docs/03-architecture/adr/` (index in section 29). All ADRs are **Proposed** (T-00 of iteration 1 marks the approved ones Accepted). For CR-001: ADR-021 to ADR-023 added, ADR-002 superseded by ADR-022, ADR-004, 005, 011, 012, 014, 018 and 019 amended. (Amended for CR-001, C13.) |
 | Rule | This document does not change the PRD or the use cases. Where they need a change, it is listed in section 27 as a proposed edit. |
 
 **How to read this document**
 - Section 1: what the PRD fixes, and how the design answers each point.
-- Sections 2–5: the picture, the stack, the rules we design by, the code layout.
+- Sections 2–5: the picture, the stack, how providers are chosen and swapped (3A), the rules we design
+  by, the code layout. (Amended for CR-001, C1.)
 - Section 6: the data model (Mermaid ERDs).
 - Sections 7–18: how each concern works (flows, API, sign-in, permissions, isolation, encryption,
   jobs, AI, audit, files, global search (16A), billing, privacy).
@@ -32,6 +33,8 @@
 | Send gate | The one piece of code allowed to send anything outside BackstageHQ (FR-236). |
 | RLS | Row-level security: a database feature that refuses to return rows from another workspace, even if the app code has a bug. |
 | KMS | Key Management Service: AWS's locked box for encryption keys. Our code never sees the master keys. |
+| Validation phase | The low-cost phase before the MVP beta (PRD 4.5): **V0** is the owner alone on staging with dummy data; **V1** is up to 10 invited creators on a separate low-cost production. (Amended for CR-001, C2.) |
+| Full setup | What runs after the validation exit (PRD 4.5, GQ5), when the owner funds it. (Amended for CR-001, C2.) |
 | Paise | Money is stored as whole paise (₹1 = 100 paise), never as decimals, so rupee figures are always exact. |
 
 ---
@@ -51,17 +54,24 @@
 | Swappable country tax rules (NFR-022, D1); company/LLP later (D15) | Tax, GST and TDS logic lives in versioned, pure-code rule packages per country. Every computed figure stores its rule version. Entity type is a profile field from day one. | ADR-014 |
 | Tax figures cross-checked; "needs a CA check" on disagreement (FR-151) | Rule result and an independent AI check are both stored. The screen shows a number only when they agree. | §14 |
 | Manager-ready from MVP (§12.4 of use cases, PRD §5.P) | Memberships with action-type grants and rules, actor + on-behalf-of on every action, payer separate from owner, one login with many workspaces. All of this ships in the MVP with only the owner role switched on. | §6.1, §10 |
-| Scheduled jobs on time on 99.5% of days; uptime 99.5%; at most 1 hour of money data lost; back within 8 hours (NFR-012, NFR-042, NFR-043) | Managed database with point-in-time restore (about 5 minutes of loss at worst), backup copies in a second Indian region, a scheduler heartbeat alarm, and an outside uptime check. | §23 |
-| Phone first, usable in 3 s on mid-range Android over 4G (NFR-007) | Server-rendered HTML with small JavaScript (HTMX). Hosting in Mumbai, close to users. Installable web app for push. | ADR-001 |
+| Scheduled jobs on time on 99.5% of days; uptime 99.5%; at most 1 hour of money data lost; back within 8 hours (NFR-012, NFR-042, NFR-043) | Managed database with point-in-time restore (about 5 minutes of loss at worst), plus an hourly encrypted backup at a second provider (S3, AWS Mumbai), a scheduler heartbeat alarm, and an outside uptime check. (Amended for CR-001, C10: was backup copies in a second Indian AWS region.) | §23, ADR-022 |
+| Phone first, usable in 3 s on mid-range Android over 4G (NFR-007) | Server-rendered HTML with small JavaScript (HTMX). Hosting in Bangalore (DigitalOcean BLR1), close to users, on containers that never sleep. Installable web app for push. (Amended for CR-001, C6.) | ADR-001, ADR-022 |
 | AI or outside service down: app keeps working; send gate and template reminders need no AI (NFR-044, NFR-045) | AI sits behind one gateway with a circuit breaker. Template reminders and the send gate never call AI. Each connection shows "paused since". | §14.5 |
 | DPDP erasure within the published period; backups age out within 90 days (NFR-005) | A deletion job runs at day 30. Database backups are kept 14 days and file versions 30 days, so every copy is gone well inside 90 days. | §18, §23 |
 | Cost to run ≤ 30% of price (M14, NFR-018) | Cheapest model that passes each test set, one AI gateway that meters every call per workspace, allowance and fair-use caps enforced before calling AI, and a small fixed footprint. | §14.6, §24 |
 | Global search finds only what the workspace stores, never another workspace, a personal message or a hidden field; typed words are never kept (FR-205, NFR-047, NFR-048) (Amended after mockups, AR5.) | One `search_entry` table inside PostgreSQL holding only plaintext business fields, under the same forced RLS. Search requests are `POST`, never logged; role filters are applied in the query so counts never include hidden records. No AI, no extra system. | §16A, ADR-020 |
-| No India-residency promise, regions listed (D11, NFR-006) | Primary data and AI processing in India (Mumbai, Hyderabad backups). Other processors listed on the privacy page. This is a fact we publish, not a promise. | §24, §26 |
+| No India-residency promise, regions listed (D11, NFR-006) | Records and files of the app in India: database in Bangalore (DigitalOcean), keys, email, files and backups in Mumbai (AWS). AI processing where the chosen AI provider runs (Anthropic outside India, or AWS Mumbai and Hyderabad on Bedrock). Every processor, free tiers included, is listed on the privacy page. This is a fact we publish, not a promise. (Amended for CR-001, C6, C8.) | §3A, §26, ADR-022 |
+| Built in India for the world; India is the first supported country; Indian rules never apply by default (D1, NFR-022, FR-005, PRD 4.4) | Every workspace stores its country, currency and time zone, chosen at sign-up. All tax, invoice, identifier and money-format rules come from one lookup by country that fails closed; there is no India fallback. A test-only fake country proves it. (Amended for CR-001, C3.) | §6.2, ADR-014 |
+| A low-cost validation phase that keeps every safety rule (PRD 4.5, FR-006) | Staging (V0) and a separate low-cost production (V1) on the same modules; invite-only sign-up and a waitlist; deferred requirements flagged in the AC-traceability file and blocking the exit. (Amended for CR-001, C2, C5.) | §19, ADR-023 |
+| Sign-in that works in every country at near-zero cost (FR-001, FR-002) | Email code first; authenticator app plus backup codes second; phone codes built behind a per-country switch, off. (Amended for CR-001, C4.) | §9, ADR-012 |
+| Lowest total cost that meets the quality bar, without a rewrite later (CR-001) | Provider selection policy and one adapter or setting per outside service. (Amended for CR-001, C1.) | §3A, ADR-021 |
 
 ---
 
 ## 2. Architecture in one picture
+
+(Amended for CR-001, C6, C7, C8. The approved AWS-only picture is kept in ADR-002 as the hyperscaler
+reference design.)
 
 ```mermaid
 flowchart LR
@@ -70,17 +80,26 @@ flowchart LR
         DT["Creator on a desktop browser"]
     end
 
-    subgraph AWS["AWS Mumbai ap-south-1"]
-        WAF["WAF and load balancer"]
+    CF["Cloudflare: DNS; edge rules at the full setup"]
+
+    subgraph DO["DigitalOcean Bangalore BLR1"]
         WEB["Web service: Django pages, HTMX, webhooks, assistant stream"]
-        WRK["Worker service: background jobs, schedules, send gate"]
-        DB[("PostgreSQL on RDS: records, job queue, activity log")]
+        WRK["Worker service: background jobs, schedules, send gate, hourly backup"]
+        MIG["Pre-deploy job: migrations"]
+        DB[("Managed PostgreSQL 17: records, job queue, activity log")]
+    end
+
+    subgraph AWS["AWS Mumbai ap-south-1: security services"]
+        KMS["KMS keys data and tokens"]
+        SES["SES: our own emails, sign-in codes, forwarding address"]
         S3Q[("S3 quarantine bucket")]
         S3P[("S3 private files, app-encrypted")]
         GD["GuardDuty malware scan"]
-        KMS["KMS keys and Secrets Manager"]
-        BR["Bedrock: Claude, India in-country"]
-        SES["SES: our own emails and the forwarding address"]
+        BK[("S3 hourly encrypted database backups")]
+    end
+
+    subgraph AIP["AI provider, chosen by setting (ADR-011)"]
+        ANT["Claude API (Anthropic), or Claude on Bedrock"]
     end
 
     subgraph Outside["Outside services"]
@@ -89,28 +108,30 @@ flowchart LR
         GO["Google sign-in"]
         IG["Instagram messaging (Meta)"]
         WA["WhatsApp Cloud API (Meta)"]
-        RZ["Razorpay subscriptions"]
-        SMS["MSG91 SMS codes"]
+        RZ["Razorpay subscriptions (full setup)"]
+        SMS["SMS codes (off; per-country switch)"]
     end
 
     subgraph Watch["Monitoring"]
         SEN["Sentry errors"]
-        CW["CloudWatch logs and metrics"]
-        UP["Outside uptime check and job heartbeat"]
+        LOG["Log service (30-day retention)"]
+        UP["Better Stack uptime and Healthchecks.io heartbeat"]
     end
 
-    PH --> WAF
-    DT --> WAF
-    WAF --> WEB
+    PH --> CF
+    DT --> CF
+    CF --> WEB
     WEB --> DB
     WRK --> DB
+    MIG --> DB
     WEB -- "uploads" --> S3Q
     GD -- "scans" --> S3Q
     WRK -- "clean files, encrypted" --> S3P
+    WRK -- "encrypted dump" --> BK
     WEB --> KMS
     WRK --> KMS
-    WEB -- "assistant" --> BR
-    WRK -- "sorting, extraction, drafts" --> BR
+    WEB -- "assistant" --> ANT
+    WRK -- "sorting, extraction, drafts" --> ANT
     WRK -- "read and send mail" --> GM
     GM --> PS
     PS -- "push" --> WEB
@@ -121,25 +142,28 @@ flowchart LR
     WRK -- "short confirmations" --> WA
     RZ -- "webhooks" --> WEB
     WEB --> RZ
-    WEB --> SMS
+    WEB -. "only where switched on" .-> SMS
     WRK --> SES
     SES -- "inbound forwards" --> WEB
     WEB --> SEN
     WRK --> SEN
-    WEB --> CW
-    WRK --> CW
-    UP --> WAF
+    WEB --> LOG
+    WRK --> LOG
+    UP --> CF
 ```
 
 **In plain words.** There are two running programs built from the same code. The **web service**
 shows pages, receives webhooks from Google, Meta and Razorpay, and streams assistant answers. The
 **worker** does everything slow or risky in the background: reading mailboxes, calling the AI,
-matching payments, sending reminders, and every outbound message through the send gate. Both
-share one **PostgreSQL database**, which also holds the job queue and the activity log, so there
-is no extra queue system or cache to run. Files go first into a quarantine bucket, are scanned for
-malware, and are then encrypted and moved to the private bucket. Everything runs in AWS Mumbai.
-The AI runs on Claude through Amazon Bedrock's India in-country option, so creator emails sent to
-the AI are processed in India too.
+matching payments, sending reminders, every outbound message through the send gate, and the hourly
+backup. Both share one **PostgreSQL database**, which also holds the job queue and the activity log, so
+there is no extra queue system or cache to run. A short **pre-deploy job** applies database migrations
+before a new version takes traffic. These run on DigitalOcean in Bangalore, which is the cheapest
+setup that meets every rule (provider comparison, ADR-022). AWS in Mumbai supplies the parts it is best
+at for us: the encryption keys, our own email, file storage with malware scanning, and a second copy of
+the database at a different company. Files go first into a quarantine bucket, are scanned, and are then
+encrypted and moved to the private bucket. The AI is Claude, called directly from Anthropic or through
+Amazon Bedrock, whichever passes the evaluation and the data-retention terms (ADR-011).
 
 ---
 
@@ -154,21 +178,23 @@ builders and read by a non-programmer owner.
 | Web framework | **Django 5.2 LTS** | 20 years old, with built-in sign-in, sessions, CSRF protection, admin and **reversible migrations**. Security fixes until April 2028. | Next.js | 001 |
 | Front end | **Server-rendered HTML + HTMX + a little Alpine.js**, installable web app (PWA) | Small pages load fast on mid-range Android. Stage 3 HTML mockups become templates almost directly. One language. | React SPA | 001 |
 | CSS | Tailwind CSS (standalone CLI, no Node) | Mobile-first utility classes. The mockup designer and builders all know it. | Plain CSS | 001 |
-| Database | **PostgreSQL 17 on Amazon RDS** | Exact money maths, transactions, row-level security, full-text search, point-in-time restore. | Aurora Serverless | 003 |
+| Database | **PostgreSQL 17, DigitalOcean Managed PostgreSQL (Bangalore)** (Amended for CR-001, C6; was Amazon RDS) | Exact money maths, transactions, row-level security, full-text search, point-in-time restore included. Plain PostgreSQL, so any host can take it over. | Amazon RDS; Cloud SQL | 003, 022 |
 | Search | **PostgreSQL full-text search** on one `search_entry` table (with the `btree_gin` extension) (Amended after mockups, AR5.) | No search engine to run, back up or secure; the same RLS isolates it; costs nothing per search. | OpenSearch | 020 |
 | Background jobs | **Procrastinate** (job queue stored in PostgreSQL) behind our own thin `jobs` module | A job is queued in the same transaction as the change, so jobs are never lost or phantom. No extra system to run. | Celery + SQS | 006 |
-| Hosting | **AWS ap-south-1 (Mumbai)**: ECS Fargate containers, ALB, RDS, S3, KMS, Secrets Manager | Managed, no servers to patch. Same region as users and as the India in-country Claude service. **[Sign-off S1]** | Google Cloud Run; Render | 002 |
-| AI | **Claude on Amazon Bedrock, India in-country profile**: Haiku 4.5 for sorting and scam signals, Sonnet 5 for extraction, drafts and the assistant | Hindi/Hinglish quality and vision for screenshots. AWS terms: no training, no sharing with the model maker. Processing stays in India. **[Sign-off S2]** | Anthropic API direct; Gemini on Vertex | 011 |
-| Sign-in | Django auth + **django-allauth** (Google) + **MSG91** SMS codes + email codes; server-side sessions | Sessions we can end instantly (NFR-027, FR-262). India-registered SMS templates (A8). **[Sign-off S6]** | AWS Cognito; Firebase Auth | 012 |
-| Our own email | **Amazon SES** (Mumbai) for digests, alerts and invites; SES inbound for the forwarding address | Same cloud and region, very cheap. Brand messages never use it: they go from the creator's Gmail. **[Sign-off S7]** | Postmark | 015 |
+| Hosting | **DigitalOcean App Platform, Bangalore (BLR1)**: web service, worker, pre-deploy migration job (Amended for CR-001, C6; was AWS ECS Fargate in Mumbai, ADR-002) | Cheapest always-on containers with a managed database and point-in-time restore; no servers to patch; close to users. **[Sign-off S1]** | AWS ECS (ADR-002); Render; Cloud Run | 022 |
+| Keys, own email, files | **AWS Mumbai**: KMS, SES, S3 with GuardDuty malware scanning (Amended for CR-001, C7) | Cheapest and strongest for these jobs; same design as approved, used from DigitalOcean with least-privilege credentials. | Google Cloud KMS; Postmark; Spaces + ClamAV | 005, 022 |
+| Edge and DNS | **Cloudflare** (free in the validation phase, Pro at the full setup) (Amended for CR-001, C6) | DNS, TLS, and the edge rate rule and managed firewall rules when switched on. | AWS WAF | 022 |
+| AI | **Claude through the direct Anthropic API**: Haiku 5.5 for sorting and scam signals, Sonnet 5.5 for extraction, drafts and the assistant; **Claude on Bedrock** as the switchable fallback (Amended for CR-001, C8; was Bedrock India) | Hindi/Hinglish quality and vision for screenshots; about half the AI cost per paid creator. Real creator data only with zero-data retention or terms that meet NFR-035; final pick by the iteration-8 evaluation. **[Sign-off S2]** | Bedrock India; Gemini on Vertex | 011 |
+| Sign-in | Django auth + **email codes** first + **authenticator app (pyotp) and backup codes** second + **django-allauth** (Google, iteration 2); SMS behind a per-country switch, off; server-side sessions (Amended for CR-001, C4) | Works in every country at near-zero cost; sessions we can end instantly (NFR-027, FR-262). **[Sign-off S6]** | AWS Cognito; Firebase Auth | 012 |
+| Our own email | **Amazon SES** (Mumbai) for sign-in codes, digests, alerts and invites; SES inbound for the forwarding address (Amended for CR-001, C7: now also carries sign-in codes, so SPF, DKIM and DMARC are a Must, PRD I-07) | Very cheap at every stage; its sandbox is the staging allow-list. Brand messages never use it: they go from the creator's Gmail. **[Sign-off S7]** | Postmark | 015, 022 |
 | Subscriptions | **Razorpay Subscriptions** (UPI Autopay, cards) | The standard Indian gateway for recurring UPI. Stripe India is not open to new merchants. | Cashfree | 016 |
 | PDFs / Excel | WeasyPrint (HTML to PDF, Noto fonts for ₹ and Devanagari), openpyxl, pikepdf / pdfplumber (statements, AIS) | Invoice layout reuses the HTML from Stage 3. Mature Python libraries. | Headless Chrome | 013 |
 | Malware scan | **GuardDuty Malware Protection for S3** | Fully managed, priced per GB scanned. No antivirus server to keep updated. | ClamAV container | 005 |
 | Web push | pywebpush with VAPID keys | Standard Web Push. Works on iPhone once the app is added to the home screen (D2). | A push SaaS | — |
 | Feature flags | django-waffle | Switches Instagram on when Meta approves, and gives a "forwarding-only" mode for Gmail (D33). | Env vars | — |
-| Infra as code | **Terraform** in `infra/` | The environment can be rebuilt from code (8-hour recovery target, NFR-043). | AWS CDK | 019 |
-| CI/CD | **GitHub Actions**, OIDC to AWS (no stored keys) | Free for this size. Playbook requires lint, type-check, tests and audit on every push. | — | 019 |
-| Errors / logs | **Sentry** (personal data scrubbed) + CloudWatch structured logs + outside uptime monitor + heartbeat | Errors with context, logs we can search, and alarms that work even if AWS is down. | Self-hosted GlitchTip | 018 |
+| Infra as code | **Terraform** in `infra/` with the DigitalOcean, AWS and Cloudflare providers (Amended for CR-001, C12) | The environment can be rebuilt from code (8-hour recovery target, NFR-043). | Pulumi | 019 |
+| CI/CD | **GitHub Actions**; deploys to App Platform with a scoped DigitalOcean token held in the GitHub environment (Amended for CR-001, C12) | Free for this size. Playbook requires lint, type-check, tests and audit on every push. | — | 019 |
+| Errors / logs | **Sentry** (personal data scrubbed) + structured logs forwarded to a log service + Better Stack uptime + Healthchecks.io heartbeat (Amended for CR-001, C11; was CloudWatch) | Errors with context, logs we can search, and alarms that work even if our host is down. Free tiers in the validation phase. | Self-hosted GlitchTip | 018 |
 | Python tooling | uv (locked dependencies with hashes), ruff, mypy, pytest, Hypothesis, time-machine, Playwright, import-linter | Standard 2026 Python toolchain. Each tool has one job. | Poetry, flake8 | 019 |
 
 **What this locks us into, in plain words.** Python and Django are the hardest thing to change
@@ -176,6 +202,47 @@ later: switching language means rewriting. Both are among the most widely used, 
 lock. AWS is the second hardest: moving clouds would take weeks, but nothing here is
 AWS-exotic. It is containers, PostgreSQL and files, which run anywhere. Bedrock and Razorpay sit
 behind one module each, so switching either touches one folder.
+
+**Amended for CR-001, C1, C6.** The host is now the easiest thing to change: one container image,
+plain PostgreSQL with a provider-independent backup, and every outside service behind one adapter or
+setting (section 3A). Moving from DigitalOcean to AWS is mainly a database restore and new
+infrastructure code (about 1–2 weeks); keys, email and files are already on AWS.
+
+---
+
+## 3A. Provider selection and swappable boundaries (Amended for CR-001, C1, C2.)
+
+**Policy (ADR-021, CR-001 wording).** Choose the lowest total-cost option among candidates that meet
+the approved quality requirements, counting recurring bills, engineering and maintenance effort,
+operational burden and likely migration cost. Compare app hosting and AI independently. Keep portable
+boundaries without building a multi-cloud platform. Prefer one region until measured demand or a
+binding requirement justifies more. Savings never weaken isolation, encryption, tested restore, the
+always-on worker, AI terms or log hygiene. Prices are dated in
+`docs/03-architecture/provider-comparison-2026-11.md` and replaced by measured bills (FR-295).
+
+**What runs at each stage** (comparison §1; fixed monthly cost before 18% GST):
+
+| Stage | Setup | Fixed cost |
+|---|---|---|
+| V0, owner on staging | DigitalOcean BLR1 (web, worker, PostgreSQL 1 GiB with 7-day point-in-time restore); AWS Mumbai (KMS `data`, SES sandbox); Cloudflare DNS; free Sentry, Better Stack, Healthchecks.io; personal accounts | about $27 |
+| V1, up to 10 invited creators | Staging as V0 plus a separate production project and AWS account (business-owned, GQ8); hourly encrypted backups to S3; S3 + GuardDuty for files from iteration 8 | about $65–85 for both |
+| Full setup, 100 creators | Same production, scaled: standby database node, 2 web, larger worker, Cloudflare Pro, paid monitoring | about $205–255 |
+| Full setup, 1,000 creators | Same, larger | about $380–590 |
+
+AI is billed per use and shown separately (comparison §4.9): about $2.80–3.80 per paid creator a
+month on the direct API.
+
+**Swappable boundaries.** Each outside service sits behind one adapter or one setting (full table in
+ADR-021): host (container image and environment variables), database (plain PostgreSQL, our role
+bootstrap, no `BYPASSRLS`, provider-independent backup), jobs (`bhq.jobs`), keys (`KmsClient`), secrets
+(environment only), files (`bhq.files.storage`, `MalwareScanner`), email (django-anymail; inbound
+webhook adapters), SMS (`SmsClient`, `PHONE_SIGNIN_COUNTRIES`), AI (provider adapters in `bhq.ai`),
+monitoring (DSN and URLs), edge (outside the app), validation phase (`BHQ_INVITE_ONLY`, deferred flags).
+
+**Migration triggers** (ADR-022): to the full setup at the validation exit (GQ5) and the owner's
+funding decision; to a hyperscaler (ADR-002's AWS design) if India processing with in-country disaster
+recovery becomes binding, stored cloud keys are no longer acceptable, platform uptime stays under 99.5%
+for two months, the largest database plan is near, or the saving outweighs the move.
 
 ---
 
@@ -219,7 +286,7 @@ boundaries are unchanged.
 
 | Module | Owns | Notes |
 |---|---|---|
-| `accounts` | users, sign-in methods, trusted devices, sessions, second checks | Global (not per workspace) |
+| `accounts` | users, sign-in methods (email codes, authenticator, backup codes; phone where switched on), trusted devices, sessions, second checks, invites and the waitlist (Amended for CR-001, C4, C5) | Global (not per workspace) |
 | `workspaces` | workspace, memberships, permission grants, the **policy** (`authorize()`) | Policy is one file, table-driven |
 | `profile` | business profile, bank accounts, handles, rate card, default terms, opening totals | Sensitive fields encrypted |
 | `connections` | Gmail, Instagram, WhatsApp senders, forwarding address, Calendar (v1), token vault | Only module that touches provider APIs, except sending (see `outbound`) |
@@ -230,12 +297,12 @@ boundaries are unchanged.
 | `collections` | reminder plans, reminder steps, templates | |
 | `payments` | payments, allocations (matches), TDS records, statements | Idempotent records |
 | `tax` | threshold watch, tax figures with cross-check, (v1) AIS, year-end pack | Uses `rules` |
-| `rules` | pure-Python country rule packages: `app/bhq/rules/india/v2026_1/` (Amended for iteration 1, D1.) | No Django imports (checked) |
+| `rules` | pure-Python country rule packages: `app/bhq/rules/india/v2026_1/` (Amended for iteration 1, D1.); one registry `bhq.rules.registry` that picks the rule set by the workspace's country and fails closed (Amended for CR-001, C3.) | No Django imports (checked); only the registry imports a country package |
 | `outbound` | outbound messages, approvals, gate decisions, **the send gate** | Only importer of provider send clients |
 | `assistant` | runs, steps, tool definitions (generated from Actions) | |
-| `audit` | activity log, undo engine, hash chain | Append-only |
+| `audit` | activity log, undo engine, hash chain; the platform staff log `staff_event` (Amended for CR-001, C5) | Append-only |
 | `notifications` | push subscriptions, notifications, quiet hours, daily digest | |
-| `ai` | gateway, prompt templates (versioned), usage metering, eval harness | Only importer of the Bedrock client |
+| `ai` | gateway, provider adapters (Anthropic, Bedrock), prompt templates (versioned), usage metering, eval harness (Amended for CR-001, C8) | Only importer of a model provider SDK |
 | `files` | storage, encryption helpers, malware-scan intake | Only user of KMS |
 | `billing` | subscriptions, entitlements, Razorpay webhooks, BackstageHQ's own invoices | Platform-level |
 | `platform` | staff access grants, exports, deletions, retention purge, internal price-test report (S-30), invariant monitors | |
@@ -243,11 +310,13 @@ boundaries are unchanged.
 | `search` | the `search_entry` table, the word splitter and amount reader (pure Python), the search Selector and view (Amended after mockups, AR5.) | Owns no business data: each module supplies its own records' searchable words through a `search.py` file in its own folder (§16A) |
 
 **Checked boundaries (import-linter in CI).** `rules` imports nothing from Django. Only
-`bhq.outbound.gate` imports `bhq.connections.*.send_client`. Only `bhq.ai.gateway` imports the Bedrock
-SDK. Only `bhq.files.crypto` imports KMS. Views import Actions and Selectors, never models of another
+`bhq.outbound.gate` imports `bhq.connections.*.send_client`. Only the AI provider adapters
+(`bhq.ai.providers.*`, called only by `bhq.ai.gateway`) import a model SDK (Amended for CR-001, C8; was
+"only `bhq.ai.gateway` imports the Bedrock SDK"). Only `bhq.files.crypto` imports KMS. Views import Actions and Selectors, never models of another
 module. `bhq.search.tokenize` and `bhq.search.amounts` import nothing from Django, like `rules`, and no
 module's `search.py` may read a column ending in `_enc` (checked by a test, §16A). (Amended after
-mockups, AR5.) (Amended for iteration 1, D1: the dotted names above are Python import paths.)
+mockups, AR5.) Only `bhq.rules.registry` imports a country
+package. (Amended for CR-001, C3.) (Amended for iteration 1, D1: the dotted names above are Python import paths.)
 
 ---
 
@@ -259,8 +328,8 @@ mockups, AR5.) (Amended for iteration 1, D1: the dotted names above are Python i
 |---|---|---|
 | IDs | UUIDv7, generated in the app | Safe in URLs (no counting other people's records), sort by time |
 | Tenancy | Every business table has `workspace_id NOT NULL`, RLS enabled **and forced** | NFR-023 |
-| Money | `BIGINT` in paise, column suffix `_paise`, plus `currency CHAR(3)` on documents (default `INR`) | Exact. Ready for other currencies in v2 (D1) |
-| Time | `timestamptz` stored in UTC. Business dates are `date` in the workspace time zone (default `Asia/Kolkata`). Tax year is computed by the rule package. | Quiet hours, due dates and the April–March year are correct |
+| Money | `BIGINT` in the currency's smallest unit (paise for INR), column suffix `_paise` kept for INR-only code, plus `currency CHAR(3)` on documents, copied from the workspace, **no default** (Amended for CR-001, C3) | Exact. Other currencies arrive with their country's rule set (D1, FR-005) |
+| Time | `timestamptz` stored in UTC. Business dates are `date` in the workspace time zone, set from the country's rule set at sign-up (`Asia/Kolkata` for India; no schema default) (Amended for CR-001, C3). Tax year is computed by the rule package. | Quiet hours, the sending window, due dates and the April–March year are correct |
 | Encryption | Columns ending `_enc` hold AES-256-GCM ciphertext under the workspace key, bound to (workspace, table, column, row) | §12 |
 | Versioning | Business rows have `version INT` (optimistic locking) | "Undo" can warn when later edits sit on top (FR-238) |
 | AI provenance | AI-filled fields are listed in `ai_unconfirmed_fields`, with sources in `field_source` | FR-080 AC1, NFR-014 |
@@ -272,6 +341,8 @@ mockups, AR5.) (Amended for iteration 1, D1: the dotted names above are Python i
 ```mermaid
 erDiagram
     USER ||--o{ AUTH_IDENTITY : "signs in with"
+    USER ||--o| TOTP_DEVICE : "second method"
+    USER ||--o{ BACKUP_CODE : "second method"
     USER ||--o{ TRUSTED_DEVICE : has
     USER ||--o{ USER_SESSION : has
     USER ||--o{ MEMBERSHIP : "joins through"
@@ -290,8 +361,8 @@ erDiagram
 
     USER {
         uuid id PK
-        string phone_e164 UK "verified"
-        string email UK "verified"
+        string email UK "verified; sign-in identity (C4)"
+        string phone_e164 UK "verified; only where phone codes are on"
         string display_name
         bool is_staff
         timestamptz created_at
@@ -299,8 +370,22 @@ erDiagram
     AUTH_IDENTITY {
         uuid id PK
         uuid user_id FK
-        string provider "phone, google, email"
+        string provider "email, google, phone (C4)"
         string subject UK
+    }
+    TOTP_DEVICE {
+        uuid id PK
+        uuid user_id FK UK "one per user in the MVP"
+        bytea secret_enc "platform key (C7)"
+        bigint last_used_step "no code reused"
+        timestamptz confirmed_at
+    }
+    BACKUP_CODE {
+        uuid id PK
+        uuid user_id FK
+        bytea code_hash UK "HMAC with the code pepper"
+        timestamptz used_at
+        timestamptz created_at "10 per batch, shown once"
     }
     TRUSTED_DEVICE {
         uuid id PK
@@ -317,8 +402,9 @@ erDiagram
     WORKSPACE {
         uuid id PK
         uuid owner_user_id FK "always the creator"
-        string country_code "IN"
-        string timezone
+        string country_code "chosen at sign-up, no default (C3)"
+        string currency "ISO 4217, from the rule set (C3)"
+        string timezone "IANA, from the rule set (C3)"
         string status "active, deletion_pending, deleted"
         timestamptz created_at
     }
@@ -405,6 +491,46 @@ erDiagram
         timestamptz revoked_at
     }
 ```
+
+**Platform tables for sign-in and the validation phase (Amended for CR-001, C4, C5, C7).** These hold
+no workspace data and sit outside RLS by design; the RLS meta-test lists them as known platform tables.
+
+```mermaid
+erDiagram
+    INVITE {
+        uuid id PK
+        string email_lower UK "normalised"
+        uuid added_by FK "staff user"
+        timestamptz created_at
+        timestamptz removed_at
+    }
+    WAITLIST_ENTRY {
+        uuid id PK
+        string email_lower UK
+        string country_code "the country they asked for"
+        string consent_version
+        timestamptz consented_at
+        bytea removal_token_hash UK
+    }
+    STAFF_EVENT {
+        uuid id PK
+        uuid staff_user_id FK
+        string action "invite_added, invite_removed"
+        bytea subject_hash "HMAC of the email"
+        timestamptz created_at "append-only"
+    }
+    PLATFORM_KEY {
+        int key_version PK
+        bytea wrapped_dek "KMS data key, context scope=platform"
+        timestamptz created_at
+    }
+```
+
+- `invite`: checked before a sign-up code is sent while `BHQ_INVITE_ONLY` is on (FR-006); staff add and
+  remove entries with a management command, each change written to `staff_event` (ADR-023).
+- `waitlist_entry`: people from a country that is not supported yet (FR-005 AC2). No workspace.
+- `staff_event`: insert and select only, a trigger refuses update and delete (like `activity_log`).
+- `platform_key`: wraps the data key for user-level secrets such as the authenticator seed (ADR-005).
 
 ### 6.3 Connections, inbox, capture, CRM, deals
 
@@ -966,7 +1092,7 @@ sequenceDiagram
     participant W as Web service
     participant Q as Job queue (Postgres)
     participant K as Worker
-    participant A as AI gateway (Bedrock)
+    participant A as AI gateway (provider per ADR-011)
     participant D as Database
     G->>P: New mail in creator's mailbox
     P->>W: Push (signed by Google)
@@ -1072,13 +1198,16 @@ adding a tested Action, never free-form database access.
 
 | Need | Design |
 |---|---|
-| Sign up / sign in (FR-001) | Phone + 6-digit SMS code (MSG91, DLT-registered template), or Google (allauth, OpenID Connect). Codes are stored hashed, expire in 5 minutes, and 5 wrong tries lock sign-in for 15 minutes (logged). Email code is a fallback and a second factor. |
-| Second factor on a new device (FR-002, NFR-004) | A long-lived random device cookie, stored hashed in `trusted_device`. With no known device, or more than 30 days since the last sign-in on it, the app asks for a second factor **of a different kind** (Google then phone code, phone then email code or Google) before showing any data. |
+| Sign up / sign in (FR-001) | **Email + 6-digit email code** (sent by a job through SES), or Google (allauth, OpenID Connect; iteration 2). Codes are stored hashed, expire in 5 minutes, and 5 wrong tries lock sign-in for 15 minutes (logged). **Phone + SMS code** exists only behind `PHONE_SIGNIN_COUNTRIES` (empty, so off; no phone option is shown, FR-001 AC3). (Amended for CR-001, C4; was phone first.) |
+| Country at sign-up (FR-005) | Sign-up asks "Where is your business based?": the supported countries from `bhq.rules.registry` (India only), suggested from the browser but never silently assumed, plus "My country is not listed", which leads to the waitlist and creates no workspace. The chosen country sets the workspace's currency and time zone. (Amended for CR-001, C3.) |
+| Invite-only access (FR-006) | While `BHQ_INVITE_ONLY` is on, a sign-up code is sent only to an address in `invite`; anyone else sees "BackstageHQ is invite-only for now" and the waitlist, and no email is sent. Staff change invites by command, logged in `staff_event` (ADR-023). (Amended for CR-001, C5.) |
+| Second method, set up once (FR-002 AC3, M1) | During profile setup every creator adds an **authenticator app** (QR code, "Open in authenticator app" link, "Copy setup key") and is shown **10 backup codes** once. Setup cannot finish without it. Where phone codes are on, a verified phone also counts. (Amended for CR-001, C4; was a verified email.) |
+| Second factor on a new device (FR-002, NFR-004) | A long-lived random device cookie, stored hashed in `trusted_device`. With no known device, or more than 30 days since the last sign-in on it, the app asks for a second factor **of a different kind** before showing any data: the authenticator code or a backup code (or a phone code where switched on); **never** an email code or Google for the same address (FR-002 AC4). Wrong second-factor codes count toward the same 5-try lock; a used backup code or authenticator time step is refused (FR-002 AC5). (Amended for CR-001, C4.) |
 | Sessions (NFR-027) | Server-side sessions in Postgres. End after 30 days without activity. "Sign out everywhere" deletes the rows, which takes effect at once. Revoking a manager (v1) deletes their sessions **for that workspace** by removing the membership. Every request re-checks membership. Cookies: `Secure`, `HttpOnly`, `SameSite=Lax`; HSTS on. |
-| Second check for sensitive actions (FR-004, FR-210, FR-212, S-29) | A one-time code to the verified phone or email. Success grants a single-use step-up token bound to that session and that purpose for 5 minutes. Bank, PAN, GSTIN changes also notify the owner by email and in-app. |
-| Account recovery (UC-001 edge case, E9) | Lost phone: recover with email code **and** Google (two independent factors). Lost both: no recovery through support alone (documented on the help page). |
+| Second check for sensitive actions (FR-004, FR-210, FR-212, S-29) | A code from the second method: authenticator, backup code, or phone where switched on (PRD "Second check", GL8; Amended for CR-001, C4). Success grants a single-use step-up token bound to that session and that purpose for 5 minutes. Bank, PAN, GSTIN changes also notify the owner by email and in-app. |
+| Account recovery (UC-001 edge case, E9) | Lost authenticator: recover with an email code **and** a backup code (two independent factors), then set up a new authenticator. Lost both: no recovery through support alone (documented on the help page). (Amended for CR-001, C4.) |
 | Staff | Separate admin sign-in with an authenticator app or passkey (allauth MFA). Staff accounts hold no workspace access by default (§10.5). |
-| Abuse limits (NFR-028) | AWS WAF rate rules at the edge, plus per-phone, per-IP and per-user counters in the app. The forwarding address and WhatsApp number have per-sender caps, and our team is alerted. |
+| Abuse limits (NFR-028) | Per-email, per-IP and per-user counters in the app (client IP from a configured header). The edge rate rule (Cloudflare) is deferred in the validation phase, where the invite list closes sign-up to strangers, and switched on at the full setup (PRD 4.5; Amended for CR-001, C6). The forwarding address and WhatsApp number have per-sender caps, and our team is alerted. |
 
 ---
 
@@ -1185,7 +1314,14 @@ uses a short-lived credential, and is logged and reported to the owner of the af
 | `bhq_worker` | Worker | As `bhq_web`, plus read the `vault` schema (tokens) |
 | `bhq_eraser` | Deletion job only | Delete a whole workspace, including the activity log |
 | `bhq_readonly_breakglass` | Two-person break-glass | Read-only, time-limited |
-| `bhq_crossws` (no login) | Owns the cross-workspace functions in §11.3; nobody connects as it | Bypass RLS, but only inside those functions. `bhq_worker` may only `EXECUTE` them. (Amended after mockups, AR4.) The one exception is `user_workspace_ids`, which `bhq_web` may also execute. (Amended for iteration 1, D2.) |
+| `bhq_backup` (from V1) | Hourly backup job only (ADR-022) | Read every table through `backup_read` policies with `pg_dump --enable-row-security`; no writes; never a member of another role (Amended for CR-001, C9, C10) |
+
+**No role bypasses RLS (Amended for CR-001, C9).** Managed PostgreSQL gives no superuser, and only a
+superuser can create a `BYPASSRLS` role, so none of ours has it. Cross-workspace reads use permissive
+policies scoped `TO bhq_crossws` (or `TO bhq_backup`) on named tables only. App roles are never members
+of those roles, because a policy for a role also applies to its members. Role bootstrap runs as a
+provider admin with `CREATEROLE` but not superuser, and CI proves it (ADR-004).
+| `bhq_crossws` (no login) | Owns the cross-workspace functions in §11.3; nobody connects as it | Read the tables those functions need through role-scoped `crossws_read` policies (it has **no** `BYPASSRLS`; Amended for CR-001, C9), but only inside those functions. `bhq_worker` may only `EXECUTE` them. (Amended after mockups, AR4.) The one exception is `user_workspace_ids`, which `bhq_web` may also execute. (Amended for iteration 1, D2.) |
 
 ### 11.3 The few cross-workspace queries
 
@@ -1231,7 +1367,9 @@ so that no workspace ID or per-creator amount ever leaves the database:
 ### 11.4 Tests that keep it true
 
 - A meta-test lists every table with a `workspace_id` column and fails if RLS is not enabled and
-  forced, or the policy is missing. A new table cannot slip through.
+  forced, or the policy is missing. A new table cannot slip through. It also fails if any other policy
+  exists that is not an allowed role-scoped read policy, or if any of our roles has `rolbypassrls`.
+  (Amended for CR-001, C9.)
 - For every model, a cross-tenant test creates two workspaces and tries to read and write across
   them through the ORM and through raw SQL. Both must return nothing.
 - Switching tests (FR-273 AC1): search, notifications and assistant answers in workspace B
@@ -1247,15 +1385,24 @@ so that no workspace ID or per-creator amount ever leaves the database:
 
 | What | How | Key |
 |---|---|---|
-| Everything in transit | TLS 1.2+ at the load balancer, TLS to RDS, HTTPS to all providers | ACM certificates |
-| Database disk, backups | RDS storage encryption | KMS key `rds` |
+| Everything in transit | TLS 1.2+ at the platform edge, TLS to the database, HTTPS to all providers (Amended for CR-001, C6) | Platform-managed certificates |
+| Database disk, backups | Provider storage encryption (DigitalOcean); the hourly off-provider dump is encrypted by the app with a KMS data key before upload (Amended for CR-001, C7, C10) | Provider keys; KMS key `data` (scope `backup`) |
 | PAN, GSTIN, bank account numbers, message bodies, outbound bodies, sensitive undo values | App-level AES-256-GCM per field. Associated data = workspace, table, column, row ID. | Per-workspace data key (`workspace_key`), wrapped by KMS key `data` |
 | Files (uploads, invoices, statements, AIS) | Encrypted by the app with the workspace data key before writing to S3; downloads stream through the app after a permission check | Workspace data key; bucket also uses SSE-KMS |
-| Connection tokens (Gmail, Instagram, Calendar) | Separate `vault` schema; encrypted under a **different** KMS key; only the worker's IAM role may decrypt; never logged (NFR-025) | KMS key `tokens` |
-| App secrets (Razorpay, MSG91, Meta, VAPID, Sentry) | AWS Secrets Manager, injected at start; rotated yearly or on staff change | — |
+| Connection tokens (Gmail, Instagram, Calendar) | Separate `vault` schema; encrypted under a **different** KMS key; only the worker's AWS identity may decrypt (its own IAM user while on DigitalOcean; Amended for CR-001, C7); never logged (NFR-025) | KMS key `tokens` |
+| User-level secrets (authenticator seed) | App-level AES-256-GCM; associated data = user, table, column (Amended for CR-001, C4, C7) | Platform data key (`platform_key`), wrapped by KMS key `data` with context `scope=platform` |
+| Backup codes, sign-in codes | Keyed hashes only (HMAC-SHA256 with a pepper); never encrypted, never readable | `OTP_PEPPER` secret |
+| App secrets (Razorpay, Meta, VAPID, Sentry, AWS credentials, DB passwords) | Encrypted environment variables on the platform, set by the deploy workflow from the GitHub environment; the app reads environment variables only; rotated yearly, AWS keys every 90 days (Amended for CR-001, C7, C12; was AWS Secrets Manager) | — |
 
 - KMS keys are **multi-Region** (primary Mumbai, replica Hyderabad), so backups restored in
-  Hyderabad can still be decrypted (§23).
+  Hyderabad can still be decrypted (§23). (Amended for CR-001, C7: applies to the AWS reference design
+  only. In the validation phase and the DigitalOcean full setup the keys are single-Region in Mumbai;
+  the database is in Bangalore, so losing one region loses keys or data, not both.)
+- **Reaching KMS from DigitalOcean (Amended for CR-001, C7).** App Platform cannot assume IAM roles,
+  so `web` and `worker` each have a least-privilege IAM user stored as an encrypted secret. Key
+  policies require an encryption context (`workspace_id`, or `scope` of `platform` or `backup`);
+  `tokens` is usable by the worker only. CloudTrail alerts on use from unexpected sources. This stored
+  credential is a reviewed risk (§25) and goes away if compute moves to a host with workload identity.
 - Plaintext data keys are cached in memory for a few minutes to keep KMS calls cheap. Never
   written to disk or logs.
 - Disconnecting a source revokes the token at Google or Meta first, then deletes the vault row
@@ -1322,7 +1469,8 @@ This must be confirmed against real Gmail behaviour in an iteration-1 spike (ope
 **Late but never twice (NFR-012).** A reminder that missed its slot goes out at the next tick
 only if it is still valid: unpaid, not disputed, not paused, and none sent today for that invoice.
 If any of these fails, it is **skipped** and logged. A reminder that is otherwise valid but falls
-outside the sending window (FR-123: Mon–Sat 10:00–18:00 IST by default, editable by the owner) is
+outside the sending window (FR-123: Mon–Sat 10:00–18:00 in the workspace's time zone, IST for India, by
+default, editable by the owner; Amended for CR-001, C3) is
 **held**, not skipped: the reminder is marked `held` and its outbound message gets status `held` with
 `send_after` set to the next window opening, shown in the queue (S-17) as "Scheduled for <time>".
 `send_after` is only for display and is recomputed if the owner edits the window. When the window
@@ -1353,19 +1501,24 @@ model. It:
 
 ### 14.2 Models by job **[Sign-off S2]**
 
-The versions below are the ones confirmed with India in-country processing as of October 2026
-(A11). Newer Claude models (for example the 5.5 family) usually reach the direct API first. When a
-newer Haiku or Sonnet is offered in the India profile, we move to it as a config change, but only
-after it passes the eval suite for that job.
+(Amended for CR-001, C8.) The provider is chosen per ADR-011 as amended: the **direct Claude API**
+for V0, and for real data only with zero-data retention or terms that meet NFR-035; otherwise
+**Claude on Bedrock** through the same gateway. The iteration-8 evaluation runs the same labelled sets
+on both and compares accuracy, latency and cost per successful task before anything reaches a creator.
+Models are pinned per purpose in settings; a newer model is adopted only after it passes the eval suite
+for that job, never automatically.
 
-| Purpose | Model (Bedrock India) | Why |
-|---|---|---|
-| Sorting, scam signals | Claude Haiku 4.5 | High volume, cheap. Runs after free header checks remove obvious newsletters and notifications. |
-| Extraction (emails, screenshots, PDFs, Hindi text) | Claude Sonnet 5 | Accuracy and vision; amounts must be right |
-| Drafts in the creator's voice | Claude Sonnet 5 | Hinglish tone. A few of the creator's own sent emails as examples, picked by brand and type. No vector database in MVP. |
-| Assistant | Claude Sonnet 5 | Tool use, streaming, multi-step |
-| Tax cross-check (FR-151) | Claude Sonnet 5 with an independent prompt that recomputes from source records | Separate from rules. Disagreement shows "needs a CA check". D9's risk (same model family) is noted. |
-| Import of past deals | Haiku 4.5 first pass, Sonnet 5 on candidates | Fits the PRD's ₹200–300 one-time estimate |
+| Purpose | Model (direct API) | Fallback (Bedrock India) | Why |
+|---|---|---|---|
+| Sorting, scam signals | Claude Haiku 5.5 | Claude Haiku 4.5 | High volume, cheap. Runs after free header checks remove obvious newsletters and notifications. |
+| Extraction (emails, screenshots, PDFs, Hindi text) | Claude Sonnet 5.5 | Claude Sonnet 5 | Accuracy and vision; amounts must be right |
+| Drafts in the creator's voice | Claude Sonnet 5.5 | Claude Sonnet 5 | Hinglish tone. A few of the creator's own sent emails as examples, picked by brand and type. No vector database in MVP. |
+| Assistant | Claude Sonnet 5.5 | Claude Sonnet 5 | Tool use, streaming, multi-step |
+| Tax cross-check (FR-151) | Claude Sonnet 5.5 with an independent prompt that recomputes from source records | Claude Sonnet 5 | Separate from rules. Disagreement shows "needs a CA check". D9's risk (same model family) is noted. |
+| Import of past deals | Haiku 5.5 first pass, Sonnet 5.5 on candidates | Haiku 4.5, Sonnet 5 | Fits the PRD's ₹200–300 one-time estimate |
+
+Estimated AI cost per paid creator a month (comparison §4.9): about $2.80–3.80 (₹245–335) on the
+direct API and $5.90–7.70 (₹520–675) on Bedrock India.
 
 A model or prompt change ships only if the eval suite meets every PRD threshold (NFR-046).
 
@@ -1403,7 +1556,8 @@ payment matching rules, numbering and every manual flow keep working because the
 
 Measured per workspace per day from `ai_call`. Levers, cheapest first: header pre-filters, Haiku
 for volume, prompt caching, fetching full bodies only for business mail, allowance and caps, and
-Bedrock batch pricing for the slow tail of imports (after the first 15 minutes of results).
+batch pricing (50% off on either provider) for the slow tail of imports (after the first 15 minutes of
+results). (Amended for CR-001, C8.)
 
 ---
 
@@ -1424,7 +1578,8 @@ Bedrock batch pricing for the slow tail of imports (after the first 15 minutes o
   only entries their permissions allow (v1).
 - **Undo.** Internal Actions store the before-values. Undo is itself an Action (and logged).
   Sent messages have no undo; the entry offers "Draft a correction" (FR-214 AC2).
-- **Separate from technical logs.** CloudWatch holds technical logs without personal data. The
+- **Separate from technical logs.** The log service holds technical logs without personal data
+  (Amended for CR-001, C11; was CloudWatch). The
   activity log is product data, included in the export (NFR-033) and kept for the life of the
   workspace.
 - **Security events** (new-device sign-in, failed second checks, gate refusals, refused
@@ -1437,7 +1592,10 @@ Bedrock batch pricing for the slow tail of imports (after the first 15 minutes o
 1. Upload goes to the S3 **quarantine** bucket through a short-lived pre-signed URL (size and type
    limits).
 2. GuardDuty scans it. Clean: the worker encrypts it with the workspace key, stores it in the
-   private bucket, and deletes the quarantine copy. Infected: it stays quarantined, the creator
+   private bucket, and deletes the quarantine copy. (Amended for CR-001, C7: S3 and GuardDuty stay in
+   AWS Mumbai and are reached from DigitalOcean through the `bhq.files.storage` and `MalwareScanner`
+   adapters. If GuardDuty is not available in Mumbai (Q-V5), a ClamAV container is the scanner; with no
+   working scanner, uploads stay off for real creators, PRD 4.5.) Infected: it stays quarantined, the creator
    is warned and our team alerted (NFR-031).
 3. Password-protected PDFs (statements, AIS) are opened in memory with the password the creator
    types. The password is never stored or logged (FR-141).
@@ -1591,7 +1749,7 @@ stored business message or for a merged lead.
 | The browser | `hx-history="false"` on the search area (otherwise HTMX copies pages into `localStorage`). The words for "Back" are held in `sessionStorage` for that tab only. `Cache-Control: no-store`; the service worker never caches search. "Search in Gmail" is built in the browser as a Gmail link with the words after `#` and opened in a new tab with `noopener noreferrer`; it never passes through our servers. |
 | Technical logs | Request bodies are never logged; the structlog redaction filter drops `q`; the view is marked `sensitive_post_parameters("q")`. |
 | Sentry | `before_send` drops request data and breadcrumbs for the search endpoint; `send_default_pii=False` as everywhere. No analytics script sees the box. |
-| Database logs and monitoring | The search query uses **server-side parameter binding** (a psycopg `Cursor`, not Django's default client-side binding), so the SQL text holds `$1…`, never the words. The RDS parameter group sets `log_parameter_max_length = 0` and `log_parameter_max_length_on_error = 0`, so slow-query logs, error logs, Performance Insights and `pg_stat_statements` never show them. |
+| Database logs and monitoring | The search query uses **server-side parameter binding** (a psycopg `Cursor`, not Django's default client-side binding), so the SQL text holds `$1…`, never the words. The RDS parameter group sets `log_parameter_max_length = 0` and `log_parameter_max_length_on_error = 0`, so slow-query logs, error logs, Performance Insights and `pg_stat_statements` never show them. (Amended for CR-001, C6: on DigitalOcean the same two settings are applied through the provider's database configuration if it allows them; if not, statement logging (`log_statement`, `log_min_duration_statement`) stays off, so parameters are never logged, and `log_parameter_max_length_on_error` keeps its default of 0. Spike Q-H1 records which applies.) |
 | The database | No "recent searches" table. The index holds record words, never typed words. |
 | Metrics | Only counts (NFR-048): searches, searches with no results, time taken. No words, no workspace dimension. |
 
@@ -1605,7 +1763,7 @@ logs stay word-free for staff too.
 ### 16A.7 Speed and cost (NFR-047)
 
 - **Indexes:** a GIN index on (`workspace_id`, `search_vector`) and one on (`workspace_id`,
-  `amounts_paise`), using the `btree_gin` extension (supported on RDS), plus the foreign-key indexes.
+  `amounts_paise`), using the `btree_gin` extension (supported on RDS; on DigitalOcean to be confirmed in spike Q-H1, Amended for CR-001, C6), plus the foreign-key indexes.
 - **One query:** returns the top 5 per group and the count per group (window functions). The
   modules' Selectors then draw at most 35 rows in at most 7 batched reads. The search transaction has
   a 1.5-second statement timeout; a timeout or any error shows the error state, never "No matches"
@@ -1656,10 +1814,13 @@ logs stay word-free for staff too.
 | Activity log | Life of the workspace | Workspace deletion only |
 | Unverified WhatsApp senders / forwards | 24 h / 7 days | Purge job |
 | Raw webhooks | Until processed, at most 7 days | Purge job |
-| Technical logs (no personal data) | 30 days | CloudWatch retention |
-| Database backups | 14 days (point-in-time) | Automatic |
+| Technical logs (no personal data) | 30 days | Log service retention (Amended for CR-001, C11) |
+| Database backups | Provider point-in-time restore 7 days; hourly encrypted off-provider dumps 14 days (Amended for CR-001, C10) | Automatic; an S3 lifecycle rule deletes dumps after 14 days |
 | S3 old file versions | 30 days | Lifecycle rule |
 | BackstageHQ billing records of the payer | Legal retention period for our own accounts | After that period |
+| Invites (`invite`) (Amended for CR-001, C5) | While the validation phase runs | Removed by staff, or 90 days after the phase ends |
+| Waitlist (`waitlist_entry`) (Amended for CR-001, C5) | Until the country is supported and the person is invited, at most 24 months | Remove link (within 7 days, FR-005 AC5), or purge job |
+| Staff log (`staff_event`) (Amended for CR-001, C5) | 2 years; holds a hash of the email, not the email | Purge job |
 | Search entries (`search_entry`) (Amended after mockups, AR5.) | Only while the record they point to exists and is searchable; a derived copy of plaintext fields, never typed search words | With the record (same transaction or cascade), on re-sort to personal, on "delete raw data" disconnect, or with the workspace (§16A.5) |
 | Typed search words (Amended after mockups, AR5.) | **Never stored**, except searches by BackstageHQ staff during a support grant, which go into the creator's activity log (§16A.6) | — (staff entries: as the activity log) |
 | Price-test totals (`platform.price_test_rollup`) | Totals per price point and month only, no workspace or person; groups under 5 creators hold no amount (§11.3) | Purge job when the price test ends, at most 24 months. Not changed by a workspace deletion, since no row belongs to one creator. (Amended after mockups, AR4.) |
@@ -1679,7 +1840,8 @@ totals match (AC1).
   file version. Both are inside the PRD's 90-day promise (NFR-005).
 
 ### 18.4 Breach readiness (NFR-037)
-The activity log and CloudWatch logs let us list affected workspaces and data types. Notice
+The activity log and the technical logs (log service; Amended for CR-001, C11) let us list affected
+workspaces and data types. Notice
 templates (creator email, regulator form) are pre-written. A breach drill is part of the hardening
 iteration. Reading of DPDP Rule 7: notify "without delay", with details within 72 hours (to be
 confirmed by counsel, Q-L2). The 24-hour readiness target in NFR-037 is stricter, so the design
@@ -1689,20 +1851,26 @@ holds either way.
 
 ## 19. Environments
 
-| Environment | Where | Data | Outside services | Deploys |
-|---|---|---|---|---|
-| Local | Docker Compose: Postgres 17, web, worker, Mailpit, fake providers | Synthetic seed data | Fakes by default; sandboxes optional | Developer |
-| CI | GitHub Actions with a Postgres service container | Fixtures | Fakes only (no network to providers) | Every push |
-| Staging | Separate AWS account, ap-south-1, smallest sizes | Synthetic data and team test accounts. **Never a copy of production.** | Google OAuth app in testing mode (team accounts), Meta test app, Razorpay test mode, Bedrock (same models), SES sandbox | Automatically on merge to `main` |
-| Production | Separate AWS account, ap-south-1, backups to ap-south-2 | Real | Live, verified apps | Manual approval in GitHub |
+(Amended for CR-001, C2, C6; ADR-022, ADR-023.)
 
-AWS Organizations separates accounts, so a mistake in staging cannot touch production. Each
-environment has its own KMS keys, OAuth clients, webhook secrets and Sentry project.
+| Environment | Phase | Where | Data | Outside services | Deploys |
+|---|---|---|---|---|---|
+| Local | All | Docker Compose: Postgres 17, web, worker, Mailpit, fake providers | Synthetic seed data | Fakes by default; sandboxes optional | Developer |
+| CI | All | GitHub Actions with a Postgres service container | Fixtures | Fakes only (no network to providers) | Every push |
+| Staging | V0 onward | DigitalOcean project `bhq-staging` (BLR1) + AWS staging account (Mumbai); personal accounts allowed | Dummy data and team test accounts. **Never a copy of production, never real creator data.** | SES sandbox (the allow-list), Google OAuth app in testing mode, Meta test app, AI provider (same models), Razorpay test mode later | Automatically on merge to `main` |
+| Production (low cost) | V1 | DigitalOcean project `bhq-production` (BLR1) + AWS production account (Mumbai), in the business's name or transferable (GQ8) | Real, up to 10 invited creators | SES production, Gmail testing mode plus forwarding (GQ9), Meta development mode, AI with NFR-035 terms | Manual approval in GitHub |
+| Production (full) | After the exit | Same production, scaled (standby database, 2+ web, Cloudflare Pro) | Real | Live, verified apps; billing; SMS only where switched on | Manual approval in GitHub |
+
+Separate DigitalOcean projects and separate AWS accounts mean a mistake in staging cannot touch
+production. Each environment has its own database, KMS keys, IAM users, OAuth clients, webhook secrets
+and Sentry project. The validation phase is a setting, not a branch: `BHQ_INVITE_ONLY=true` and the
+deferred flags in `acs.yaml` (ADR-023).
 
 **Note on Google testing mode.** Google OAuth apps in testing mode are limited to 100 test users,
 and their refresh tokens expire after 7 days. A beta that runs on Gmail before Google verification
 would force creators to reconnect every week. This supports the PRD's fallback (D33, Q14): until
-verification, the beta runs forwarding-only.
+verification, the beta runs forwarding-only. (Amended for CR-001, C2: in the validation phase the owner
+chose testing mode plus forwarding (GQ9), accepting the weekly reconnect for up to 10 creators.)
 
 ---
 
@@ -1725,16 +1893,19 @@ verification, the beta runs forwarding-only.
 
 ### 20.2 Delivery
 
-1. Merge to `main` builds **one** container image (ARM64), tagged with the commit SHA, pushed to
-   ECR.
-2. Staging: run migrations as a one-off task, roll out the web and worker services, run smoke
-   tests.
-3. Production: manual approval (GitHub Environments). Take an on-demand database snapshot, run
-   migrations, then a rolling deploy with health checks and ECS automatic rollback on failure.
-   Post-deploy smoke test.
-4. **Rollback:** redeploy the previous image. It works because migrations are expand/contract:
+(Amended for CR-001, C12; ADR-019 as amended.)
+1. Merge to `main` with green CI builds **one** container image (linux/amd64), tagged with the commit
+   SHA, pushed to DigitalOcean Container Registry.
+2. Staging: the workflow renders the App Platform spec (`infra/do/app.staging.yaml`) with the image
+   tag, `GIT_SHA` and the secrets from the GitHub `staging` environment, and applies it. The
+   `PRE_DEPLOY` job runs migrations; if it fails, the new version never takes traffic. Web and worker
+   roll out with health checks, then smoke tests run.
+3. Production (from V1): manual approval (GitHub Environments). Take an on-demand logical backup, then
+   the same steps. Post-deploy smoke test.
+4. **Rollback:** redeploy the previous image tag. It works because migrations are expand/contract:
    the previous code still runs on the new schema (ADR-017).
-5. GitHub authenticates to AWS with OIDC (no stored AWS keys).
+5. GitHub holds a scoped DigitalOcean token per environment (DigitalOcean has no OIDC trust for GitHub),
+   rotated every 90 days. Deploys never touch AWS.
 
 ### 20.3 Migrations that can roll back (ADR-017)
 
@@ -1760,13 +1931,14 @@ one automated test named after it (e.g. `test_fr123_ac2_one_reminder_per_day`).
 | Integration (real Postgres) | Actions end to end with the activity log; RLS meta-test and cross-tenant tests; append-only log; concurrency (two confirms, double reminder race) | pytest, Postgres service |
 | Permissions | The PRD §7.2 matrix as a data file (`app/bhq/workspaces/matrix.yaml`; Amended for iteration 1, D1), each row × role × expected result, plus never-delegable and assistant-overlay cases | pytest parametrised |
 | Send gate | Every outbound path; edit after approval; permission removed before send; crash between provider call and database commit; template reminders | pytest + fake providers + import-linter |
-| Providers | Fake Gmail, Meta, WhatsApp, Razorpay, Bedrock for CI; contract tests against sandboxes nightly in staging | pytest, recorded fixtures |
+| Providers | Fake Gmail, Meta, WhatsApp, Razorpay, AI provider, email and SMS for CI; contract tests against sandboxes nightly in staging (Amended for CR-001, C8) | pytest, recorded fixtures |
 | Time | Reminders, digests, expiry, quiet hours, trial ends, 30-day deletion | time-machine |
 | AI quality | Eval sets with PRD thresholds | Eval harness |
 | End to end | The MVP exit demo (connect, import, invoice, reminder, payment with Undo) on a phone viewport | Playwright + axe |
 | Performance | Approval queue and Money screen with 500 items under 2 s (NFR-040); assistant first token under 3 s (NFR-039) | pytest timing on seeded data; Locust in hardening |
 | Global search (FR-205) (Amended after mockups, AR5.) | **Pure:** word splitter (Devanagari words stay whole, emails, handles, invoice numbers, leading zeros) and amount reader ("80000", "80,000", "₹80k", "1.2L", "94,400"; rejects fractions of a paisa) as table-driven tests plus Hypothesis. **Integration:** FR-205 AC1–AC8 and AC10–AC13 on real Postgres; entry added, changed and removed in the same transaction for every Action that touches a searchable record; cascade on delete; disconnect removes DM results at once (AC5). **Never indexed:** a marker word written into every `_enc` column, message body and file, and into a personal and an over-cap message, is never found (AC4, AC6). **Isolation:** two workspaces, results and counts 0 across them (AC8). **Roles (v1, AC9):** for each role preset and record type, search results equal the records that role's list Selectors return, counts included, and no amount match without amount visibility. **Words not kept (AC12):** a search with a marker word, then app logs, captured Sentry events, metrics, the CI Postgres log (run with statement logging on) and `pg_stat_statements` contain no trace of it; a staff search does appear in the activity log. **Speed (NFR-047):** nightly on seeded data (one workspace at the NFR-047 size among 50 others), server time p95 under 300 ms; Playwright on a throttled 4G phone profile under 2 s. | pytest, Hypothesis, Playwright |
-| Security | Dependency audit and SAST in CI; OWASP ZAP baseline on staging; external review before beta (NFR-029); backup-restore drill | — |
+| Security | Dependency audit and SAST in CI; OWASP ZAP baseline on staging; external review, scoped to what is live, before the first real creator (NFR-029, validation hardening); restore drill of both backup layers (Amended for CR-001, C2, C10) | — |
+| Country rules (Amended for CR-001, C3) | A test-only fake country with its own rule set: no PAN, GSTIN, Indian state, GST threshold, ₹ or IST appears anywhere; a second test-only country with no rule set: every lookup fails closed (FR-005 AC3, FR-003 AC5) | pytest |
 
 ---
 
@@ -1775,9 +1947,9 @@ one automated test named after it (e.g. `test_fr123_ac2_one_reminder_per_day`).
 | Signal | How | Watches |
 |---|---|---|
 | Errors | Sentry (web and worker), `send_default_pii=False` and a scrubber for tokens, PAN, bank numbers and bodies | Exceptions, slow requests, releases |
-| Logs | structlog JSON to CloudWatch, with `request_id`, `job_id`, workspace ID, actor kind. A redaction filter, plus a CI test that tokens never reach logs (NFR-025 AC). The filter also drops typed search words, and a CI test checks they never reach logs, Sentry or database logs (NFR-048, §16A.6). (Amended after mockups, AR5.) | Debugging |
-| Metrics | CloudWatch metrics from the app: job lag per queue, job failures, Gmail sync lag (max per mailbox), webhooks failed, gate refusals, reminders sent and skipped, auto-matches and undos (M11), AI cost per hour, AI errors; search count, share with no results and time taken, with no words and no workspace dimension (NFR-048; Amended after mockups, AR5) | Dashboards and alarms |
-| Uptime | Outside monitor (e.g. Better Stack) hitting `/health/ready` from outside AWS every minute (NFR-042 "measured outside our own hosting") | 99.5% per month |
+| Logs | structlog JSON to standard output, forwarded to the log service (Amended for CR-001, C11; was CloudWatch), with `request_id`, `job_id`, workspace ID, actor kind. A redaction filter, plus a CI test that tokens never reach logs (NFR-025 AC). The filter also drops typed search words, and a CI test checks they never reach logs, Sentry or database logs (NFR-048, §16A.6). (Amended after mockups, AR5.) | Debugging |
+| Metrics | Platform CPU, memory and restart alerts, plus metrics computed by our monitor jobs and alerted through the alerting integration (Amended for CR-001, C11; was CloudWatch metrics): job lag per queue, job failures, Gmail sync lag (max per mailbox), webhooks failed, gate refusals, reminders sent and skipped, auto-matches and undos (M11), AI cost per hour, AI errors; search count, share with no results and time taken, with no words and no workspace dimension (NFR-048; Amended after mockups, AR5) | Dashboards and alarms |
+| Uptime | Outside monitor (Better Stack) hitting `/health/ready` from outside our host (NFR-042 "measured outside our own hosting"): every 3 minutes on the free tier in the validation phase, where uptime is measured but not a target; every minute at the full setup (Amended for CR-001, C2, C11) | 99.5% per month from the full setup |
 | Heartbeat | Each scheduler tick pings an outside dead-man's switch (e.g. Healthchecks.io). Silence for 20 minutes pages us. | NFR-012 |
 | **Invariant monitors** | SQL checks every 15 min that page on any hit: a sent message without a matching human approval or template opt-in (**M10**); a reminder after a payment match, or two for one invoice on one day (**M5**); a gap in invoice numbers (FR-112); a payment counted twice (FR-145); a broken audit hash chain; a search entry for a message that is not a stored business message, or for a merged lead (FR-205; Amended after mockups, AR5) | The "zero, ever" promises |
 | Product metrics | Internal report (S-30, FR-295): trials, conversions and retention by price point; AI + hosting cost per creator; time to first value (M1) from event timestamps; "collected after reminders" (M3) as one total per price point per closed month, from `platform.price_test_rollup`, shown only when at least 5 creators contribute (§11.3). (Amended after mockups, AR4.) | Price test, M3, M12–M14 |
@@ -1791,9 +1963,9 @@ uptime down, job lag over 30 minutes, error spike, deletion job overdue.
 
 | Target (PRD) | How we meet it |
 |---|---|
-| ≤ 1 hour of money data lost (NFR-043) | RDS point-in-time restore. Transaction logs are shipped every ~5 minutes, so realistic loss is a few minutes. |
-| Back within 8 hours after a major failure (NFR-043) | Zone failure: Multi-AZ fails over in minutes (v1 posture), or a point-in-time restore takes about 1–2 hours (lean beta posture). Region failure: restore in Hyderabad from cross-region backup copies with Terraform, KMS replica keys and S3 replicas. |
-| Quarterly restore drill (NFR-043, playbook) | Restore to a fresh instance, run integrity checks (audit hash chain, invoice sequences, totals), record the time taken. |
+| ≤ 1 hour of money data lost (NFR-043) | Provider point-in-time restore (DigitalOcean, 7 days), so realistic loss is a few minutes. From V1, an hourly encrypted logical backup to S3 at a second provider (AWS Mumbai) caps the loss at 1 hour even if the whole DigitalOcean account or region is lost. (Amended for CR-001, C10; was RDS point-in-time restore.) |
+| Back within 8 hours after a major failure (NFR-043) | Server failure in the validation phase: point-in-time restore to a new cluster, about 1–2 hours. Full setup: a standby node fails over in minutes. Region or provider loss: create a database (DigitalOcean in another region, or RDS) with Terraform and restore the latest hourly dump; KMS, SES and S3 are unaffected. (Amended for CR-001, C10.) |
+| Restore drill before the first real creator, then quarterly (NFR-043, PRD 4.5, playbook) | Restore both layers to a fresh database, force RLS again, run the RLS meta-test and integrity checks (audit hash chain, invoice sequences, totals), and record the time taken. (Amended for CR-001, C2, C10.) |
 | Uptime 99.5% per month (NFR-042) | Managed services, rolling deploys with health checks, automatic rollback. At least 2 web tasks once beyond the beta. |
 | Jobs on time on 99.5% of days (NFR-012) | State-driven schedules catch up after any outage. Heartbeat alarm. Job lag alarm. |
 | Outside service down (NFR-044) | Each connection shows "paused since <time>". Cursors resume where they stopped. |
@@ -1803,9 +1975,30 @@ point-in-time restore and cross-region backups, one web task and one worker. Swi
 Multi-AZ database and two web tasks before the public v1 launch, or once there are about 50
 paying creators.
 
+**Amended for CR-001, C2, C10.** Validation phase (V0, V1): one web container, one worker, a
+single-node database with 7-day point-in-time restore, plus the hourly off-provider backup in V1.
+Uptime is measured, not a target (PRD 4.5). Full setup: standby database node and at least two web
+containers from the start of the MVP beta (the old "about 50 paying creators" point is brought forward,
+because the standby node costs about $30 a month on DigitalOcean).
+
 ---
 
 ## 24. Cost of running it
+
+**Amended for CR-001, C13.** The dated comparison `docs/03-architecture/provider-comparison-2026-11.md`
+replaces the fixed-cost figures below for planning. Summary (US$ a month, before 18% GST):
+
+| Stage | Fixed | AI (direct API) | Fixed per paying creator |
+|---|---|---|---|
+| V0, owner on staging | ≈ 27 (≈ 1–2 while sign-up credits last) | 0 now; 1–5 from iteration 8 | — |
+| V1, 10 invited creators | ≈ 65–85 (staging + production) | 28–38 | — (free phase) |
+| Full, 100 creators (60 paid) | ≈ 205–255 | 170–230 | 3.40–4.25 (₹300–375) |
+| Full, 1,000 creators (600 paid) | ≈ 380–590 | 1,700–2,300 | 0.63–0.98 (₹55–86) |
+
+The approved AWS figures below are kept as the baseline that the comparison measured against; they
+apply again only if a migration trigger moves us to the ADR-002 design. M14 is unchanged (variable cost
+only, P2): about ₹265–375 per paid creator on the direct API, so the price and the assistant allowance
+still decide whether it passes.
 
 Rough list prices for AWS Mumbai and the named services, in US$ per month, converted at ₹88. To be
 replaced by measured cost from `ai_call` and the AWS bill (FR-295).
@@ -1829,8 +2022,8 @@ with a NAT gateway saves about $35–45 a month. The database stays private. Thi
 
 | Item | Paid creator / month | Free creator / month |
 |---|---|---|
-| AI (PRD §10.1 estimate; to be re-measured on Bedrock prices) | ₹220–330 | ₹10–20 |
-| SMS codes (sign-ins, second checks) | ₹1–3 | ₹1–3 |
+| AI (PRD §10.1 estimate; to be re-measured on Bedrock prices) (Amended for CR-001, C8: ₹245–335 on the direct API, ₹520–675 on Bedrock India; comparison §4.9) | ₹220–330 | ₹10–20 |
+| SMS codes (sign-ins, second checks) | ₹1–3 (₹0 while phone codes are off; Amended for CR-001, C4) | ₹1–3 (₹0 while off) |
 | WhatsApp confirmations (may now be charged after 1,000 free a month; verify, Q-V4) | ₹0–5 | — |
 | Database growth, storage, email | ₹2–5 | ₹1–3 |
 | Razorpay fee (~2% of ₹499–999, plus GST on the fee) | ₹12–24 | — |
@@ -1868,7 +2061,7 @@ security review, CA review, domain and DLT registration.
 
 | Threat | Control |
 |---|---|
-| Account takeover (SIM swap, phished code) | Second factor of a different kind on new devices; step-up and owner notice for bank, PAN, GSTIN, export; no support-only recovery |
+| Account takeover (taken-over email, phished code, SIM swap where phone codes are on) | Email code first and an authenticator or backup code second on new devices, never two codes from the same mailbox; replay of a used authenticator step or backup code refused; step-up and owner notice for bank, PAN, GSTIN, export; no support-only recovery (Amended for CR-001, C4) |
 | One creator sees another's data | Three locks (§11), meta-tests, workspace in every URL |
 | Stolen Gmail or Instagram tokens | Vault schema, separate KMS key, only the worker can decrypt, least scopes (`gmail.readonly` + `gmail.send` only), revoke on disconnect |
 | Hidden instructions trick the AI | §14.3 rules; send gate; red-team set per release |
@@ -1879,7 +2072,9 @@ security review, CA review, domain and DLT registration.
 | Forged webhooks | Signature checks, unique event IDs, timestamp windows |
 | Supply chain | Locked hashes (uv), pip-audit, Dependabot, pinned base images |
 | Search shows the wrong thing or keeps typed words (PRD R17) (Amended after mockups, AR5.) | Only plaintext business fields are indexed, never `_enc` columns; same forced RLS; role filter inside the query so counts match; `POST` only and word-free logs, Sentry and database logs; tests for FR-205 AC4, AC8, AC9, AC12 (§16A) |
-| Web attacks (XSS, CSRF, injection) | Django auto-escaping and CSRF, ORM only (raw SQL reviewed), strict Content-Security-Policy with nonces, WAF managed rules |
+| Web attacks (XSS, CSRF, injection) | Django auto-escaping and CSRF, ORM only (raw SQL reviewed), strict Content-Security-Policy with nonces; managed edge rules (Cloudflare) from the full setup (Amended for CR-001, C6) |
+| Stored cloud credentials leak (Amended for CR-001, C7) | One IAM user per component with least privilege; KMS key policies require an encryption context; `tokens` key for the worker only; 90-day rotation; CloudTrail alert on unexpected use; secrets only in the platform's encrypted variables and the GitHub environment; in scope for the external review; removed by moving to a host with workload identity (migration trigger) |
+| Free tiers or personal accounts holding real data (PRD R19) (Amended for CR-001, C2) | Real data only in V1 production, on paid plans with data-processing terms checked against GL-A1; personal accounts only for staging; monitoring tools receive no personal data by design |
 
 ---
 
@@ -1889,13 +2084,13 @@ Each item has a recommendation, the main alternative, and what it means in plain
 
 | # | Decision | Recommendation | Main alternative | Plain-language trade-off |
 |---|---|---|---|---|
-| S1 | Cloud and region | **AWS Mumbai**, backups in Hyderabad | Google Cloud Run (Mumbai), or Render (Singapore) | AWS keeps app, data and AI in India and is very standard. It takes a bit more setup than Cloud Run or Render. Moving later is weeks of work, but nothing used is AWS-only. |
-| S2 | AI provider | **Claude on Amazon Bedrock, India in-country** (Haiku 4.5 + Sonnet 5) | Anthropic API direct (newest models first, processed in the US) or Gemini on Google Vertex (cheaper, in Mumbai) | Bedrock gives India processing and AWS's no-training terms under one contract. New Claude models may reach the India profile later than the direct API. The AI gateway makes switching a one-folder change, re-checked by the eval suite. |
+| S1 | Cloud and region | **DigitalOcean Bangalore** for the app and database; **AWS Mumbai** for keys, email, files and backups (Amended for CR-001, C6, C7; was AWS Mumbai with Hyderabad backups) | AWS only (ADR-002); Render (Singapore); Cloud Run (Mumbai) | About a third of the AWS bill for the validation phase and the full setup up to 1,000 creators, data still in India. The cost: AWS credentials are stored on DigitalOcean instead of IAM roles, and DigitalOcean has one Indian region. Moving to AWS later is about 1–2 weeks because keys, email and files are already there. |
+| S2 | AI provider | **Direct Claude API** (Haiku 5.5 + Sonnet 5.5); for real data only with zero-data retention or terms you accept as meeting NFR-035; final pick by the iteration-8 evaluation (Amended for CR-001, C8; was Bedrock India) | Claude on Bedrock India (Haiku 4.5 + Sonnet 5) | The direct API costs about half per paid creator (₹245–335 vs ₹520–675) and has the newest models, but processes outside India and keeps data 30 days unless zero retention is granted. Bedrock keeps processing in India and stores nothing. The gateway makes switching a setting, re-checked by the eval suite. |
 | S3 | Language and framework | **Python + Django, server-rendered pages with HTMX** | TypeScript + Next.js/React | Django is the most readable and gives sign-in, admin and reversible migrations out of the box. Pages are small and fast on phones. A native app later needs a JSON API, which is planned (`/api/v1`) and reuses the same logic. |
-| S4 | Infrastructure posture for the beta | **Lean:** single-zone database with point-in-time restore, 1 web + 1 worker, public subnets without NAT (~₹17–25k/month total). Upgrade to Multi-AZ and 2 web tasks before public v1 (~₹29–40k). | Full high-availability from day one (~₹7–9k/month more) | A zone outage in the beta could mean 1–2 hours down while we restore. That is still inside the 8-hour target and likely inside 99.5% uptime. It saves about a third of the bill while revenue is tiny. |
+| S4 | Infrastructure posture | **Validation phase:** single-node database with 7-day point-in-time restore plus hourly off-provider backups, 1 web + 1 worker (≈ ₹2,400 a month for V0, ₹5,700–7,500 for V1 with staging). **Full setup:** standby database node and 2 web containers from the MVP beta (≈ ₹18,000–22,500 at 100 creators). (Amended for CR-001, C2, C10; was AWS lean beta ₹17–25k.) | High availability from V1 (~₹2,600 a month more) | A server failure in the validation phase could mean 1–2 hours down while we restore. That is inside the 8-hour target, and uptime is only measured in that phase. |
 | S5 | How M14 (cost ≤ 30% of price) is measured | **Variable cost per creator** (AI, SMS, payment fees), with fixed platform cost reported separately (edit P2) | Spread all costs over creators | With 20 creators, fixed hosting alone is ₹850–1,250 each, so M14 would fail whatever the price. Measuring variable cost tests what the price test is for. |
-| S6 | Sign-in | **Build on Django + allauth + MSG91 SMS** | Managed identity (AWS Cognito or Firebase) | Owning it gives instant sign-out-everywhere and manager revoke, and India-registered SMS. It is more code to secure, so it is a tier-A ticket and in the external review. Managed identity is less code but harder to fit the per-workspace rules and second check. |
-| S7 | Provider for our own emails and the forwarding address | **Amazon SES** in Mumbai, if SES receiving works there (to verify); otherwise Postmark | Postmark (US) for both | SES keeps forwarded brand emails in India and costs almost nothing. Postmark is simpler and has great deliverability, but forwarded emails would pass through the US (listed on the privacy page). |
+| S6 | Sign-in | **Build on Django + allauth: email code first, authenticator app and backup codes second, SMS behind a per-country switch, off** (Amended for CR-001, C4; GQ3 decided) | Managed identity (AWS Cognito or Firebase) | Owning it gives instant sign-out-everywhere and manager revoke, and works in every country at near-zero cost. It is more code to secure, so it is a tier-A ticket and in the external review. Managed identity is less code but harder to fit the per-workspace rules and second check. |
+| S7 | Provider for our own emails and the forwarding address | **Amazon SES** in Mumbai, if SES receiving works there (to verify, Q-V3); otherwise Postmark. SES now also carries sign-in codes, and its sandbox is the staging allow-list (Amended for CR-001, C7) | Postmark (US) for both | SES keeps forwarded brand emails in India and costs almost nothing. Postmark is simpler and has great deliverability, but forwarded emails would pass through the US (listed on the privacy page). |
 | S8 | Gmail permissions | **Only `gmail.readonly` + `gmail.send`** | Add `gmail.modify` now for the Later "Gmail labels" feature | Fewer permissions means a smaller security review and less fear for creators (NFR-026). Adding labels later means a new Google review. |
 | S9 | Staff access to creator data | **No standing access.** Owner grants time-limited access in the app. Database break-glass needs two people and is reported to the owner. | Engineers keep read access to production for support | Stronger privacy promise (NFR-030) and a cleaner security review. Support is slower, because we must ask the creator first. |
 | S10 | Issued invoices when an account is deleted | **Delete them with the account** after offering the final export. The creator keeps the legal copy. BackstageHQ keeps only its own billing records. | Keep issued invoices for the legal retention period | Deleting is simpler and matches "delete my account". Keeping them protects creators who lose their export, but means holding their data for years after they leave. Needs a lawyer or CA check. |
@@ -1940,6 +2135,26 @@ E10 and E12, and section 14A, AR1–AR5).** Each change is tagged "(Amended afte
 | D2 | ADR-004 appendix; §11.3 | `user_workspace_ids(user_id)` added: a `SECURITY DEFINER` function owned by `bhq_crossws`, returning only the workspace IDs where the user has an active membership; `bhq_web` and `bhq_worker` may execute it. | After sign-in the app needs the workspace before any context exists; security events must be logged in the owner's workspaces. Membership rows sit behind RLS. |
 | D3 | §10.2 | `edit_business_profile` added (owner only in the MVP, not delegable; v1 decides whether a manager may be ticked). M2's first-entry rule recorded: `change_payout_bank` and `change_pan_gstin` on a field never saved before return ALLOW (logged), not STEP_UP. | S-21 is owner only, but no action type covered the non-sensitive profile fields; M2 needs a home in the policy. |
 
+**Edits applied for change request CR-001 (proposed 2026-11-11; owner adopted CR-001 and decisions
+GQ1–GQ10 on 2026-11-11; PRD and use-case wording GL1–GL24 applied separately).** Each change is tagged
+"(Amended for CR-001, Cn.)" where it sits. Evidence: `docs/03-architecture/provider-comparison-2026-11.md`.
+
+| # | Where | Applied edit | Why |
+|---|---|---|---|
+| C1 | New §3A; §0, §1, §3 ("What this locks us into"); new ADR-021 | Provider selection policy (CR-001 wording) and one adapter or setting per outside service, so the full setup is configuration, not a rewrite. | CR-001 "Architecture: provider selection policy"; owner: "keep provisions for the full-blown implementation". |
+| C2 | §0 words, §1, §3A, §19, §21, §22, §23 (S4), §25, §26 S4; new ADR-023 | Validation phase: staging (V0) and a separate low-cost production (V1) on the same modules; deferred requirements flagged in `acs.yaml` and blocking the exit; validation-hardening slice before the first real creator. | PRD 4.5 (GL20), GQ4, GQ5, GQ8. |
+| C3 | §1, §5 (`rules` registry), §6.1, §6.2 (`workspace.currency`, no country or time-zone default), §9, §13, §21; ADR-014 | Workspace country, currency and time zone set from the chosen country's rule set; one lookup by country that fails closed; Indian fields only in Indian workspaces; windows in the workspace time zone; test-only fake country. | FR-005, FR-003 AC5, NFR-022 (GL5, GL14, GL16, GL17), GQ1. |
+| C4 | §1, §3, §5, §6.2 (`totp_device`, `backup_code`, `user.email` as identity), §9, §12, §24.2, §25, §26 S6; ADR-012 | Email code first; authenticator app plus 10 backup codes second (never email or Google again); SMS built behind `PHONE_SIGNIN_COUNTRIES`, off; recovery with email code plus backup code. | FR-001, FR-002 (GL12, GL13), GQ3. |
+| C5 | §1, §5, §6.2 (`invite`, `waitlist_entry`, `staff_event`), §9, §18.1; ADR-023 | Invite-only sign-up while `BHQ_INVITE_ONLY` is on; invites changed by staff command and logged in an append-only staff log; waitlist for unsupported countries with no workspace. | FR-006, FR-005 AC2, AC5 (GL14, GL15), GQ2, GQ4. |
+| C6 | §1, §2 (new picture), §3, §3A, §9, §12, §16A.6, §16A.7, §19, §25, §26 S1; new ADR-022 superseding ADR-002 | App, worker, migrations and PostgreSQL on DigitalOcean Bangalore; Cloudflare for DNS and (later) edge rules. ADR-002's AWS design kept as the hyperscaler target with named migration triggers. | Cheapest qualifying candidate in the dated comparison (§1, §5 there). |
+| C7 | §3, §12, §16, §25, §26 S7; ADR-005, ADR-022 | KMS, SES, S3 and GuardDuty stay on AWS Mumbai, reached through least-privilege per-component credentials; platform data key for user-level secrets; secrets as encrypted platform variables. | Same security as approved at a fraction of the cost; the authenticator seed needs encryption outside any workspace. |
+| C8 | §1, §2, §3, §5, §7.1, §14.2, §14.6, §21, §26 S2; ADR-011 | Direct Claude API (Haiku 5.5, Sonnet 5.5) for V0; for real data only with zero-data retention or accepted terms, else Bedrock through the same gateway; provider adapters; binding choice by the iteration-8 evaluation. | CR-001 "compare AI independently"; about half the AI cost per paid creator; NFR-035. |
+| C9 | §11.2, §11.4; ADR-004 | No role has `BYPASSRLS`; cross-workspace functions read through role-scoped `crossws_read` policies; `bhq_backup` reads through `backup_read`; bootstrap works without superuser; meta-test checks policies and role attributes. | Managed PostgreSQL gives no superuser, so the original `BYPASSRLS` role could not be created on any candidate host. |
+| C10 | §1, §11.2, §12, §18.1, §23; ADR-022 | Provider point-in-time restore plus an hourly encrypted logical backup at a second provider; restore drill of both before the first real creator. | NFR-043 holds even if the DigitalOcean account or region is lost; the same backup is the migration path. |
+| C11 | §3, §15, §18.1, §18.4, §22; ADR-018 | Logs to standard output and a log service with 30-day retention; platform alerts plus our monitor jobs; Better Stack uptime and Healthchecks.io heartbeat on free tiers in the validation phase. | No CloudWatch on DigitalOcean; free tiers receive no personal data. |
+| C12 | §3, §12, §20.2; ADR-019 | amd64 image to DigitalOcean Container Registry; App Platform spec applied by the deploy workflow with a pre-deploy migration job; scoped DigitalOcean token in the GitHub environment; Terraform with DigitalOcean, AWS and Cloudflare providers. | Follows C6. |
+| C13 | §0 (status row fixed, inputs, decisions), §24 (summary and pointer), §26, §28, §29 | Housekeeping: stale "Proposed. Draft for owner approval" status replaced; cost summary per stage; open questions Q-H1, Q-H2 added, Q-V2 and Q-V5 rescheduled; ADR index updated. | Keeps the document consistent with CR-001 and with git history. |
+
 ---
 
 ## 28. Open questions and verification results
@@ -1954,16 +2169,19 @@ E10 and E12, and section 14A, AR1–AR5).** Each change is tagged "(Amended afte
 | A6 | WhatsApp replies in the 24-hour window are low or no cost | Secondary sources say service messages may be charged from 1 Oct 2026, after 1,000 free a month | Small. Each forward's confirmation is one message. Verify on Meta's pricing page (Q-V4). |
 | A9 | DPDP breach notice time limit | Rules notified Nov 2025. Board notice "without delay", details within 72 hours (sources differ). Rule 7's start date is phased. | Our 24-hour readiness covers it. Counsel to confirm (Q-L2). |
 | A11 | AI providers offer no-training, short-retention terms | Bedrock: prompts not used for training, not shared with model makers; retention mode is configurable per account. Claude Sonnet 5, Opus 5, Haiku 4.5 available with India in-country processing. Claude on Vertex is not offered in Mumbai. | Supports S2. Confirm the chosen models do not need the provider data-sharing mode (Q-V2). |
+| CR-001 | Provider prices and features (checked 2026-11-11) | Full list with dates and sources in `provider-comparison-2026-11.md`. Notable: managed PostgreSQL hosts give no superuser, so `BYPASSRLS` roles cannot be created (Render staff; PostgreSQL docs); DigitalOcean includes 7-day point-in-time restore; direct Claude API standard retention is 30 days, zero retention by approval; Bedrock India offers Haiku 4.5 and Sonnet 5 but not the 5.5 family. | C6–C10. (Amended for CR-001, C13.) |
 
 ### 28.2 Open questions
 
 | # | Question | Who |
 |---|---|---|
 | Q-V1 | Quotes from 2–3 authorised CASA labs for the Gmail assessment | Owner |
-| Q-V2 | Bedrock retention mode for Haiku 4.5 and Sonnet 5 in the India profile (must not require sharing with the model maker) | Architect, iteration 1 spike |
+| Q-V2 | Bedrock retention mode for Haiku 4.5 and Sonnet 5 in the India profile (must not require sharing with the model maker). (Amended for CR-001, C13: folded into Q-H2; needed only if Bedrock is the fallback; before iteration 8.) | Architect, before iteration 8 |
 | Q-V3 | Does SES email receiving work in ap-south-1? (decides S7) | Architect, iteration 1 spike |
 | Q-V4 | Current WhatsApp service-message pricing in India | Owner |
-| Q-V5 | GuardDuty Malware Protection for S3 available in ap-south-1 | Architect, iteration 1 spike |
+| Q-V5 | GuardDuty Malware Protection for S3 available in ap-south-1 (Amended for CR-001, C13: moved to before iteration 8, when files arrive) | Architect, before iteration 8 |
+| Q-H1 | DigitalOcean BLR1 fits the design: App Platform in BLR1; PostgreSQL 17 with `btree_gin`; `db_bootstrap_roles` runs as `doadmin` without superuser and the RLS tests pass; statement and parameter logging can be kept off (NFR-048); transaction pooling works with the per-transaction workspace setting; point-in-time restore to a new cluster passes the RLS meta-test; `pg_dump --enable-row-security` round trip; client IP header. If it fails, the fallback is Render (Singapore). (Amended for CR-001, C6, C9, C10.) | Architect, iteration 1 spike (T-17), before T-15 |
+| Q-H2 | Zero-data retention for our Anthropic account (owner applies now); if refused, does the owner accept 30-day retention in writing as meeting NFR-035, or do we use Bedrock? Bedrock India price and data-sharing mode (old Q-V2). (Amended for CR-001, C8.) | Owner applies; architect confirms before iteration 8 |
 | Q-T1 | Does Gmail keep our own `Message-ID` on `messages.send`, so retries can check the Sent folder? (send "exactly once") | Iteration 1 spike |
 | Q-L1 | Legal retention of a creator's issued invoices after account deletion (S10) | Owner with CA or lawyer |
 | Q-L2 | DPDP Rule 7 timing and when it takes effect | Owner with counsel |
@@ -1980,7 +2198,7 @@ All ADRs are in `docs/03-architecture/adr/`, status **Proposed**.
 | # | Title |
 |---|---|
 | 001 | Modular monolith in Python/Django with server-rendered HTMX pages |
-| 002 | Managed hosting on AWS Mumbai with a lean beta posture |
+| 002 | Managed hosting on AWS Mumbai with a lean beta posture (**superseded by ADR-022**; kept as the hyperscaler reference; Amended for CR-001, C6) |
 | 003 | PostgreSQL as the only datastore |
 | 004 | Tenant isolation: workspace ID on every row plus Postgres row-level security |
 | 005 | Encryption of sensitive fields, files and connection tokens |
@@ -1989,7 +2207,7 @@ All ADRs are in `docs/03-architecture/adr/`, status **Proposed**.
 | 008 | Permissions as action types and rules, evaluated as code at the moment of action |
 | 009 | The send gate |
 | 010 | Append-only activity log |
-| 011 | AI gateway and Claude on Amazon Bedrock (India) |
+| 011 | AI gateway and Claude on Amazon Bedrock (India) (provider amended: direct Claude API, Bedrock as fallback; Amended for CR-001, C8) |
 | 012 | Authentication and sessions |
 | 013 | Money, invoice numbering and idempotent payment records |
 | 014 | Versioned country rule packages |
@@ -1999,10 +2217,15 @@ All ADRs are in `docs/03-architecture/adr/`, status **Proposed**.
 | 018 | Observability and invariant monitors |
 | 019 | Environments and CI/CD |
 | 020 | Global search inside PostgreSQL (Amended after mockups, AR5.) |
+| 021 | Provider selection policy and swappable boundaries (Amended for CR-001, C1.) |
+| 022 | Low-cost hosting on DigitalOcean Bangalore with AWS for keys, email and files (Amended for CR-001, C6, C7, C10.) |
+| 023 | Validation phase: environments, invite-only access and deferred flags (Amended for CR-001, C2, C5.) |
 
 ---
 
 ## Sources checked for this draft
+
+- CR-001 provider prices and features (2026-11-11): see section 10 of `provider-comparison-2026-11.md`. (Amended for CR-001, C13.)
 
 - Gmail scopes and CASA: [Unipile guide](https://www.unipile.com/integrating-google-oauth-2-0-user-authentication-into-your-app/), [Nango Google security review](https://nango.dev/docs/api-integrations/google-shared/google-security-review), [Latenode community thread](https://community.latenode.com/t/is-casa-tier-2-assessment-necessary-for-all-gmail-api-apps-options-for-indie-developers/22861) (vendor sources; prices unverified)
 - Google OAuth testing-mode limits: [Unipile refresh-token guide](https://www.unipile.com/google-oauth-refresh-token/), [Sailjada post](https://tech.sailjada.com/posts/2026-05-06-2046.html)

@@ -1,6 +1,6 @@
 # ADR-005: Encryption of sensitive fields, files and connection tokens
 
-**Status:** Proposed
+**Status:** Proposed · Amended for CR-001, C7
 
 ## Context
 NFR-004 (encrypted in storage and transit) and NFR-025 (tokens encrypted, kept separately, never seen by
@@ -19,6 +19,27 @@ staff or logs). PAN, bank and income data and Gmail access are high-value target
 - Uploads go to a quarantine bucket first. GuardDuty Malware Protection for S3 scans them before they
   are encrypted and moved (NFR-031).
 - One small `files.crypto` module is the only code that touches KMS (checked by import-linter).
+
+**Amended for CR-001, C7 (2026-11-11).**
+- The key service is **AWS KMS in Mumbai**, used from DigitalOcean (ADR-022). The app cannot assume an
+  IAM role there, so each component has its own least-privilege IAM user stored as an encrypted app
+  secret: `web` may use only the `data` key, `worker` also `tokens`; key policies require an encryption
+  context naming a workspace or the platform scope. Credentials rotate every 90 days; CloudTrail alerts
+  on unexpected use. When compute moves to a host with workload identity, the stored credentials go.
+- Disk encryption: DigitalOcean encrypts managed databases and their backups at rest with keys it
+  manages (not our KMS key `rds`, which exists only on the AWS reference design). Field-level
+  encryption above is what protects PAN, bank numbers, bodies and tokens if a backup leaks.
+- **User-level secrets** (the authenticator seed, ADR-012) belong to no workspace, so they are encrypted
+  with a **platform data key** (`platform_key` table, one row per key version), wrapped by KMS key
+  `data` with encryption context `{"scope": "platform"}`. Associated data binds the user ID, table and
+  column. Backup codes are not encrypted but stored as keyed hashes (HMAC with the code pepper).
+- Multi-Region keys are not used in the validation phase: the hourly off-provider backup is encrypted
+  under a key in the same Mumbai account, and a region loss of AWS Mumbai alone does not lose data
+  (the database is in Bangalore). Revisit at a hyperscaler move.
+- The `KmsClient` adapter takes a generic encryption context (not only a workspace ID), so other key
+  services can be added without touching callers.
+- Malware scanning keeps GuardDuty for S3 (Mumbai, subject to Q-V5); if unavailable, a ClamAV container
+  is the fallback, and uploads stay off for real creators until a scanner works (PRD 4.5).
 
 ## Options considered
 | Option | For | Against |
