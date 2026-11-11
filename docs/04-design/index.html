@@ -19,8 +19,8 @@
   <h2 class="h2 mt-6">MVP screens</h2>
   <div style="overflow-x:auto"><table class="t" aria-label="Screens">
     <thead><tr><th>ID</th><th>Screen</th><th>PRD</th><th>States shown</th></tr></thead><tbody>
-    <tr><td>S-01</td><td><a href="mockups/s01-sign-in.html">Sign up / sign in</a></td><td>FR-001, 002</td><td>Phone, code, wrong code, locked, new device</td></tr>
-    <tr><td>S-02</td><td><a href="mockups/s02-profile-setup.html">Profile setup</a></td><td>FR-003, 023</td><td>Normal, error (bad PAN)</td></tr>
+    <tr><td>S-01</td><td><a href="mockups/s01-sign-in.html">Sign up / sign in</a></td><td>FR-001, 002</td><td>Email and country, enter code, wrong code, locked, not invited, waitlist, waitlist joined, new device (authenticator code), wrong authenticator code, backup code</td></tr>
+    <tr><td>S-02</td><td><a href="mockups/s02-profile-setup.html">Profile setup</a></td><td>FR-003, 023</td><td>Authenticator setup (QR, setup key, code), wrong code, backup codes, business details (India), error (bad PAN)</td></tr>
     <tr><td>S-03</td><td><a href="mockups/s03-connect.html">Connect sources</a></td><td>FR-010 to 013, 217</td><td>Normal, connecting, error</td></tr>
     <tr><td>S-04</td><td><a href="mockups/s04-import-review.html">Import review</a></td><td>FR-020 to 022</td><td>Normal, loading (partial), empty, error</td></tr>
     <tr><td>S-05</td><td><a href="mockups/s05-home.html">Home (Today)</a></td><td>FR-200, 201</td><td>Normal, loading, empty, error, free plan</td></tr>
@@ -64,7 +64,7 @@
   <p class="muted mb-2">Each gap is marked on the screen where it matters. These are choices for the product owner to confirm or change in the PRD.</p>
   <p class="banner ok mb-2"><span aria-hidden="true">&#10003;</span><span>All 29 gaps below were closed by PRD amendments M1 to M29 (commit 3f754e9). The list is kept as the record of what was open when the mockups were approved.</span></p>
   <div style="overflow-x:auto"><table class="t" aria-label="Gaps"><thead><tr><th>#</th><th>Gap</th><th>Placeholder in the mockups</th></tr></thead><tbody>
-    <tr id="g1"><td>G1</td><td>FR-002: second factor must differ from the first; phone-only sign-ups have no second method.</td><td>Email code offered as the second method (S-01, S-29).</td></tr>
+    <tr id="g1"><td>G1</td><td>FR-002: second factor must differ from the first; phone-only sign-ups have no second method.</td><td>Email code offered as the second method (S-01, S-29). Superseded by CR-001: second method is now an authenticator app with backup codes (S-01, S-02). S-29 not yet amended.</td></tr>
     <tr id="g2"><td>G2</td><td>FR-003, FR-004: steps and order of setup not defined; unclear if a second check applies to the first bank entry; states with the lower GST threshold not listed.</td><td>Two steps, no second check on first entry (S-02).</td></tr>
     <tr id="g3"><td>G3</td><td>FR-022 spreadsheet import has no screen in section 6.</td><td>Tab on S-04; look-back period control on S-03.</td></tr>
     <tr id="g4"><td>G4</td><td>FR-291, FR-292: trial length, price and whether GST is included are open (Q1, Q3).</td><td>14 days, no card, Rs 499 + GST, Rs 4,990 a year (S-27).</td></tr>
@@ -93,5 +93,6 @@
     <tr id="g27"><td>G27</td><td>FR-049: no control to choose draft language (English, Hindi, Hinglish).</td><td>Language picker on the draft (S-11).</td></tr>
     <tr id="g28"><td>G28</td><td>FR-122, FR-201, FR-013: wording of reminder templates, digest and WhatsApp replies is not specified.</td><td>My copy (X-01); needs owner and CA review.</td></tr>
     <tr id="g29"><td>G29</td><td>Documents disagree on stage names: PRD header says mockups are "Stage 3, then Stage 4 architecture"; the architecture calls itself Stage 3 and says mockups are not yet made.</td><td>None needed for design; fix the label in one document.</td></tr>
+    <tr id="g30"><td>G30</td><td>CR-001 (open): FR-002 and T-14 put the authenticator in profile setup but give no step order; the approved S-02 never drew the old "second way to sign in" card.</td><td>Authenticator first, then business details, then connect: 3 steps (S-02).</td></tr>
   </tbody></table></div>
 </main></body></html>

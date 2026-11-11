@@ -1,56 +1,107 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-01 Sign up / sign in · BackstageHQ</title>
 <script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
-<body data-id="S-01" data-title="Sign up / sign in" data-fr="FR-001, FR-002" data-shell="none" data-states="ready,code,wrong,locked,device">
+<body data-id="S-01" data-title="Sign up / sign in" data-fr="FR-001, FR-002, FR-005, FR-006" data-shell="none" data-states="ready,code,wrong,locked,notinvited,waitlist,waitlisted,device,devicewrong,backup">
 <main class="mx-auto max-w-md p-4 pt-10">
   <h1><img src="../assets/logo.svg" alt="BackstageHQ" style="height:44px;width:auto;display:block"></h1>
   <p class="muted mb-6">The business side of your content, handled. Works on your phone.</p>
 
-  <!-- step 1: phone -->
+  <!-- step 1: email and country (CR-001: email code is the sign-in; phone sign-in is switched off so no phone option is shown, FR-001 AC3) -->
   <section data-state="ready" class="card" aria-labelledby="h1">
     <h2 id="h1" class="h2">Sign up or sign in</h2>
-    <label class="field"><span class="l">Mobile number</span>
-      <input class="input" inputmode="tel" autocomplete="tel" value="+91 98765 43210" aria-describedby="p-h">
-      <span class="hint" id="p-h">We will text you a 6-digit code.</span></label>
+    <label class="field"><span class="l">Email</span>
+      <input class="input" type="email" inputmode="email" autocomplete="email" value="arjun.creates@gmail.com" aria-describedby="p-h">
+      <span class="hint" id="p-h">We will email you a 6-digit code. No password to remember.</span></label>
+    <label class="field"><span class="l">Your country</span>
+      <select class="input" aria-describedby="c-h" onchange="if(this.value==='other'){location.hash='waitlist'}">
+        <option value="in" selected>India</option><option value="other">My country is not listed</option></select>
+      <span class="hint" id="c-h">Only needed the first time. It decides your currency, tax and invoice rules.</span></label>
     <a class="btn btn-primary btn-block" href="#code" data-toast="Code sent (sample)">Send code</a>
-    <p class="muted text-center my-3">or</p>
-    <a class="btn btn-secondary btn-block" href="s02-profile-setup.html">Continue with Google</a>
-    <p class="muted mt-4">By continuing you agree to the terms and the <a href="x03-what-we-read.html">privacy page</a>.</p>
+    <p class="muted mt-3">Invited to try BackstageHQ? Use the email address your invite was sent to.</p>
+    <p class="muted mt-3">By continuing you agree to the terms and the <a href="x03-what-we-read.html">privacy page</a>.</p>
   </section>
 
   <!-- step 2: code -->
   <section data-state="code" class="card" aria-labelledby="h2" hidden>
-    <h2 id="h2" class="h2">Enter your code</h2>
-    <p class="muted mb-3">Sent to +91 98765 43210. <a href="#ready">Change number</a></p>
+    <h2 id="h2" class="h2">Check your email</h2>
+    <p class="muted mb-3">We sent a 6-digit code to arjun.creates@gmail.com. It works for 5 minutes. <a href="#ready">Change email</a></p>
     <label class="field"><span class="l">6-digit code</span><input class="input" inputmode="numeric" autocomplete="one-time-code" value="482913" maxlength="6" style="letter-spacing:.3em;font-size:22px"></label>
     <a class="btn btn-primary btn-block" href="s02-profile-setup.html">Continue</a>
     <button class="btn btn-ghost btn-block mt-2" data-toast="New code sent (sample)">Send a new code</button>
-    <p class="muted mt-3">New here? A private workspace is created for you and you are its owner.</p>
+    <p class="muted mt-3">Cannot find it? Check spam or promotions. You can ask for up to 4 codes an hour.</p>
+    <p class="muted mt-1">New here? A private workspace is created for you and you are its owner.</p>
   </section>
 
-  <!-- wrong code -->
+  <!-- wrong code, tries left -->
   <section data-state="wrong" class="card" aria-labelledby="h3" hidden>
-    <h2 id="h3" class="h2">Enter your code</h2>
+    <h2 id="h3" class="h2">Check your email</h2>
+    <p class="muted mb-3">Code sent to arjun.creates@gmail.com.</p>
     <label class="field"><span class="l">6-digit code</span><input class="input" inputmode="numeric" value="123456" aria-invalid="true" aria-describedby="e1" style="letter-spacing:.3em;font-size:22px">
       <span class="err" id="e1" role="alert">That code is not right. You have 2 tries left.</span></label>
     <button class="btn btn-primary btn-block">Try again</button>
+    <button class="btn btn-ghost btn-block mt-2" data-toast="New code sent (sample)">Send a new code</button>
   </section>
 
-  <!-- locked after 5 -->
+  <!-- locked after 5 wrong codes (time shown in the workspace time zone; India time here) -->
   <section data-state="locked" class="card" hidden>
-    <div class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Too many wrong codes.</b><br>For your safety, sign-in is paused for 15 minutes. Try again at 4:45 pm. We have noted this attempt in your activity log.</div></div>
+    <div class="banner bad" role="alert"><span aria-hidden="true">&#9888;</span><div><b>Too many wrong codes.</b><br>For your safety, sign-in is paused for 15 minutes. Try again at 4:45 pm India time. We have noted this attempt in your activity log.</div></div>
     <p class="muted mt-3">Not you? Email support and we will help.</p>
   </section>
 
-  <!-- second factor on new device -->
-  <section data-state="device" class="card" hidden>
-    <h2 class="h2">One more check</h2>
-    <p class="mb-3">You signed in with Google on a new browser. To protect your invoices and bank details, we need a second check before showing anything.</p>
-    <div class="banner info mb-3"><span aria-hidden="true">&#128241;</span><span>We will text a code to the phone ending <b>3210</b>.</span></div>
-    <label class="field"><span class="l">6-digit code</span><input class="input" inputmode="numeric" placeholder="000000" style="letter-spacing:.3em;font-size:22px"></label>
+  <!-- invite-only (FR-006 AC1): no code was sent -->
+  <section data-state="notinvited" class="card" aria-labelledby="h4" hidden>
+    <h2 id="h4" class="h2">BackstageHQ is invite-only for now</h2>
+    <div class="banner info mb-3" role="status"><span aria-hidden="true">&#9993;</span><span>We did not send a code, because <b>arjun.creates@gmail.com</b> has not been invited yet.</span></div>
+    <p class="mb-3">We are letting a small group of creators in first. Got an invite at a different email address? Try that one. Otherwise, join the waiting list and we will write to you when there is room.</p>
+    <a class="btn btn-primary btn-block" href="#waitlist">Join the waiting list</a>
+    <a class="btn btn-ghost btn-block mt-2" href="#ready">Try a different email</a>
+  </section>
+
+  <!-- waitlist: unsupported country or not invited (FR-005 AC2). Email and country only. No workspace is created. -->
+  <section data-state="waitlist" class="card" aria-labelledby="h5" hidden>
+    <h2 id="h5" class="h2">BackstageHQ is not available in your country yet</h2>
+    <p class="muted mb-3">We start with creators in India and add countries one at a time. Leave your email and we will tell you when yours is next. Nothing else is needed.</p>
+    <label class="field"><span class="l">Email</span><input class="input" type="email" inputmode="email" autocomplete="email" value="lena.k@example.com"></label>
+    <label class="field"><span class="l">Your country</span>
+      <select class="input"><option>Germany</option><option>United States</option><option>United Kingdom</option><option>Indonesia</option><option>Other</option></select></label>
+    <label class="check"><input type="checkbox" checked> <span>You may email me about BackstageHQ coming to my country. Every email has a link to remove me.</span></label>
+    <a class="btn btn-primary btn-block" href="#waitlisted">Join the waiting list</a>
+    <a class="btn btn-ghost btn-block mt-2" href="#ready">Back</a>
+    <p class="muted mt-3">We keep only your email, country and the date you joined. See the <a href="x03-what-we-read.html">privacy page</a>.</p>
+  </section>
+
+  <section data-state="waitlisted" class="card" aria-labelledby="h6" hidden>
+    <div class="banner ok" role="status"><span aria-hidden="true">&#10003;</span><div><b id="h6">You are on the list.</b><br>We will email lena.k@example.com when BackstageHQ opens in your country. You can remove yourself from the list with the link in any of our emails.</div></div>
+    <a class="btn btn-secondary btn-block mt-3" href="#ready">Back to sign in</a>
+  </section>
+
+  <!-- second check on a new device: authenticator code or backup code, never an email code (FR-002 AC4) -->
+  <section data-state="device" class="card" aria-labelledby="h7" hidden>
+    <h2 class="h2" id="h7">One more check</h2>
+    <p class="mb-3">You signed in on a new browser. To protect your invoices and bank details, we need a code from your authenticator app before showing anything.</p>
+    <div class="banner info mb-3"><span aria-hidden="true">&#128241;</span><span>Open your authenticator app and find <b>BackstageHQ</b>. Type the 6-digit code it shows.</span></div>
+    <label class="field"><span class="l">Authenticator code</span><input class="input" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" maxlength="6" style="letter-spacing:.3em;font-size:22px"></label>
     <a class="btn btn-primary btn-block" href="s05-home.html">Verify and continue</a>
     <label class="check"><input type="checkbox" checked> <span>Remember this device for 30 days</span></label>
-    <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g1">Gap G1</a></b> If someone signed up with phone only, there is no second method. I show an email code as the alternative (requires a verified email).</div>
+    <a class="btn btn-ghost btn-block" href="#backup">Lost your phone? Use a backup code</a>
+  </section>
+
+  <section data-state="devicewrong" class="card" aria-labelledby="h8" hidden>
+    <h2 class="h2" id="h8">One more check</h2>
+    <label class="field"><span class="l">Authenticator code</span><input class="input" inputmode="numeric" value="654321" aria-invalid="true" aria-describedby="e2" style="letter-spacing:.3em;font-size:22px">
+      <span class="err" id="e2" role="alert">That code is not right. You have 2 tries left. Codes change every 30 seconds, so type the one on screen now.</span></label>
+    <button class="btn btn-primary btn-block">Try again</button>
+    <a class="btn btn-ghost btn-block mt-2" href="#backup">Use a backup code instead</a>
+    <p class="muted mt-3">Wrong codes here and on the email step share the same 5 tries. After that, sign-in pauses for 15 minutes.</p>
+  </section>
+
+  <section data-state="backup" class="card" aria-labelledby="h9" hidden>
+    <h2 class="h2" id="h9">Use a backup code</h2>
+    <p class="muted mb-3">Type one of the 10 backup codes you saved when you set up. Each code works once.</p>
+    <label class="field"><span class="l">Backup code</span><input class="input" autocomplete="off" placeholder="xxxx-xxxx" value="k7p2-9mqd" style="letter-spacing:.1em;font-size:20px"></label>
+    <a class="btn btn-primary btn-block" href="s05-home.html">Verify and continue</a>
+    <a class="btn btn-ghost btn-block mt-2" href="#device">Back to the authenticator code</a>
+    <p class="muted mt-3">A code you already used is refused. After signing in, you can make a new set in settings.</p>
   </section>
 </main>
 <script src="../assets/app.js"></script></body></html>

@@ -1,44 +1,121 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>S-02 Profile setup · BackstageHQ</title>
 <script src="https://cdn.tailwindcss.com"></script><script src="../assets/tailwind-config.js"></script><link rel="stylesheet" href="../assets/app.css"></head>
-<body data-id="S-02" data-title="Set up your business" data-fr="FR-003, FR-023" data-shell="none" data-states="ready,error">
+<body data-id="S-02" data-title="Set up your business" data-fr="FR-002, FR-003, FR-023" data-shell="none" data-states="auth,authwrong,backup,ready,error">
 <main class="mx-auto max-w-lg p-4 pt-6">
-  <p class="muted" aria-live="polite">Step 1 of 2 &middot; about 2 minutes</p>
-  <div class="bar my-2" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Setup progress"><i style="width:50%"></i></div>
-  <h1 class="text-2xl font-extrabold mt-4">Just what your first invoice needs</h1>
-  <p class="muted mb-4">Everything else can wait. We will ask for it only when you need it.</p>
 
-  <form class="card" onsubmit="return false">
-    <label class="field"><span class="l">Your legal name (as on PAN)</span><input class="input" value="Arjun Mehta" autocomplete="name"></label>
-    <label class="field"><span class="l">Business type</span>
-      <select class="input"><option>Individual</option><option>Sole proprietor</option></select>
-      <span class="hint">Companies and LLPs are not supported yet.</span></label>
-    <label class="field"><span class="l">PAN</span>
-      <input class="input" value="ABCDE1234F" style="text-transform:uppercase" data-state="ready" aria-describedby="pan-h">
-      <input class="input" value="ABCDE12345" style="text-transform:uppercase" data-state="error" hidden aria-invalid="true" aria-describedby="pan-e">
-      <span class="hint" id="pan-h" data-state="ready">10 characters, like ABCDE1234F.</span>
-      <span class="err" id="pan-e" data-state="error" role="alert" hidden>That PAN does not look right. It should be 5 letters, 4 numbers, 1 letter.</span></label>
-    <label class="field"><span class="l">State</span>
-      <select class="input"><option>Maharashtra</option><option>Karnataka</option><option>Delhi</option></select>
-      <span class="hint">Decides which GST threshold applies to you.</span></label>
-    <h2 class="h3 mb-2 mt-4">Bank account for your invoices</h2>
-    <label class="field"><span class="l">Account holder name</span><input class="input" value="Arjun Mehta"></label>
-    <div class="grid gap-3 sm:grid-cols-2">
-      <label class="field"><span class="l">Account number</span><input class="input" inputmode="numeric" value="" placeholder="e.g. 50100234567890"></label>
-      <label class="field"><span class="l">IFSC</span><input class="input" value="HDFC0001234"></label>
-    </div>
-    <details class="mb-3"><summary class="min-h-tap flex items-center font-semibold cursor-pointer">Optional: GSTIN, trading name, handles</summary>
-      <label class="field mt-2"><span class="l">GSTIN (only if you are registered)</span><input class="input" placeholder="Skip if you are not registered"><span class="hint">No GSTIN means non-GST invoices. You can add it later.</span></label>
-      <label class="field"><span class="l">Trading name</span><input class="input" placeholder="e.g. Arjun Creates"></label>
-      <label class="field"><span class="l">Instagram and YouTube handles</span><input class="input" value="@arjun.creates"></label>
-    </details>
-    <details class="mb-3"><summary class="min-h-tap flex items-center font-semibold cursor-pointer">Income already earned this tax year (2026-27)</summary>
-      <label class="field mt-2"><span class="l">Opening total, in rupees</span><input class="input" inputmode="numeric" value="6,00,000">
-        <span class="hint">Helps the GST threshold meter start correctly (FR-023). Skip if you are new this year.</span></label>
-    </details>
-    <a class="btn btn-primary btn-block" href="s03-connect.html">Save and continue</a>
-    <a class="btn btn-ghost btn-block mt-1" href="s03-connect.html">Skip for now, I will add it when I invoice</a>
-  </form>
-  <div class="gapnote"><b>Placeholder <a class="gapflag" href="../index.html#g2">Gap G2</a></b> The PRD lists the fields but not the steps, the order, or whether the second check applies to the first bank entry (it applies to later changes, FR-004). I used two steps and no second check on first entry. Which states have the lower GST threshold is also not listed.</div>
+  <!-- Step 1 of 3: authenticator app (CR-001). Cannot be skipped. -->
+  <div data-state="auth authwrong backup">
+    <p class="muted" aria-live="polite">Step 1 of 3 &middot; about 2 minutes</p>
+    <div class="bar my-2" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" aria-label="Setup progress"><i style="width:33%"></i></div>
+  </div>
+  <div data-state="ready error" hidden>
+    <p class="muted" aria-live="polite">Step 2 of 3 &middot; about 2 minutes</p>
+    <div class="bar my-2" role="progressbar" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100" aria-label="Setup progress"><i style="width:66%"></i></div>
+  </div>
+
+  <div data-state="auth authwrong">
+    <h1 class="text-2xl font-extrabold mt-4">Set up an authenticator app</h1>
+    <p class="muted mb-4">Your invoices and bank details are private. This adds a second lock that only your phone can open. You will use it on new devices and before changing bank or tax details. It cannot be skipped.</p>
+    <form class="card" onsubmit="return false">
+      <h2 class="h3 mb-1">1. Get an authenticator app</h2>
+      <p class="muted mb-3">Google Authenticator, Microsoft Authenticator or any similar free app. Already have one? Go to step 2.</p>
+
+      <h2 class="h3 mb-1">2. Add BackstageHQ to it</h2>
+      <p class="muted mb-2">Using the phone you are on now? Use the first button. Setting up from a computer? Scan the picture with your phone.</p>
+      <a class="btn btn-secondary btn-block" href="#auth" data-toast="Would open your authenticator app (sample)">Open in authenticator app</a>
+      <div class="flex items-center gap-3 my-3" style="flex-wrap:wrap">
+        <svg id="qr" role="img" aria-label="QR code for the authenticator app (sample picture, not a real code)" viewBox="0 0 29 29" width="132" height="132" style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px;flex:none" shape-rendering="crispEdges"></svg>
+        <div style="flex:1;min-width:180px">
+          <p class="muted">Cannot scan? Type this setup key into your app instead.</p>
+          <p class="my-1" style="font-family:ui-monospace,Menlo,monospace;font-size:17px;font-weight:700;letter-spacing:.06em" aria-label="Setup key">JBSW Y3DP EHPK 3PXP</p>
+          <button type="button" class="btn btn-secondary btn-sm" data-toast="Setup key copied (sample)">Copy setup key</button>
+        </div>
+      </div>
+
+      <h2 class="h3 mb-1 mt-4">3. Type the 6-digit code it shows</h2>
+      <label class="field">
+        <span class="l">Authenticator code</span>
+        <input class="input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" data-state="auth" value="" placeholder="000000" aria-describedby="a-h" style="letter-spacing:.3em;font-size:22px">
+        <input class="input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" data-state="authwrong" value="654321" hidden aria-invalid="true" aria-describedby="a-e" style="letter-spacing:.3em;font-size:22px">
+        <span class="hint" id="a-h" data-state="auth">The code changes every 30 seconds. Make sure your phone's date and time are set to automatic.</span>
+        <span class="err" id="a-e" data-state="authwrong" role="alert" hidden>That code is not right. You have 3 tries left. Type the code showing right now.</span></label>
+      <a class="btn btn-primary btn-block" href="#backup">Confirm code</a>
+      <p class="muted mt-2">Next, we show you backup codes in case you lose your phone.</p>
+    </form>
+  </div>
+
+  <!-- Backup codes: shown once, saved before continuing -->
+  <div data-state="backup" hidden>
+    <h1 class="text-2xl font-extrabold mt-4">Save your backup codes</h1>
+    <div class="banner ok mt-2 mb-3" role="status"><span aria-hidden="true">&#10003;</span><span>Authenticator app connected.</span></div>
+    <form class="card" onsubmit="return false">
+      <p class="mb-2">If you lose your phone, each of these 10 codes lets you in once. <b>We show them only now</b> and cannot show them again. Keep them somewhere safe, like a password manager or a printed note.</p>
+      <ul class="grid grid-cols-2 gap-2 my-3" style="list-style:none;padding:0;font-family:ui-monospace,Menlo,monospace;font-size:16px;font-weight:700" aria-label="Your 10 backup codes">
+        <li class="card" style="padding:8px 12px;margin:0">k7p2-9mqd</li><li class="card" style="padding:8px 12px;margin:0">x4tn-82hb</li>
+        <li class="card" style="padding:8px 12px;margin:0">r9wc-3fva</li><li class="card" style="padding:8px 12px;margin:0">m2ze-7ykp</li>
+        <li class="card" style="padding:8px 12px;margin:0">d5qh-64ns</li><li class="card" style="padding:8px 12px;margin:0">u8gb-1xjc</li>
+        <li class="card" style="padding:8px 12px;margin:0">t3vm-95rw</li><li class="card" style="padding:8px 12px;margin:0">h6ka-20ld</li>
+        <li class="card" style="padding:8px 12px;margin:0">z1nf-48pe</li><li class="card" style="padding:8px 12px;margin:0">b7sy-36qt</li>
+      </ul>
+      <div class="flex gap-2" style="flex-wrap:wrap">
+        <button type="button" class="btn btn-secondary btn-sm" data-toast="Backup codes copied (sample)">Copy all</button>
+        <button type="button" class="btn btn-secondary btn-sm" data-toast="Backup codes downloaded (sample)">Download as a file</button>
+      </div>
+      <label class="check mt-2"><input type="checkbox" id="saved"> <span>I have saved these codes somewhere safe.</span></label>
+      <a class="btn btn-primary btn-block" href="#ready">Continue</a>
+      <p class="muted mt-2">Tick the box to continue. In the real product the button stays off until it is ticked.</p>
+    </form>
+  </div>
+
+  <!-- Step 2 of 3: business details. India fields stay because the workspace country is India. -->
+  <div data-state="ready error" hidden>
+    <h1 class="text-2xl font-extrabold mt-4">Just what your first invoice needs</h1>
+    <p class="muted mb-4">Everything else can wait. We will ask for it only when you need it.</p>
+    <p class="banner info mb-3"><span aria-hidden="true">&#127470;&#127475;</span><span>Workspace country: <b>India</b>. Invoices in rupees (&#8377;), India time. You can change this until your first invoice.</span></p>
+
+    <form class="card" onsubmit="return false">
+      <label class="field"><span class="l">Your legal name (as on PAN)</span><input class="input" value="Arjun Mehta" autocomplete="name"></label>
+      <label class="field"><span class="l">Business type</span>
+        <select class="input"><option>Individual</option><option>Sole proprietor</option></select>
+        <span class="hint">Companies and LLPs are not supported yet.</span></label>
+      <label class="field"><span class="l">PAN</span>
+        <input class="input" value="ABCDE1234F" style="text-transform:uppercase" data-state="ready" aria-describedby="pan-h">
+        <input class="input" value="ABCDE12345" style="text-transform:uppercase" data-state="error" hidden aria-invalid="true" aria-describedby="pan-e">
+        <span class="hint" id="pan-h" data-state="ready">10 characters, like ABCDE1234F.</span>
+        <span class="err" id="pan-e" data-state="error" role="alert" hidden>That PAN does not look right. It should be 5 letters, 4 numbers, 1 letter.</span></label>
+      <label class="field"><span class="l">State</span>
+        <select class="input"><option>Maharashtra</option><option>Karnataka</option><option>Delhi</option></select>
+        <span class="hint">Decides which GST threshold applies to you.</span></label>
+      <h2 class="h3 mb-2 mt-4">Bank account for your invoices</h2>
+      <label class="field"><span class="l">Account holder name</span><input class="input" value="Arjun Mehta"></label>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <label class="field"><span class="l">Account number</span><input class="input" inputmode="numeric" value="" placeholder="e.g. 50100234567890"></label>
+        <label class="field"><span class="l">IFSC</span><input class="input" value="HDFC0001234"></label>
+      </div>
+      <details class="mb-3"><summary class="min-h-tap flex items-center font-semibold cursor-pointer">Optional: GSTIN, trading name, handles</summary>
+        <label class="field mt-2"><span class="l">GSTIN (only if you are registered)</span><input class="input" placeholder="Skip if you are not registered"><span class="hint">No GSTIN means non-GST invoices. You can add it later.</span></label>
+        <label class="field"><span class="l">Trading name</span><input class="input" placeholder="e.g. Arjun Creates"></label>
+        <label class="field"><span class="l">Instagram and YouTube handles</span><input class="input" value="@arjun.creates"></label>
+      </details>
+      <details class="mb-3"><summary class="min-h-tap flex items-center font-semibold cursor-pointer">Income already earned this tax year (2026-27)</summary>
+        <label class="field mt-2"><span class="l">Opening total, in rupees</span><input class="input" inputmode="numeric" value="6,00,000">
+          <span class="hint">Helps the GST threshold meter start correctly (FR-023). Skip if you are new this year.</span></label>
+      </details>
+      <a class="btn btn-primary btn-block" href="s03-connect.html">Save and continue</a>
+      <a class="btn btn-ghost btn-block mt-1" href="s03-connect.html">Skip for now, I will add it when I invoice</a>
+    </form>
+  </div>
+
+  <div class="gapnote" data-state="auth authwrong backup"><b>Placeholder <a class="gapflag" href="../index.html#g30">Gap G30</a></b> CR-001 puts the authenticator in profile setup but does not say where it sits among the steps. I put it first, before any bank or PAN entry, and added a step (3 steps in all). The old "Add a second way to sign in" card was never drawn in the approved mockup, so this is new.</div>
+  <div class="gapnote" data-state="ready error" hidden><b>Placeholder <a class="gapflag" href="../index.html#g2">Gap G2</a></b> The PRD lists the fields but not the steps, the order, or whether the second check applies to the first bank entry (it applies to later changes, FR-004). I used no second check on first entry. Which states have the lower GST threshold is also not listed. Indian fields show here because the workspace country is India (FR-003 AC5).</div>
 </main>
+<script>
+// Mockup only: draws a sample QR-like picture. It is not a real code.
+(function(){var s=document.getElementById('qr'),n=29,h='',x=7;function r(a,b,w,f){h+='<rect x="'+a+'" y="'+b+'" width="'+w+'" height="'+w+'" fill="'+f+'"/>';}
+function fi(a,b){r(a,b,7,'#0F172A');r(a+1,b+1,5,'#fff');r(a+2,b+2,3,'#0F172A');}
+function skip(i,j){return (i<8&&j<8)||(i>n-9&&j<8)||(i<8&&j>n-9);}
+for(var i=0;i<n;i++)for(var j=0;j<n;j++){if(skip(i,j))continue;x=(x*1103515245+12345)&0x7fffffff;if((x>>16)%2)r(i,j,1,'#0F172A');}
+fi(0,0);fi(n-7,0);fi(0,n-7);s.innerHTML=h;})();
+</script>
 <script src="../assets/app.js"></script></body></html>

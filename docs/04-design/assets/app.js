@@ -64,7 +64,7 @@
 
   // ---------- mockup bar + states ----------
   var states = (d.states || '').split(',').filter(Boolean);
-  var labels = { results: 'Results', amount: 'Amount', brand: 'Brand', hindi: 'Hindi', none: 'No results', nogmail: 'No Gmail', hint: 'Before typing', ready: 'Normal', loading: 'Loading', empty: 'Empty', error: 'Error', upgrade: 'Free plan', partial: 'Partial', paused: 'Paused', locked: 'Locked', wrong: 'Wrong code' };
+  var labels = { results: 'Results', amount: 'Amount', brand: 'Brand', hindi: 'Hindi', none: 'No results', nogmail: 'No Gmail', hint: 'Before typing', ready: 'Normal', loading: 'Loading', empty: 'Empty', error: 'Error', upgrade: 'Free plan', partial: 'Partial', paused: 'Paused', locked: 'Locked', wrong: 'Wrong code', code: 'Enter code', notinvited: 'Not invited', waitlist: 'Waitlist', waitlisted: 'Waitlist joined', device: 'New device', devicewrong: 'Wrong app code', backup: 'Backup codes', auth: 'Authenticator', authwrong: 'Wrong app code' };
   var bar = document.createElement('div');
   bar.className = 'mockbar';
   bar.innerHTML = '<a href="../index.html">&larr; All screens</a><span><b>' + esc(d.id || '') + '</b> ' + esc(d.title || '') + (d.fr ? ' &middot; ' + esc(d.fr) : '') + ' &middot; MVP mockup, sample data</span>';

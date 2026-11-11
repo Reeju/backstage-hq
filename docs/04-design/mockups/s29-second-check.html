@@ -6,13 +6,13 @@
   <p class="muted mb-2">Shared component. It opens over the page when a sensitive action needs it: change bank, PAN or GSTIN; full export; delete account; transfer ownership; allow support access (24 hours, owner only; S-26).</p>
   <section class="card" role="dialog" aria-labelledby="t">
     <h1 class="h2" id="t">Confirm it is you</h1>
-    <p class="mb-3">You are about to <b>change your bank account</b> for invoices. We sent a 6-digit code to the phone ending <b>3210</b>.</p>
+    <p class="mb-3">You are about to <b>change your bank account</b> for invoices. Enter the 6-digit code from your authenticator app.</p>
     <div data-state="ready"><label class="field"><span class="l">Code</span><input class="input" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" style="letter-spacing:.3em;font-size:22px"></label><a class="btn btn-primary btn-block" href="#done">Confirm</a></div>
     <div data-state="wrong" hidden><label class="field"><span class="l">Code</span><input class="input" aria-invalid="true" value="123456" aria-describedby="e" style="letter-spacing:.3em;font-size:22px"><span class="err" id="e" role="alert">That code is not right. 3 tries left.</span></label><button class="btn btn-primary btn-block">Try again</button></div>
     <div data-state="locked" hidden class="banner bad" role="alert"><span>Too many wrong codes. Sensitive changes are paused for 15 minutes and this was logged.</span></div>
     <div data-state="done" hidden class="banner ok" role="status"><span aria-hidden="true">&#10003;</span><div><b>Done.</b> The change is saved and logged. We emailed a notice to arjun@arjuncreates.in.<br><a href="s21-settings-profile.html">Back to settings</a></div></div>
-    <div class="flex gap-2 mt-3 flex-wrap" data-state="ready wrong"><button class="btn btn-ghost" data-toast="New code sent">Send a new code</button><a class="btn btn-ghost" href="s21-settings-profile.html">Cancel</a></div>
-    <p class="muted mt-3">No code on your phone? Use the email code instead. <span class="gapflag">see Gap G1</span></p>
+    <div class="flex gap-2 mt-3 flex-wrap" data-state="ready wrong"><button class="btn btn-ghost" data-toast="Enter one of your saved backup codes">Use a backup code</button><a class="btn btn-ghost" href="s21-settings-profile.html">Cancel</a></div>
+    <p class="muted mt-3">Lost your phone? Use one of the 10 backup codes you saved at setup. An email code is never accepted here, because whoever reads your email could then change your bank. (Amended for CR-001: authenticator replaces the phone code.)</p>
   </section>
 </main>
 <script src="../assets/app.js"></script></body></html>
