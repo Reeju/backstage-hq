@@ -34,3 +34,6 @@
 - `architecture.md` CR-001 history line: "proposed" → "raised", and records C1–C13 approval.
 - `plan.md` Status row: "pending the owner's review" → approved the same day (section 11).
 - `T-00.md`: a "Done" note at the top; the planned text below it is kept as history.
+- ADR-002 status tail (owner approved): "Was: Proposed · Needs owner sign-off (S1 and S4…)" →
+  "Was: Accepted (approved with the architecture, commit 1abed76; S1 and S4 signed off…)". It still
+  starts "Superseded by ADR-022".

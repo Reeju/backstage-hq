@@ -1,6 +1,6 @@
 # ADR-002: Managed hosting on AWS Mumbai with a lean beta posture
 
-**Status:** Superseded by ADR-022 (Amended for CR-001, C6.) · Was: Proposed · Needs owner sign-off (S1 and S4 in `architecture.md` §26)
+**Status:** Superseded by ADR-022 (Amended for CR-001, C6.) · Was: Accepted (approved with the architecture, commit 1abed76; S1 and S4 signed off in `architecture.md` §26)
 
 > **Superseded for CR-001 (2026-11-11).** The validation phase and the recommended full setup run on
 > DigitalOcean Bangalore with AWS Mumbai for KMS, SES and S3 (ADR-022). This AWS design is kept, unchanged,
