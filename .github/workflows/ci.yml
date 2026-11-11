@@ -1,0 +1,205 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+    working-directory: app
+
+env:
+  UV_FROZEN: "1"
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - run: uv sync
+      - run: uv run ruff check
+      - run: uv run ruff format --check
+
+  types:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - run: uv sync
+      # Strict modules (workspaces, files, rules; later payments, invoicing, outbound) are added
+      # to [[tool.mypy.overrides]] in pyproject.toml by the tickets that create them.
+      - run: uv run mypy .
+
+  tests:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bhq
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d bhq"
+          --health-interval 3s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/bhq
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - run: uv sync
+      # bootstrap-roles: PLACEHOLDER, filled in by T-04.
+      # The service container's superuser may be used ONLY to create the roles (T-04 adds
+      # `manage.py db_bootstrap_roles`). T-04 must then point DATABASE_URL at the non-superuser
+      # application role so tests never run as a superuser.
+      - name: bootstrap-roles
+        run: echo "bootstrap-roles placeholder (T-04)"
+      - run: uv run pytest --cov
+      - name: Coverage floor for strict modules (90%)
+        run: |
+          set -eu
+          for m in workspaces files rules payments invoicing outbound; do
+            if [ -d "bhq/$m" ]; then
+              echo "== coverage: bhq.$m"
+              uv run coverage report --include="bhq/$m/*" --fail-under=90
+            else
+              echo "skip: bhq.$m does not exist yet"
+            fi
+          done
+
+  contracts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - run: uv sync
+      - run: uv run lint-imports
+
+  migrations:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bhq
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d bhq"
+          --health-interval 3s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/bhq
+      DJANGO_SETTINGS_MODULE: config.settings.test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true # the round-trip reads the newest release/* tag
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - run: uv sync
+      # bootstrap-roles: PLACEHOLDER, filled in by T-04 (migrate as bhq_migrator, not superuser).
+      - name: bootstrap-roles
+        run: echo "bootstrap-roles placeholder (T-04)"
+      - run: uv run python manage.py makemigrations --check --dry-run
+      - run: uv run python scripts/ci/migration_roundtrip.py
+
+  deps:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - name: uv lock --check
+        env:
+          UV_FROZEN: "0" # the workflow-wide UV_FROZEN=1 would turn this check into a no-op
+        run: uv lock --check
+      # Reviewed exceptions live in app/pip-audit-ignore.toml (reason + expiry each); the script
+      # fails on an expired or reasonless entry and prints the --ignore-vuln flags.
+      - name: pip-audit
+        run: |
+          flags=$(uv run --no-project python scripts/ci/pip_audit_ignores.py pip-audit-ignore.toml)
+          # shellcheck disable=SC2086
+          uv export --frozen --no-hashes | uvx pip-audit==2.10.1 -r /dev/stdin --strict --no-deps --disable-pip $flags
+
+  security:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # gitleaks scans history
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+          GITLEAKS_ENABLE_COMMENTS: "false"
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - run: uv sync
+      - name: semgrep
+        working-directory: .
+        run: uvx semgrep==1.185.0 --metrics=off --config p/django --config p/python --severity WARNING --severity ERROR --error app
+      - name: manage.py check --deploy (staging settings, dummy env)
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.staging
+          SECRET_KEY: ci-dummy-secret-key-0123456789-abcdefghijklmnopqrstuvwxyz-0123456789
+          DATABASE_URL: postgres://dummy:dummy@localhost:5432/dummy
+          ALLOWED_HOSTS: staging.example.com
+        run: uv run python manage.py check --deploy --fail-level WARNING

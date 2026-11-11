@@ -1,0 +1,11 @@
+title = "BackstageHQ gitleaks config"
+
+[extend]
+useDefault = true
+
+# Allow only the known placeholder values in app/.env.example, never the whole file or path.
+[allowlist]
+description = "Placeholder values"
+regexes = [
+  '''SECRET_KEY=change-me''',
+]

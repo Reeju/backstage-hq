@@ -38,6 +38,7 @@ select = ["E", "F", "I", "B", "UP", "S", "DJ"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101"]
+"scripts/ci/tests/**" = ["S101"]
 "conftest.py" = ["S101"]
 
 [tool.mypy]
@@ -52,12 +53,22 @@ django_settings_module = "config.settings.test"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.test"
 addopts = "--strict-markers"
-testpaths = ["tests"]
+testpaths = ["tests", "scripts/ci/tests"]
+markers = ["e2e: browser end-to-end tests (nightly)"]
 pythonpath = ["."]
 
 [tool.coverage.run]
 source = ["bhq", "config"]
 omit = ["config/settings/*", "*/tests/*"]
+
+[tool.importlinter]
+root_packages = ["bhq", "config"]
+
+[[tool.importlinter.contracts]]
+name = "bhq modules do not import from config"
+type = "forbidden"
+source_modules = ["bhq"]
+forbidden_modules = ["config"]
 
 [tool.coverage.report]
 show_missing = true

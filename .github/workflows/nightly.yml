@@ -1,0 +1,37 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+    working-directory: app
+
+env:
+  UV_FROZEN: "1"
+
+jobs:
+  e2e:
+    # Placeholder until T-14 adds the Playwright suite: passes when no e2e tests are collected.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.10.11"
+          enable-cache: true
+          cache-dependency-glob: app/uv.lock
+      - run: uv sync
+      - name: pytest -m e2e (exit code 5 = nothing collected, allowed)
+        run: |
+          rc=0
+          uv run pytest -m e2e || rc=$?
+          if [ "$rc" -ne 0 ] && [ "$rc" -ne 5 ]; then exit "$rc"; fi

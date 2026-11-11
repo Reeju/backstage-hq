@@ -1,0 +1,7 @@
+# Reviewed pip-audit exceptions. Empty today; keep it that way unless a finding forces one.
+# Every entry needs a reason and an expiry date (YYYY-MM-DD); CI fails when one has expired.
+#
+# [[ignore]]
+# id = "GHSA-xxxx-xxxx-xxxx"
+# reason = "Not reachable: we do not use the affected function. Tracked in <ticket>."
+# expires = 2027-01-31
