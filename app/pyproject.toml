@@ -1,0 +1,67 @@
+[project]
+name = "backstagehq"
+version = "0.1.0"
+description = "BackstageHQ - the business OS for creators"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "django~=5.2",
+    "psycopg[binary]~=3.2",
+    "django-environ",
+    "gunicorn",
+    "whitenoise",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pytest-django",
+    "pytest-cov",
+    "factory-boy",
+    "time-machine",
+    "hypothesis",
+    "ruff",
+    "mypy",
+    "django-stubs[compatible-mypy]",
+    "import-linter",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["static"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "DJ"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+"conftest.py" = ["S101"]
+
+[tool.mypy]
+python_version = "3.13"
+plugins = ["mypy_django_plugin.main"]
+exclude = ["static/"]
+# Strict list starts empty and grows per module.
+
+[tool.django-stubs]
+django_settings_module = "config.settings.test"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+addopts = "--strict-markers"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.coverage.run]
+source = ["bhq", "config"]
+omit = ["config/settings/*", "*/tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+
+[[tool.mypy.overrides]]
+module = ["environ"]
+ignore_missing_imports = true

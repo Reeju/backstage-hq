@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: bhq
+      POSTGRES_PASSWORD: bhq
+      POSTGRES_DB: bhq
+    ports:
+      - "127.0.0.1:${DB_PORT:-5432}:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bhq -d bhq"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:v1.33.1
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
+  web:
+    build:
+      context: .
+      target: dev
+    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.local
+      DATABASE_URL: postgres://bhq:bhq@db:5432/bhq
+      EMAIL_HOST: mailpit
+      EMAIL_PORT: "1025"
+      GIT_SHA: local
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8000}:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  dbdata:

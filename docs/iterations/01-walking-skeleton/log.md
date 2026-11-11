@@ -37,3 +37,32 @@
 - ADR-002 status tail (owner approved): "Was: Proposed · Needs owner sign-off (S1 and S4…)" →
   "Was: Accepted (approved with the architecture, commit 1abed76; S1 and S4 signed off…)". It still
   starts "Superseded by ADR-022".
+
+## T-01: Project skeleton and local environment — 2026-11-11
+
+- Built by `builder` (Sonnet); reviewed by `reviewer` (Opus): **APPROVE** after two rounds.
+- Round 1 (CHANGES REQUIRED): must-fix was `ruff format` on `config/settings/base.py`. Also fixed:
+  compose ports bound to `127.0.0.1`; mailpit pinned to `v1.33.1`; production `DATABASE_URL` has
+  no default (fails loudly); `staging.py` now imports `production.py` so the two cannot drift;
+  `@require_GET` on health views (+405 test); `.gitignore` adds `app/staticfiles/`, `app/.coverage`;
+  WhiteNoise test warning silenced.
+- Checks: ruff, ruff format, mypy pass; pytest 7 passed against the compose DB; arm64 and amd64
+  images build and run as uid 10001; `/health/live` 200, `/health/ready` 200 (503
+  `{"status":"unavailable","reason":"database"}` with the DB stopped), `/admin/` 404.
+- Accepted deviations from the ticket:
+  - compose `web` runs `migrate` before `runserver`, else `/health/ready` stays 503 (contenttypes
+    migrations) on a fresh clone;
+  - host ports overridable with `DB_PORT` / `WEB_PORT`;
+  - a `dev` Docker target used by compose;
+  - an extra DB-down 503 test and a mypy override for `django-environ`;
+  - Tailwind CLI v3.4.19 (the design config is v3 format).
+- Carry-overs (not yet written into those tickets):
+  - **T-16 (major):** `/health/live` may get a 301 (SSL redirect) or 400 (DisallowedHost) from the
+    App Platform probe. Add `SECURE_REDIRECT_EXEMPT = [r"^health/"]` and handle the probe's Host
+    header.
+  - **T-16:** drop `chown -R bhq /app` (keep code read-only to the runtime user); pin the uv image
+    by digest.
+  - **T-04:** run `migrate` with the migrator role (`--database migrator`), ideally as a one-shot
+    compose service that `web` waits for.
+- Note: port 5432 on the dev machine is held by another project's container; local runs used
+  `DB_PORT=5433 WEB_PORT=8001`.
