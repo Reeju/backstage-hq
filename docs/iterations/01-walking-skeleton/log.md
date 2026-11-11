@@ -56,7 +56,7 @@
   - a `dev` Docker target used by compose;
   - an extra DB-down 503 test and a mypy override for `django-environ`;
   - Tailwind CLI v3.4.19 (the design config is v3 format).
-- Carry-overs (not yet written into those tickets):
+- Carry-overs (written into T-16 and T-04 as "Carry-over from the T-01 review" sections, owner-approved 2026-11-11):
   - **T-16 (major):** `/health/live` may get a 301 (SSL redirect) or 400 (DisallowedHost) from the
     App Platform probe. Add `SECURE_REDIRECT_EXEMPT = [r"^health/"]` and handle the probe's Host
     header.
