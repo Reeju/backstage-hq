@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Status | **Approved** (Stage 2, commit d0aef41). Amended after the architecture with edits P1–P4 (`docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits M1–M29 (`docs/04-design/index.html`, section "PRD gaps"; list in section 14A), approved by the owner on 2026-11-09, with Q1, Q3, Q4, Q5, Q10, Q12 and Q17–Q20 answered as recommended. Items still awaiting the CA are marked as such (Q18, Q20). Edit **M30** (global search, FR-205, section 14A) was added on 2026-11-10: the owner approved the scope decision (search is in the MVP) on 2026-11-10; the owner accepted the recommendations for Q21–Q25 on 2026-11-10. |
+| Status | **Approved** (Stage 2, commit d0aef41). Amended after the architecture with edits P1–P4 (`docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits M1–M29 (`docs/04-design/index.html`, section "PRD gaps"; list in section 14A), approved by the owner on 2026-11-09, with Q1, Q3, Q4, Q5, Q10, Q12 and Q17–Q20 answered as recommended. Items still awaiting the CA are marked as such (Q18, Q20). Edit **M30** (global search, FR-205, section 14A) was added on 2026-11-10: the owner approved the scope decision (search is in the MVP) on 2026-11-10; the owner accepted the recommendations for Q21–Q25 on 2026-11-10. Edits **GL1–GL24** from change request CR-001 (global market and validation phase, section 14A) were approved and applied on 2026-11-11, with Q26–Q35 decided the same day (Q32 still open for the spending figure). |
 | Stage | 2 of the playbook (`docs/PLAYBOOK.md`). Gate: owner approves MVP scope, permission matrix and acceptance criteria. |
 | Input | Approved `docs/01-usecases/use-cases.md` (79 use cases, decisions D1–D40). |
 | Next | Stage 5, build iterations. Stage 4 architecture (approved, commit 1abed76) and Stage 3 mockups (approved, commit 0382fad) are both done; the architecture was made first. Stage numbers here follow `docs/PLAYBOOK.md` (3 = mockups, 4 = architecture). The architecture document and its commit call it "Stage 3"; that label is the one to correct (architecture edit AR1, section 14A). (Amended after mockups, M29.) |
@@ -30,7 +30,9 @@
 | Later | After v1. Includes v1.x (small follow-ups), v2 (roadmap) and "not committed". |
 | Priority | Must / Should / Could, inherited from the use case unless stated. Priority answers "how important"; release answers "when". |
 | Tap | A recorded human approval in the app by a person allowed to give it (the send rule, D6/D22). |
-| Second check | A one-time code sent to the creator's verified phone or email, needed for sensitive actions. |
+| Second check | A one-time code from the creator's **second method** (authenticator app, a backup code, or a phone code where switched on), needed for sensitive actions. (Amended for CR-001, GL8; was a code sent to a verified phone or email.) |
+| Validation phase | A phase before the MVP closed paid beta in which the owner and up to 10 invited creators in India use a working BackstageHQ, free, on the cheapest setup that still protects their data. It ends when the owner decides to fund the full setup (section 4.5). (Amended for CR-001, GL7.) |
+| Supported country | A country whose onboarding, currency, invoicing, tax rules, payment detection, billing and support are all approved. India is the first (section 4.4). (Amended for CR-001, GL7.) |
 | Source link | A link from any AI-produced value to the email, DM, file or sentence it came from (NFR-014). |
 
 ---
@@ -84,6 +86,7 @@ Stage 1 already challenged the brief. This section only checks that the PRD keep
 | File GST or income-tax returns, or give tax or legal advice | D9; outputs are labelled "not advice" |
 | Native iPhone or Android app | D2; web app first, trigger in section 3 |
 | Companies and LLPs as customers; foreign-currency invoicing | D15, D1 |
+| Supporting countries other than India in the validation phase and the MVP (Amended for CR-001, GL9) | D1, section 4.4 |
 | Manager v2 features (roster dashboard, AI coach, brand portal, payouts) | D16, section 12 of use cases |
 | Brand marketplace, content creation, post scheduling | Different business |
 | Promise that data stays in India | D11 |
@@ -134,6 +137,7 @@ row: (a) at least **70%** of weekly active creators do most of their sessions on
 
 | Release | Who | What it proves | Exit test (demo) |
 |---|---|---|---|
+| **Validation phase** (Amended for CR-001, GL10) | The owner plus up to 10 invited creators in India | The loop is useful on real work, on a low-cost setup, with every safety rule intact. | The exit trigger in section 4.5. |
 | **MVP** (closed paid beta) | First 20 creators, mostly P2, some P1 on free | The loop works on real inboxes: enquiry to lead to quote to deal to invoice to reminder to payment detected. People pay at one of two prices. | A real creator connects Gmail, sees what they're owed in 15 minutes, sends one invoice and one reminder from their phone, and a payment email marks it paid with Undo. |
 | **v1** (public paid launch) | P1–P3, managers (S1), CAs and helpers | Delegation is safe; year-end tax is covered. All 41 Must use cases are live. | A manager in two workspaces sends an invoice they are ticked for and has a deal over their limit queued for the creator; the creator downloads a year-end pack that matches the app. |
 | **Later** | All, plus P4 and agencies | Breadth: contract review, pipeline board, GST summaries, advance tax, other income, benchmarks, manager v2. | Set when scheduled. |
@@ -205,6 +209,81 @@ When a paid workspace drops to free (trial ends, payment stops, D30 grace ends),
 lost**. Automation stops, automatic reminders stop, and the creator is told by email and in-app
 (FR-293).
 
+### 4.4 Supported countries (Amended for CR-001, GL11)
+
+BackstageHQ is built in India for creators worldwide. Countries are supported one at a time: a
+country is supported only when every row below is in place and approved. India is the first
+supported country (D1). Indian rules never apply by default to another country's workspace (NFR-022).
+
+| Row | India (validation phase and MVP) | All other countries |
+|---|---|---|
+| Onboarding | Country chosen at sign-up; invite-only in the validation phase (FR-005, FR-006) | Waitlist: email and country only, no workspace |
+| Currency | INR | Not supported |
+| Invoicing | Indian invoice format, PAN and GSTIN (FR-110, FR-111) | Not supported |
+| Tax rules | Indian rule set (FR-150, FR-151), CA reviewed (Q15, Q20) | Not supported; each country needs its own rule set and accountant review |
+| Payment detection | Indian bank alert emails, UPI, statements (FR-140–FR-146) | Not supported |
+| Billing | Manual in the validation phase; gateway and GST from the MVP (FR-290–FR-295) | Not supported |
+| Support | Owner and staff, in English | Not supported |
+| Sign-in methods | Email code or Google, authenticator app second; phone code behind a switch, off (FR-001, FR-002) | Not applicable |
+
+**Waitlist.** At sign-up the country list shows India plus "My country is not listed", which shows
+"BackstageHQ is not available in your country yet", a form for email and country only, and a consent
+line. A second country is chosen after the MVP beta, from waitlist demand and an approved rule set.
+Not a limited mode and not generic invoices: another country's invoices still need that country's
+legal fields and tax rules, its data-protection duties would begin on day one, and its results would
+distort the price test (M12–M14).
+
+### 4.5 Validation phase (Amended for CR-001, GL20)
+
+**Who.** The owner, then up to 10 invited creators in India, allow-listed by email address (FR-006).
+Two steps: **V0**, owner only, dummy data, on staging, personal developer accounts, the owner's SIM
+and free tiers; **V1**, invited creators with real data, on a separate low-cost production
+environment, never staging.
+
+| Item | Rule |
+|---|---|
+| Price | Free during the phase, no payment gateway. A pre-pay ask at the end, as a manual invoice (Q31). |
+| Gmail | Google testing mode (up to 100 named test users, "unverified app" warning, reconnect every 7 days), plus the forwarding address as the always-on fallback. No paid security assessment yet. |
+| Instagram DMs | Meta development mode with creators added as testers, if Meta allows it for this API (GL-A3); otherwise the screenshot fallback (FR-052). |
+| WhatsApp forward-to number | Owner testing only, on a Meta test number or a spare SIM. Creators use email forward and upload until the permanent business number exists. |
+| AI | Paid-per-use API only if its terms say no training and short retention (NFR-035). Free AI tiers that may train on inputs are never used with real creator data. |
+| Accounts | Personal developer accounts for V0. Accounts holding real creator data in V1 are in the business's name or transferable to it (Q33). |
+| Hosting, database, email | The architect picks the cheapest option that meets "what must still hold". A host that sleeps when idle is not allowed for the worker (reminders) or the web app (NFR-007). |
+
+**What must still hold in V1 (no exceptions; savings never weaken these):** tenant isolation
+(NFR-001, NFR-023); encryption of stored data and of PAN, GSTIN and bank details (NFR-004); the
+second factor (FR-002); no secrets or personal data in logs (NFR-025); the send gate and zero
+send-gate breaches (M10); zero reminder misfires (NFR-008); scheduled jobs on time (NFR-012);
+backups with no more than 1 hour lost and a tested restore before the first real creator (NFR-043);
+the activity log (NFR-032); export and deletion (UC-130, UC-132, NFR-005); a privacy page listing
+every provider and region used, including free tiers (NFR-006); AI terms (NFR-035); breach readiness
+(NFR-037); the external security review before real users, scoped to what is live (NFR-029); and the
+CA sign-off before any real invoice (Q20).
+
+**Exceptions (deferred with a flag, not dropped).** Each is listed in the AC-traceability file as
+`deferred: validation-phase (GLn)`, shown in the traceability report, and the exit checklist cannot
+pass while any flag remains.
+
+| Requirement | Treatment in the validation phase | Back on at |
+|---|---|---|
+| NFR-042 uptime 99.5% a month | Measured and alerted by the outside monitor, not a target | Full setup (MVP beta) |
+| NFR-028 abuse limits (edge rule part) | In-app limits hold; the edge rule is deferred. The allow-list closes sign-up to strangers | Full setup |
+| FR-001 phone sign-up; FR-002 AC4 as previously worded; I-06 | Replaced by email first and authenticator second (FR-001, FR-002). Phone switch off | When the owner switches SMS on for a country |
+| NFR-010 and M1 (15 minutes after Gmail) | Measured only for creators on Gmail testing mode; weekly reconnects noted | Gmail verification |
+| NFR-038 DMs in 5 minutes; FR-012 | Only for creators Meta lets us add as testers; otherwise screenshot fallback | Meta app review |
+| FR-013 WhatsApp forward-to number | Owner testing only; creators use email forward and upload | Permanent business number |
+| FR-292 pay for a subscription; I-09; FR-291 trial | No billing; manual if the owner chooses a pre-pay | Full setup |
+| Metrics M12, M13, M14 | Not measured (no payments). Variable cost per creator is still recorded as an estimate | MVP beta |
+| NFR-031 malware check on uploads | Holds if uploads are on; if scanning is not ready, uploads stay off for real creators | When scanning exists |
+
+**Exit trigger to the paid full setup (Q30; the owner sets the numbers).** Both of: (a) at least 6
+of the 10 creators active every week for 4 weeks in a row, and at least 5 saying they would pay one
+of the test prices (or pre-paying); and (b) the owner decides to fund the full setup. Separately, the
+phase must end before any of these is needed: more than 10 creators, more than 100 Gmail test users,
+creators outside the allow-list, real SMS, or taking payment through a gateway. Exit work: switch
+the deferred flags back on one by one, move accounts to the business's name, and migrate data with a
+tested restore. Each move is listed in the hardening iteration.
+
 ## 5. Functional requirements
 
 **How each requirement is written.** Heading line: ID, name, priority, release, use cases, plan
@@ -225,11 +304,16 @@ or, from v1, by a person ticked for that action type.
 ### 5.A Account, profile, connections, import, rate card
 
 **FR-001 Sign up and sign in** · Must · MVP · UC-001 · Free
-Sign up with a phone number and one-time code, or with Google. Works fully in a phone browser.
-- AC1: Given a new person, when they sign up with their phone and the correct code, then a
-  workspace is created with them as **owner** and profile setup opens.
+Sign up with an **email code**, or with Google (iteration 2). **Phone code** sign-in is built
+behind a per-country switch, off until SMS is set up. Works fully in a phone browser. (Amended for
+CR-001, GL12; was a phone number and one-time code, or Google.)
+- AC1: Given a new invited person in a supported country, when they sign up with their email and the
+  correct code, then a workspace is created with them as **owner** and profile setup opens.
+  (Amended for CR-001, GL12.)
 - AC2: Given a wrong code entered 5 times, when they try again, then sign-in is locked for 15
   minutes and the attempt is logged.
+- AC3: Given phone sign-in is off for a country, when the sign-in screen opens, then no phone option
+  is shown. (Added for CR-001, GL12.)
 
 **FR-002 Second factor on a new device** · Must · MVP · NFR-004 · Free
 A sign-in from a new device or browser needs a second factor different from the first (e.g.
@@ -239,20 +323,26 @@ Google sign-in plus a phone code).
 - AC2: Given a known device, when the creator signs in within 30 days of their last sign-in on it,
   then no second factor is asked.
 
-**Always a second method (Amended after mockups, M1).** So that a second factor of a different
-kind always exists, a creator who signed up with a phone code also adds and verifies an email
-address (or links Google) during profile setup (S-02); a creator who signed up with Google verifies
-a phone number. This step cannot be skipped. The second check (S-29) can then use either the phone
-or the email code. This matches the architecture (section 9).
-- AC3: Given a creator who signed up with a phone code, when profile setup finishes, then a
-  verified email address or a linked Google account is on the account.
-- AC4: Given that creator signs in on a new device with a phone code, when the second factor is
-  asked, then the choices are an email code or Google, never a second phone code.
+**Always a second method (Amended after mockups, M1; reworded for CR-001, GL13).** Every creator
+sets up an **authenticator app** during profile setup (S-02) and is shown 10 backup codes once;
+where phone codes are switched on, a verified phone also counts. This step cannot be skipped. The
+second check (S-29) uses the same second method. An email code or Google on the same address is the
+same kind as the first factor and never counts as the second. (Was: phone sign-ups added a verified
+email or Google, Google sign-ups a phone.)
+- AC3: Given a creator who signed up with an email code or Google, when profile setup finishes,
+  then an authenticator app (or a verified phone where switched on) is on the account and backup
+  codes were shown once. (Amended for CR-001, GL13.)
+- AC4: Given a new-device sign-in with an email code or Google, when the second factor is asked,
+  then the choices are the authenticator code, a backup code or (where switched on) a phone code,
+  never an email code or Google for the same address. (Amended for CR-001, GL13.)
+- AC5: Given a backup code already used, when entered again, then it is refused. (Added for CR-001,
+  GL13.)
 
 **FR-003 Business profile with only what the first invoice needs** · Must · MVP · UC-001, D15 · Free
-Legal name, PAN (format-checked), state, bank account for invoices, GSTIN if registered, optional
-trading name, creator handles. Business type offered: Individual or Sole proprietor only. Anything
-not needed yet can be skipped and is asked for when first needed.
+The profile fields come from the workspace country's rule set (FR-005). **For India:** legal name,
+PAN (format-checked), state, bank account for invoices (IFSC), GSTIN if registered, optional trading
+name, creator handles. Business type offered: Individual or Sole proprietor only. Anything not
+needed yet can be skipped and is asked for when first needed. (Amended for CR-001, GL16.)
 - AC1: Given a new creator with no GSTIN, when they enter name, PAN, state and bank details, then
   they can create a valid non-GST invoice without being asked anything else.
 - AC2: Given a PAN in the wrong format, when saved, then it is refused with a plain message.
@@ -271,6 +361,37 @@ signed off in the pre-MVP CA review; working assumption in A12.
 - AC4: Given a new creator entering bank details during setup, when they save, then no second
   check is asked and the entry is logged; when they later change the bank account, then a second
   check is asked (FR-004 AC1).
+- AC5: Given a workspace whose country is not India, when profile setup or settings open, then no
+  PAN, GSTIN, Indian state or GST threshold is shown or applied. (Added for CR-001, GL16. AC1–AC4
+  apply to India.)
+
+**FR-005 Country of the workspace** · Must · Validation phase and MVP · UC-001, D1, NFR-022 · Free
+(Amended for CR-001, GL14.) Every workspace has a country, chosen by the creator at sign-up
+(suggested from the browser, never silently assumed). Currency, time zone, identifiers, the state
+list, tax rules and invoice format come from that country's rule set. No code path falls back to
+India. The country can be changed until the first invoice is issued.
+- AC1: Given a person signing up, when they choose India, then the workspace is created with country
+  India, currency INR, time zone Asia/Kolkata and the current Indian rule set.
+- AC2: Given a person who chooses "My country is not listed", when they continue, then no workspace
+  is created and they can join the waitlist with only their email and country.
+- AC3: Given a workspace whose country has no rule set (test-only), when any tax, invoice or
+  currency rule is looked up, then it fails with an error and nothing is calculated, shown or sent;
+  it never falls back to India.
+- AC4: Given a workspace that has issued an invoice, when the owner tries to change the country,
+  then it is refused with "Contact support to change your country."
+- AC5: Given a waitlist entry, when the person uses the remove link in any waitlist email, then the
+  entry is deleted within 7 days.
+
+**FR-006 Invite-only access in the validation phase** · Must · Validation phase · D41 · Free
+(Amended for CR-001, GL15.)
+- AC1: Given the validation phase is on and an email address is not invited, when a sign-in code is
+  requested, then no email is sent and the page says "BackstageHQ is invite-only for now", with the
+  waitlist.
+- AC2: Given an invited address, when the person signs up, then FR-001 AC1 applies.
+- AC3: Given the owner adds or removes an invited address, when done, then it takes effect within 5
+  minutes without a code change, and the change is in the staff log.
+- AC4: Given the validation phase is switched off, when anyone in a supported country signs up, then
+  no invite check is made.
 
 **FR-004 Sensitive details need the owner and a second check** · Must · MVP · UC-001, UC-142, UC-152, D25 · Free
 Payout bank details, PAN and GSTIN can be changed only by the owner, in settings, after a second
@@ -779,7 +900,8 @@ At most one reminder per invoice per day; none after a payment match; none outsi
 sending window; each send is recorded once even if the system retries.
 
 **Sending window (Amended after mockups, M9).** **Decided (Q10):** Monday to
-Saturday, 10:00–18:00 IST, editable by the owner in Settings: automation (S-22). The window applies
+Saturday, 10:00–18:00 **in the workspace's time zone (IST for India)** (Amended for CR-001, GL17),
+editable by the owner in Settings: automation (S-22). The window applies
 to payment reminders only, in both modes; replies, quotes and invoices the creator taps Send on go
 at once.
 
@@ -986,8 +1108,8 @@ Not by WhatsApp in v1.
 
 **FR-202 Notification settings** · Must · MVP · UC-120, UC-041, NFR-008 · Free
 Channels (web push, email), digest time, quiet hours for notifications to the creator. On iPhone
-the app explains how to add it to the home screen, which web push needs. **Decided (Q10):** default quiet hours 22:00–08:00, editable by each person in Settings:
-notifications (S-24). (Amended after mockups, M9.)
+the app explains how to add it to the home screen, which web push needs. **Decided (Q10):** default quiet hours 22:00–08:00 **in the workspace's time zone**, editable by each person in Settings:
+notifications (S-24). (Amended after mockups, M9; amended for CR-001, GL17.)
 - AC1: Given quiet hours 22:00–08:00, when a non-urgent event happens at 23:00, then the push is held
   until 08:00.
 - AC2: Given an iPhone user who has not added the app to the home screen, when they turn on push,
@@ -1660,7 +1782,9 @@ confirm (Q11).
 
 NFR-001 to NFR-024 are approved in the use-case document (section 7) and all apply from the MVP
 unless marked. This section sets final targets where the use cases asked the PRD to, and adds
-NFR-025 onwards. All are Must for the MVP unless stated.
+NFR-025 onwards. All are Must for the MVP unless stated. In the validation phase the exceptions
+listed in section 4.5 apply, each flagged in the AC-traceability file. Every other NFR holds.
+(Amended for CR-001, GL19.)
 
 ### 8.1 Security
 
@@ -1736,14 +1860,14 @@ Each is listed in section 12 and must be verified before the architecture is app
 | # | Service | What we use it for | Release | Approval or contract needed | Assumption (verify) | If it fails or is late |
 |---|---|---|---|---|---|---|
 | I-01 | **Gmail** | Read business email, send from the creator's address, history import | MVP | Google app verification for restricted access plus an annual independent security assessment (D12, D33) | A1, A2 | Forwarding address (FR-011) and upload; forwarding-only beta if over the budget or time limit (Q14) |
-| I-02 | **Google sign-in** | Sign up and sign in | MVP | Standard Google OAuth | — | Phone code sign-in |
+| I-02 | **Google sign-in** | Sign up and sign in; basic profile only (Amended for CR-001, GL18) | MVP | Standard Google OAuth | — | Email code sign-in (was phone code) |
 | I-03 | **Instagram (Meta)** | Read DMs on professional accounts; reply inside the window (v1); insights (Later) | MVP (when approved) | Meta app review and business verification (D34) | A3, A4, A5 | Screenshot forward or upload (FR-052); copy-and-open for replies |
 | I-04 | **WhatsApp Business Platform (Meta)** | One forward-to number receiving forwards from verified creators; short confirmations | MVP | WhatsApp Business account and number, through Meta directly or a provider | A6 | Email forward and upload |
 | I-05 | **Google Calendar** | Show and push deal dates | v1 | Google verification (lower tier than Gmail) | A7 | In-app calendar |
-| I-06 | **SMS / phone codes** | Sign-in codes, second checks | MVP | Indian SMS rules (sender ID and template registration) | A8 | Email codes |
-| I-07 | **Our own email sender** | Digests, alerts, invites, BackstageHQ invoices (never brand messages, which go from the creator's account) | MVP | Verified sending domain | — | In-app notices |
+| I-06 | **SMS / phone codes** | Sign-in codes, second checks | Optional. Off until switched on per country (Amended for CR-001, GL18) | India needs DLT registration (sender ID and template), other countries their own | A8 | Email code and authenticator |
+| I-07 | **Our own email sender** | Digests, alerts, invites, BackstageHQ invoices, and now sign-in codes (never brand messages, which go from the creator's account) | MVP | Verified sending domain; deliverability (SPF, DKIM, DMARC) is a Must (Amended for CR-001, GL18) | — | In-app notices |
 | I-08 | **Web push** | Reminders and digest on phones | MVP | — | iPhone needs the app added to the home screen (D2) | Email |
-| I-09 | **Subscription payments** | Collect BackstageHQ fees by UPI and cards; recurring billing | MVP | Indian payment gateway account; BackstageHQ's own GST registration | A10 | Manual invoice and bank transfer for the 20 beta customers |
+| I-09 | **Subscription payments** | Collect BackstageHQ fees by UPI and cards; recurring billing | MVP | Indian payment gateway account; BackstageHQ's own GST registration. Not used in the validation phase (Amended for CR-001, GL18) | A10 | Manual invoice and bank transfer for the 20 beta customers |
 | I-10 | **AI model provider(s)** | Sorting, extraction, scam checks, drafts, assistant, tax cross-check | MVP | Contract with no-training and short-retention terms (NFR-035) | A11 | Automation pauses; manual flows still work (NFR-045) |
 | I-11 | **Document and image reading** | Screenshots, PDFs, statements, receipts, AIS files, Hindi text | MVP | Part of I-10 or a separate service | — | Creator types the values |
 | I-12 | **File storage and malware check** | Invoices, contracts, uploads | MVP | Cloud provider | — | — |
@@ -1791,6 +1915,10 @@ extra storage and database work per creator should be negligible, inside the hos
 so it does not change metric M14. The architect confirms this in AR5. "Ask the assistant" from
 search is an ordinary assistant request within the allowance (FR-234). (Amended after mockups, M30.)
 
+SMS costs nothing while phone codes are off, and email codes cost close to zero. (Amended for CR-001,
+GL21.) Validation-phase fixed cost: a monthly cap set by the owner (Q32), reported in the style of
+FR-295. (Amended for CR-001, GL21.)
+
 Fixed yearly costs not in these figures: the Gmail security assessment (D12), Meta and WhatsApp
 fees, the CA review (D36), the external security review (NFR-029).
 
@@ -1837,6 +1965,8 @@ Likelihood and impact: H = high, M = medium, L = low.
 | R15 | Free users never upgrade (P1 has little ability to pay) | M | M | Free tier shows what automation found ("₹X owed, 3 scams flagged"); trial (FR-291) | Owner |
 | R16 | Code built by AI agents has a security or money bug a non-programmer owner can't spot | M | H | Tests from every AC; Opus reviewer per ticket; external review and restore drill before users (playbook) | Reviewer |
 | R17 | Search shows something it should not (another workspace, a personal message, a field a v1 helper may not see), or search words leak into logs (Added after mockups, M30.) | L | H | Only stored business fields are searchable; workspace isolation in the database (NFR-023); per-result permission check; tests FR-205 AC4, AC8, AC9, AC12; NFR-048 | Architect, reviewer |
+| R18 | Creators drop out at authenticator setup (Added for CR-001, GL22) | M | M | Measure in the validation phase (GL-A2); fallback: SMS for India | Owner |
+| R19 | Real creator data is held on free tiers or personal accounts that do not meet our rules (Added for CR-001, GL22) | L | H | Section 4.5 "what must still hold"; the architect checks each tier's terms | Architect |
 
 ---
 
@@ -1855,12 +1985,15 @@ architecture, P4.)
 | A5 | Only recent DM history is available; the "requests" folder, voice notes and group chats may not be | Import from DMs (FR-020) is partial; creators told |
 | A6 | A WhatsApp Business number can receive forwarded messages and images and reply inside the 24-hour service window at low or no per-message cost | Cost model (10.1) changes |
 | A7 | Google Calendar needs a lower verification tier than Gmail | v1 timing |
-| A8 | Indian SMS rules require registered sender IDs and templates for sign-in codes | Lead time for MVP sign-in |
+| A8 | Indian SMS rules require registered sender IDs and templates (DLT registration), only needed when phone codes are switched on for India. (Amended for CR-001, GL23.) | Lead time for switching phone codes on |
 | A9 | The DPDP Rules 2025 set a time limit for telling the regulator and affected people about a breach, and a consent standard for processing | NFR-037 timing |
 | A10 | Indian payment gateways support UPI and card subscriptions for a small company | Manual billing for the beta |
 | A11 | AI providers offer contracts with no training on customer data and short retention | Choice of provider; NFR-035 |
 | A12 | GST: ₹20L threshold for services in most states, ₹10L in special-category states; IGST vs CGST+SGST by place of supply; TDS on creator fees mostly at 10% (now under section 393 of the 2025 Act), with 1% and 2% cases. Working list of states with the ₹10L threshold for services, to confirm with the CA: Manipur, Mizoram, Nagaland, Tripura. (Amended after mockups, M2.) | Rule set; CA review (D36) |
 | A13 | Advance-tax and TDS-certificate dates under the 2025 Act are unchanged from the old ones | Later features (UC-073, UC-074) |
+| GL-A1 | Free tiers and developer accounts used in V1 allow production use with personal data, and their data-handling terms meet NFR-035 and DPDP. (Added for CR-001, GL23.) | Pay for that tier earlier, or the validation phase cannot hold real data |
+| GL-A2 | At least 8 of 10 validation creators set up an authenticator app without help. (Added for CR-001, GL23.) | Switch SMS on for India as the second factor (DLT registration, small per-message cost) |
+| GL-A3 | Meta development mode lets invited creators connect Instagram DMs as testers. (Added for CR-001, GL23.) | Screenshot fallback (FR-052) |
 
 ### 12.1 Verification results (2026-11)
 
@@ -1960,7 +2093,7 @@ Every MVP and v1 use case maps to at least one FR. Later use cases get FRs when 
 | New (E2) | FR-290–FR-295 | MVP |
 | UC-125 (E12) | FR-205, NFR-047, NFR-048, screen S-43 (M30) | MVP |
 
-## 14A. Amendments after mockups (M1–M30)
+## 14A. Amendments after mockups (M1–M30) and for CR-001 (GL1–GL24)
 
 The Stage 3 mockups (`docs/04-design/index.html`, section "PRD gaps") marked 29 places where the
 PRD was silent or open. Each is closed below. Text marked "Decided" was settled by the owner on 2026-11-09;
@@ -1981,7 +2114,7 @@ details are a draft for the owner's review (Q21–Q25).
 | M6 | G6 | FR-124, new FR-125, S-13 | New requirement: mark an invoice disputed (pauses reminders) and resolve it. |
 | M7 | G7 | FR-113, FR-114, S-13 | Sent-invoice view on S-13; credit-note form, limit, numbering and send on tap. |
 | M8 | G8 | FR-047, FR-048, FR-083 | Split control; manual stage moves; no lost reason in MVP; fixed cancel-reason list. |
-| M9 | G9 | FR-123, FR-202, metric M5 | Sending window (Mon–Sat 10:00–18:00 IST) and quiet hours (22:00–08:00) decided (Q10), editable by the owner; window applies to reminders only. |
+| M9 | G9 | FR-123, FR-202, metric M5 | Sending window (Mon–Sat 10:00–18:00 IST) and quiet hours (22:00–08:00) decided (Q10), editable by the owner; window applies to reminders only. (Times are in the workspace's time zone, IST for India; amended for CR-001, GL17.) |
 | M10 | G10 | Section 4.3, FR-012, FR-294, S-06 | Free Inbox shows scam labels only; over-cap messages store no content; DMs on free and the 500 shared cap decided (Q4). |
 | M11 | G11 | FR-200, S-05 | "Recent" card on Home with Undo and Reconnect; no separate notification centre. |
 | M12 | G12 | FR-234 | 300 panel requests a month, what counts, where shown, what happens at 100% (Q5). |
@@ -2003,6 +2136,34 @@ details are a draft for the owner's review (Q21–Q25).
 | M28 | G28 | FR-122 (and FR-201, FR-013 wording) | X-01 copy adopted as the default templates; reminders make no legal or interest claims; owner reads it once before launch (Q19). |
 | M29 | G29 | Section 0 | "Next" row corrected to playbook stage numbers. |
 | M30 | — (owner decision 2026-11-10) | New FR-205, new S-43, NFR-047, NFR-048, sections 0, 4.2, 4.3, 7.2, 10.1, 11 (R10, R17), 13 (E12), 14, 15 (Q21–Q25) | Global search in the MVP: plain keyword search, no AI, Free; only what the workspace already stores (names, subjects, numbers, amounts), never personal content (FR-044), message or file text, or Gmail live; one workspace only, filtered by role from v1; search words not kept. Draft awaiting owner review. |
+| GL1 | — (CR-001, 2026-11-11) | Use cases: section 3 intro | "Built in India for creators worldwide"; India first; other countries one at a time. (Amended for CR-001, applied 2026-11-11.) |
+| GL2 | — (CR-001, 2026-11-11) | Use cases: D1 | D1 reworded: global addressable market, a country is supported only when its rule set, billing and support are approved. |
+| GL3 | — (CR-001, 2026-11-11) | Use cases: new D41 | Low-cost validation phase decision. |
+| GL4 | — (CR-001, 2026-11-11) | Use cases: UC-001 | Choose country, email code or Google, authenticator second; waitlist edge case. |
+| GL5 | — (CR-001, 2026-11-11) | Use cases: NFR-022 | Should becomes Must; every workspace has a country; no fallback to India. |
+| GL6 | — (CR-001, 2026-11-11) | Use cases: out-of-scope row, P4 risk | "v2" replaced by countries added one at a time after the MVP beta. |
+| GL7 | — (CR-001, 2026-11-11) | Section 0 | New terms: Validation phase, Supported country. |
+| GL8 | — (CR-001, 2026-11-11) | Section 0 | Second check uses the second method (authenticator, backup code, phone code where on). |
+| GL9 | — (CR-001, 2026-11-11) | Section 2.2 | Non-goal: countries other than India in the validation phase and MVP. |
+| GL10 | — (CR-001, 2026-11-11) | Section 4.1 | New first row: Validation phase. |
+| GL11 | — (CR-001, 2026-11-11) | New section 4.4 | Supported-countries matrix and waitlist. |
+| GL12 | — (CR-001, 2026-11-11) | FR-001 | Email code first; phone behind a per-country switch, off; new AC3. |
+| GL13 | — (CR-001, 2026-11-11) | FR-002 and "Always a second method" | Authenticator app plus 10 backup codes; AC3, AC4 reworded, AC5 added. |
+| GL14 | — (CR-001, 2026-11-11) | New FR-005 | Country of the workspace. |
+| GL15 | — (CR-001, 2026-11-11) | New FR-006 | Invite-only access in the validation phase. |
+| GL16 | — (CR-001, 2026-11-11) | FR-003 | Profile fields from the country's rule set; new AC5. |
+| GL17 | — (CR-001, 2026-11-11) | FR-123, FR-202, M9, Q10 | Sending window and quiet hours in the workspace's time zone (IST for India). |
+| GL18 | — (CR-001, 2026-11-11) | Section 9: I-02, I-06, I-07, I-09 | Google basic profile only; SMS optional and off; email sender carries sign-in codes; no subscription payments in the validation phase. |
+| GL19 | — (CR-001, 2026-11-11) | Section 8 intro | Validation-phase exceptions apply, each flagged. |
+| GL20 | — (CR-001, 2026-11-11) | New section 4.5 | Validation phase: who, limits, what must still hold, exceptions, exit trigger. |
+| GL21 | — (CR-001, 2026-11-11) | Section 10.1 | SMS zero while phone codes are off; validation-phase fixed-cost cap. |
+| GL22 | — (CR-001, 2026-11-11) | Section 11 | New R18 (authenticator drop-out) and R19 (real data on free or personal accounts). |
+| GL23 | — (CR-001, 2026-11-11) | Section 12 (A8, GL-A1–GL-A3) | A8 narrowed; three new assumptions. |
+| GL24 | — (CR-001, 2026-11-11) | Section 15 | GQ1–GQ10 recorded as Q26–Q35. |
+
+GL1–GL24 come from change request 001 (`docs/change-requests/001-global-market-and-infrastructure-value.md`,
+"Adoption draft") and were approved by the owner on 2026-11-11. They are not designer gaps and are not
+the success metrics. GL1–GL6 changed the use-case document; GL7–GL24 changed this PRD.
 
 **Mockup follow-ups for M30 (applied 2026-11-10, `mockups/s43-search.html`).** (a) New S-43: the results view on desktop (from
 the top-bar box) and full-screen on the phone, with the states Before typing, Loading, Results, No
@@ -2055,7 +2216,7 @@ These are business decisions. I have not assumed any answer; each has my recomme
 | Q7 | Native-app trigger thresholds (D39)? | **70% of weekly active creators mostly on phones, and 70% 3-month paid retention, for two months in a row.** |
 | Q8 | Free or paid: helper access (editor, CA, family), and AI capture from the WhatsApp number? | **Accountant access free** (CAs bring creators to us); Editor and Assistant helpers **paid**; WhatsApp capture **paid**. |
 | Q9 | How long between an account-deletion request and erasure? | **30 days** (time to change your mind), backups cleared within a further 60 days; published on the privacy page. |
-| Q10 | When may reminders go to brands, and what are default quiet hours for the creator? | Brand reminders **Mon–Sat 10:00–18:00 IST**; creator quiet hours **22:00–08:00**; both editable by the owner. |
+| Q10 | When may reminders go to brands, and what are default quiet hours for the creator? | Brand reminders **Mon–Sat 10:00–18:00 IST**; creator quiet hours **22:00–08:00**; both editable by the owner. (Both use the workspace's time zone, IST for India; amended for CR-001, GL17.) |
 | Q11 | Permission gaps (edit E4): should manager inbox access follow "view deals", and should issuing numbers and marking paid follow "send invoices"? | **Yes to both.** Fewer checkboxes; personal messages never shown to managers. |
 | Q12 | May BackstageHQ staff see a creator's data for support? *Also (Amended after mockups, M13, M14): how long does one grant last, and may the internal price-test report show "collected after reminders" as one total per price point?* | **Only with the owner's in-app, time-limited permission per case, logged** (NFR-030). State it on the privacy page. **24 hours per grant**, after a second check. **Yes to the per-price-point total** (owner accepted) only (no per-creator figure), because it is the north-star number for the beta; alternative: leave it off S-30 and read it from creators' own monthly reviews in v1. |
 | Q13 | How long do we keep the raw text of business emails and DMs? | **While the source is connected**, so every AI value keeps its source link; deleted on disconnect if chosen. |
@@ -2071,3 +2232,13 @@ These are business decisions. I have not assumed any answer; each has my recomme
 | Q23 | (Added after mockups, M30.) In the MVP, does search look only at sender, subject, brand, numbers and amounts, **not the text inside emails, DMs and files**, with a "Search in Gmail" link as the fallback? | **Decided 2026-11-10 (owner accepted):** **Yes.** That text is stored locked (ADR-005) so a leaked database shows nothing; searching it needs an architecture change and weakens that protection. Revisit in v1 if beta creators keep missing results. Alternative: search message text in the MVP, at the cost of an architecture change, more build time and a weaker privacy promise. |
 | Q24 | (Added after mockups, M30.) Do we keep search words? | **Decided 2026-11-10 (owner accepted):** **No:** not stored, not logged, no "recent searches"; only counts. **One exception:** searches made by BackstageHQ staff during a support session (NFR-030) are shown in the creator's activity log with the words, so the owner sees what staff looked for. Alternative: log staff searches without the words. |
 | Q25 | (Added after mockups, M30.) Where does search live on the phone? | **Decided 2026-11-10 (owner accepted):** **A magnifier button in the phone header on every screen**, opening search full-screen. Alternative: put it under "More" in the bottom bar, which keeps the header clean but adds a tap and hides it. |
+| Q26 | (Added for CR-001, GQ1.) First supported country for the validation phase and the MVP beta? | **Decided 2026-11-11 (owner accepted): India only.** Choose the second country after the beta, from waitlist demand. |
+| Q27 | (Added for CR-001, GQ2.) What does a creator from another country see? | **Decided 2026-11-11 (owner accepted): a waitlist** (email and country only). Not a limited mode and not generic invoices. |
+| Q28 | (Added for CR-001, GQ3.) Sign-in methods? | **Decided 2026-11-11 (owner accepted): email code first** (Google added in iteration 2), **authenticator app second** with backup codes, **SMS built behind a switch, off**. Alternative not taken: keep SMS as the Indian second factor now, which needs DLT registration and per-message cost. |
+| Q29 | (Added for CR-001, GQ4.) Who is in the validation phase? | **Decided 2026-11-11 (owner accepted): the owner, then up to 10 invited Indian creators**, allow-listed, free of charge. |
+| Q30 | (Added for CR-001, GQ5.) Exit trigger to the paid full setup? | **Decided 2026-11-11 (owner accepted): 6 of 10 creators active every week for 4 weeks, and 5 who would pay or pre-pay, plus the owner's decision to fund it.** The owner sets the numbers. |
+| Q31 | (Added for CR-001, GQ6.) Free, or ask validation creators to pre-pay for the beta at the end? | **Decided 2026-11-11 (owner accepted): free during the phase, with a pre-pay ask at the end** (manual invoice). A real willingness-to-pay signal without a payment gateway. |
+| Q32 | (Added for CR-001, GQ7.) Monthly spending cap for the validation phase, and budget for the scoped external security review and the CA review before the first real creator and the first real invoice? | **Decided 2026-11-11: a cap will be set. Open for the figure only:** the owner still has to set the cap and the review budgets. Both reviews stay before real creators, as the approved PRD requires. |
+| Q33 | (Added for CR-001, GQ8.) Whose name are the accounts in once real creator data exists (personal developer accounts or a company)? This also decides who is the "data fiduciary" under India's DPDP Act. | **Decided 2026-11-11 (owner accepted): personal accounts for V0 only; accounts holding real creator data in the business's name or transferable to it.** Whether a company exists yet is the owner's call. |
+| Q34 | (Added for CR-001, GQ9.) Gmail in the validation phase: testing mode (free, weekly reconnect, "unverified app" warning) or forwarding only? | **Decided 2026-11-11 (owner accepted): testing mode plus forwarding.** It tests the import moment (D3) without paying for the Google security assessment. |
+| Q35 | (Added for CR-001, GQ10.) Approve the mockup amendment for S-01 and S-02 and the ticket changes before T-10 starts? | **Decided 2026-11-11 (owner accepted): yes.** T-01 to T-03, T-05 to T-09 and T-12 are not affected and can start now; T-04 only gains the workspace country, currency and time-zone fields (architect to confirm). |

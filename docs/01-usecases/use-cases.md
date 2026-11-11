@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | **Approved** (Stage 1). Amended after the PRD with edits E1–E9 (`docs/02-prd/PRD.md`, section 13). Amended after the architecture with edit P1 (NFR-002; `docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits E10 (NFR-008) and E12 (new UC-125, global search, after the owner's decision of 2026-11-10) (`docs/02-prd/PRD.md`, section 13). Owner decisions D1–D40 are in section 11; the five items in 11.3 wait on PRD open questions. |
+| Status | **Approved** (Stage 1). Amended after the PRD with edits E1–E9 (`docs/02-prd/PRD.md`, section 13). Amended after the architecture with edit P1 (NFR-002; `docs/03-architecture/architecture.md`, section 27). Amended after the mockups with edits E10 (NFR-008) and E12 (new UC-125, global search, after the owner's decision of 2026-11-10) (`docs/02-prd/PRD.md`, section 13). Amended for CR-001 with edits GL1–GL6 (D1 reworded, new D41, UC-001, NFR-022; `docs/02-prd/PRD.md`, section 14A). Owner decisions D1–D41 are in section 11; the five items in 11.3 wait on PRD open questions. |
 | Stage | 1 of the playbook (`docs/PLAYBOOK.md`) |
 | Input | Owner's research summary and owner's decisions (Nov 2026) |
 | Next | Owner approves. Then Stage 2 (PRD), which settles the items listed in section 11.3. |
@@ -93,8 +93,10 @@ off any admin task to an AI assistant in plain words. The creator should only ev
 ## 3. Personas
 
 12 personas: 4 creators, 4 helpers they may share access with, 3 outside parties, 1 anti-persona.
-v1 is **India-first** (D1). It is built for **individuals and sole proprietors** (D15); other
-business types come later.
+BackstageHQ is **built in India for creators worldwide** (D1). India is the first supported
+country for the validation phase, the MVP and v1; other countries are added one at a time. It is
+built for **individuals and sole proprietors** (D15); other business types come later.
+(Amended for CR-001, GL1.)
 
 ### 3.1 Creators (the paying user)
 
@@ -110,7 +112,7 @@ business types come later.
 | Top pains | Scams; what to charge; barter tax; forgets to chase | **Chasing 60–90-day payments; TDS mismatch at ITR; threshold anxiety; half the week on admin** | No visibility into the manager; commission reconciliation; usage-rights expiry; year-end scramble | Foreign currency invoicing, FIRA, whether GST applies |
 | Likely plan (D4) | Free: tracking, export, one-time import, scam flags (D31) | Paid: automation and assistant | Paid, with helpers | Paid; foreign income is a Could |
 | What they'd pay for | Little | Time back and money collected; compares to ₹199 trackers and Sheets | Control and delegation; will pay more if it saves CA and manager fees | Correct export paperwork |
-| Risk to us | Low ability to pay | Free substitutes | A manager who already does this | Fully global creators are v2 (D1) |
+| Risk to us | Low ability to pay | Free substitutes | A manager who already does this | Countries other than India: added one at a time after the MVP beta, from waitlist demand and an approved rule set (D1) (Amended for CR-001, GL6.) |
 | Business type | Individual | Individual | Individual or sole proprietor. A company or LLP comes later (D15). | Individual |
 
 ### 3.2 Helpers the creator may share access with
@@ -447,14 +449,16 @@ under this rule.
 - **Actor:** Creator (P1–P4)
 - **Goal:** Give BackstageHQ the minimum it needs to send a correct invoice.
 - **Trigger:** First sign-up, or the first time an invoice needs a missing detail.
-- **Main flow:** 1. Sign up with phone or Google. 2. Enter legal name, PAN, state, bank account
-  for invoices, and GSTIN if registered. 3. Add creator handles (IG, YouTube). 4. Skip anything
-  not needed yet.
+- **Main flow:** 1. Choose your country, then sign up with an email code or Google. 2. Set up an
+  authenticator app as your second sign-in method. 3. For India: legal name, PAN, state, bank
+  account for invoices, and GSTIN if registered. 4. Add creator handles (IG, YouTube). 5. Skip
+  anything not needed yet. (Amended for CR-001, GL4.)
 - **Edge cases:** Not GST-registered (non-GST invoice). Sole proprietor trading name. Company
   or LLP (not in v1; D15; the data model must allow it later). Wrong PAN (format check).
   Special-category state (lower GST threshold). Changing PAN or GSTIN later: only the creator can,
   with a second check (D25). Lost phone or email: account recovery with a second check, never
-  through support alone. (Amended after PRD, E9.)
+  through support alone. (Amended after PRD, E9.) Country not supported yet: join the waitlist,
+  no workspace is created. Phone sign-in only where switched on. (Amended for CR-001, GL4.)
 - **Done when:** Given a new creator with no GSTIN, when they finish setup with name, PAN, state
   and bank details, then they can create a valid non-GST invoice without being asked anything else.
 
@@ -1686,7 +1690,7 @@ approval is late.
 | NFR-019 | **Works on weak networks** | Shoots happen outdoors | Could | Given no network, when the app is opened, then the last digest and money summary are visible. |
 | NFR-020 | **Assistant safety** | An AI that can act must not embarrass, leak or lose money | Must | Outbound blocking is enforced by the system (UC-142). Outside content is never treated as instructions (UC-146). Every run is logged and undoable (UC-144). The assistant only ever has the permissions of the person using it (UC-145). |
 | NFR-021 | **Tax figures are cross-checked** (D9) | A wrong tax number is a trust and liability problem | Must | Every tax figure is computed by fixed, versioned rules and checked a second time by an independent AI review against the source records. If they disagree, then the figure is shown as "needs a CA check", not as a number. Before launch, a CA reviews the v1 rule set once (D36). |
-| NFR-022 | **Swappable currency and tax rules** (D1) | Lets us go global in v2 without a rewrite | Should | Tax rules, invoice formats and currency are kept as separate rule sets per country. Adding a second country's rule set needs no change to deal, invoice or payment logic (the architecture stage will confirm how). |
+| NFR-022 | **Swappable currency and tax rules** (D1) | Lets us go global in v2 without a rewrite | Must | Every workspace has a country. Tax rules, invoice formats, currency, identifiers and time zone come from that country's rule set. No rule falls back to India. Adding a country needs no change to deal, invoice or payment logic (the architecture stage will confirm how). (Amended for CR-001, GL5; priority was Should.) |
 | NFR-023 | **Workspaces never mix** (D19) | A manager with many creators must never leak one creator's deals to another | Must | Given a manager belongs to workspaces A and B, when they use any screen, search, export, notification or the assistant in A, then nothing from B appears. |
 | NFR-024 | **Ownership is always clear** (D17) | Whoever pays, the creator must stay in control | Must | Given any workspace, when anyone opens settings, then the owner (always the creator) and the payer are shown separately, and only the owner can transfer ownership, change payout bank details or delete data (UC-152). |
 
@@ -1724,7 +1728,8 @@ Passionfroot takes 5–15% of each deal.
 | Bank Account Aggregator connection | D5: detect payments from email first | Later |
 | Payment links, early payout, holding money | D8 | Explore partners later |
 | GST or ITR filing; CA partner | D9 | v2 |
-| Global tax and currency; multi-language interface | D1, D10 | v2 |
+| Countries other than India: added one at a time after the MVP beta, from waitlist demand and an approved rule set. (Amended for CR-001, GL6.) | D1 | After the MVP beta |
+| Multi-language interface | D10 | v2 |
 | Companies and LLPs as customers | D15: individuals and sole proprietors first | Later |
 | A promise that data stays in India | D11 | — |
 | A marketplace that finds brands; content creation or social post scheduling | Different business, or content work rather than admin | — |
@@ -1762,7 +1767,7 @@ Passionfroot takes 5–15% of each deal.
 
 | # | Owner's decision | What changed in this document | Risk to note |
 |---|---|---|---|
-| D1 | India-first, built so currency and tax rules can be swapped for global in v2 | P4 kept as an Indian creator with foreign income; UC-102 Later; NFR-022 added | A small extra build cost now to keep rules swappable |
+| D1 | Global addressable market, built from India. A country is supported only when its rule set (currency, invoice format, tax, identifiers, time zone), billing and support are approved. India is first. Indian rules never apply by default to another country's workspace (NFR-022). (Amended for CR-001, GL2; was "India-first, built so currency and tax rules can be swapped for global in v2".) | P4 kept as an Indian creator with foreign income; UC-102 Later; NFR-022 added; UC-001 and NFR-022 (Must) | A small extra build cost now to keep rules swappable |
 | D2 | Web app that works well on phones, plus a WhatsApp forward-to number. Native app later. | UC-006, UC-041, UC-120, NFR-007, out-of-scope | Without a native app, iPhone users can't use the phone's share menu, and web push on iPhone only works if the app is added to the home screen. WhatsApp forwarding covers most of the gap. |
 | D3 | "Build something which can actually add value — can't do by hand." | Section 5.0: entry point is the inbox/DM-to-deal plus money-on-autopilot loop. UC-004, 014, 015, 017, 020 moved up; assistant added. | Launch now depends on two outside approvals (Google for Gmail, Meta for Instagram). If either is slow, launch slips or ships with manual fallbacks. AI accuracy *is* the product, so a wrong draft or match costs trust. |
 | D4 | Free tier for tracking and export; paid tier for automation with an AI assistant. No price yet. | Section 5.0b split; NFR-011, NFR-018; section 8 | The assistant runs AI on every request, so the cost per paying creator must fit a price we haven't set. Making the import and scam flags free (D31) also costs AI. |
@@ -1807,6 +1812,7 @@ Passionfroot takes 5–15% of each deal.
 | D38 | OQ10 | First customers through intros and creator communities first, from a verified domain, and never ask for Gmail access in the first message. This refines D14. | D14 risk | Slower than bulk outreach to reach 20 customers |
 | D39 | OQ11 | Build the native app once most weekly use is on phones and paid retention holds | Section 9 | The exact numbers are settled in the PRD (11.3) |
 | D40 | OQ14 | Verified-manager feature is split: an authorised-representative letter (from the creator's permissions, no ID check) in v2; an ID-checked verified badge later | Section 12: M2-13 (letter, v2), ML-04 (badge, later); section 9 | The letter must be withdrawn when the manager is revoked, or it could be misused |
+| D41 | CR-001 | A low-cost **validation phase** comes before the MVP beta: the owner and up to 10 invited creators, free, on the cheapest setup that keeps every security, isolation, encryption, backup and privacy rule. Exit when usage and pay signals are met and the owner funds the full setup (PRD 4.5). (Amended for CR-001, GL3.) | PRD 4.5, FR-006 | Real creator data on a cheap setup still needs every protection rule to hold |
 
 ### 11.2 Still open
 
