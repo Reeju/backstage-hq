@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 '/Users/soham/Desktop/Project with CLaude/BackstageHQ/.codex/hooks/route.py'"
+          }
+        ]
+      }
+    ]
+  }
+}
