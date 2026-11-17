@@ -101,17 +101,7 @@
   (clean; flags a fake `AKIA…` key), actionlint (clean), `check --deploy --fail-level WARNING`
   on staging (passes, 1 silenced). The reviewer also confirmed that an irreversible `RunPython`
   fails the round trip and a vulnerable pin (`django==4.2.0`) fails pip-audit.
-- **Owner steps (pending; the ticket is not fully proven until done):**
-  1. Push the repo to a private GitHub repo with Actions enabled.
-  2. If it belongs to an organisation (not a personal account), add a `GITLEAKS_LICENSE` secret.
-  3. Get one green run on `main`, then set branch protection on `main` requiring the 7 jobs:
-     `lint`, `types`, `tests`, `contracts`, `migrations`, `deps`, `security`.
-  4. Red runs on throwaway branches (link each here, then delete the branch):
-     - a model field without a migration (`migrations`);
-     - a `RunPython` without `reverse_code` (`migrations`);
-     - a random 40-character string next to `aws_secret_access_key=` (`security`). Don't use
-       AWS's documentation example key: gitleaks skips anything containing "EXAMPLE";
-     - a vulnerable pin such as `django==4.2.0` (`deps`).
+- **Owner steps: done 2026-11-17** (see "T-02 proof on GitHub" below).
 - Carry-overs written into the tickets:
   - **T-04:** the `migrations` job migrates as `bhq_migrator`, and `tests` runs as the app role.
   - **T-14:** remove the nightly's exit-code-5 allowance once real e2e tests exist.
@@ -142,3 +132,36 @@
   - pytest: 21 passed against compose Postgres;
   - actionlint is clean;
   - gitleaks 8.30.1 flags a random key in both env and JSON form, and the repo scans clean.
+
+## T-02 proof on GitHub — 2026-11-17
+
+- **Owner decision (2026-11-17):** the repo `Reeju/backstage-hq` stays **public**. The ticket assumed a
+  private repo. Public gives unlimited Actions minutes and branch protection on GitHub Free, at the
+  cost of the docs and code being readable by anyone.
+  - History was scanned with gitleaks 8.30.1 before the first push: no leaks.
+  - Commit author emails are public.
+  - `provider-comparison-2026-11.md` assumed the 2,000-minute private allowance; that limit no
+    longer applies.
+- Pushed `main`; GitHub's own initial commit (a one-line README) was merged in, not overwritten.
+  The personal account needs no `GITLEAKS_LICENSE`.
+- **Green run** on `main`, all 7 jobs passed: https://github.com/Reeju/backstage-hq/actions/runs/44097845363
+- **Red runs.** Each was a throwaway branch, deleted afterwards. The failing step was confirmed in the logs:
+  - Model field without a migration: `migrations` failed at `makemigrations --check` ("Migrations for
+    'redtest': + Add field extra"). https://github.com/Reeju/backstage-hq/actions/runs/44098182001
+  - `RunPython` without `reverse_code`: `migrations` failed at the round trip, on the backwards step
+    (`IrreversibleError … redtest.0002_irreversible is not reversible`). https://github.com/Reeju/backstage-hq/actions/runs/44098182751
+  - Random 40-character key next to `aws_secret_access_key=`: `security` failed (gitleaks RuleID
+    `aws-secret-access-key`). https://github.com/Reeju/backstage-hq/actions/runs/44098181942
+  - `jinja2==2.10.1`: `deps` failed (pip-audit found 10 known vulnerabilities). https://github.com/Reeju/backstage-hq/actions/runs/44098182011
+  - In the two migration runs, `lint` and `types` also went red. The cause was the throwaway app
+    itself (a missing `__str__` and a mypy class-variable annotation), not the pipeline.
+- **Branch protection on `main`:**
+  - It requires all 7 checks: `lint`, `types`, `tests`, `contracts`, `migrations`, `deps`,
+    `security`.
+  - The branch must be up to date before merging.
+  - No force pushes, no deletion.
+  - `enforce_admins` is **off**, so the owner, as admin, can still push straight to `main`. Pull
+    requests (including Dependabot's) cannot merge while red.
+- Dependabot opened its first PRs straight away (django 6.1.3, gunicorn 27.0.1, ruff 0.17.5).
+  None has been reviewed or merged.
+- T-02 acceptance criteria all proven.
